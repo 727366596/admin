@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="../../css/common/public.css"/>
+      <link rel="stylesheet" type="text/css" href="../../css/common/mui.min.css"/>
+      <link rel="stylesheet" type="text/css" href="../../css/fieldManage/frm_workTab.css" />
+      <link rel="stylesheet" type="text/css" href="../../css/common/iscroll-style.css" />
+      <script type="text/javascript" src="../../script/common/rem-750.js"></script>
+      <style>
+          #wrapper{
+            margin-top: -1rem;
+          }
+      </style>
+  </head>
+  <body>
+        <!-- <header id="header">
+                <div class="headerLeft" onclick="api.closeWin()"></div>
+                <div class="headerCenter">
+                    我派出去的活
+                </div>
+                <div class="headerRight"></div>
+        </header> -->
+        <div id='wrapper'>
+         <div class="cont_box scroller" >
+               <div class="list"  id="inner_w">
+               </div>
+               <div class="more" style="height:1.0rem;background-color:#fff;border-bottom:solid 1px #f2f2f2;">
+                  <i class="pull_icon"></i>
+                  <span style="font-size: 0.28rem;font-family: PingFangSC-Regular, sans-serif;color: #747474;">上拉加载更多...</span>
+               </div>
+        </div>
+      <script type="text/javascript" src="../../script/common/api.js"></script>
+      <script type="text/javascript" src="../../script/common/jquery.min.js"></script>
+      <script type="text/javascript" src="../../script/common/jquery.tmpl.js"></script>
+      <script type="text/javascript" src="../../script/common/zepto-1.2.0.min.js"></script>
+      <script type="text/javascript" src="../../script/common/common/pds.ajax.js"></script>
+      <script type="text/javascript" src="../../script/common/emptyFrm.js"></script>
+      <script type="text/template" id='UserTmpl'>
+          {{each(i,item) eachData.data}}
+                      <div  class="top" data-workId ="${item.id}" data-workType = "${item.workType}">
+                          <div class="content clearfix">
+                            {{if item.workType==101}}
+                            <img class="left_icon" src="../../image/fieldManage/top.png" alt="">
+                            {{else}}
+                            <img class="left_icon" src="../../image/fieldManage/workType.png" alt="">
+                            {{/if}}
+                            <ul class="label">
+                               {{if item.workType==101}}
+                               <li class="where">去哪干活:</li>
+                               {{/if}}
+                               <li class="person">派谁去干活:</li>
+                               {{if item.workType==101}}
+                               <li>要求完成时间:</li>
+                               {{/if}}
+                               {{if item.workType==102}}
+                               <li>派发时间：</li>
+                               {{/if}}
+                             </ul>
+                            <ul class="val">
+                              {{if item.workType==101}}
+                               <li>${item.landName}</li>
+                               {{/if}}
+                               <li>${item.username}</li>
+                               {{if item.workType==101&&item.limitTime != null}}
+                               <li class="time">${item.limitTime.split(" ")[0]}</li>
+                               {{/if}}
+                               {{if item.workType==102&&item.createDate != null}}
+                               <li>${item.createDate.split(" ")[0]}</li>
+                               {{/if}}
+                             </ul>
+                             {{if item.workType==101}}
+                             <i class="right_icon" data-phone = '${item.phone}' onclick="sendCall(this)"></i>
+                             {{else}}
+                             <i class="right_icon" style="margin-top: 0rem;" data-phone = '${item.phone}' onclick="sendCall(this)"></i>
+                             {{/if}}
+                          </div>
+                      </div>
+                      {{if item.weak==120}}
+                      <div class="sick clearfix" data-number = "${i}">
+                         <div class="wrapper_list">
+                             {{if item.disease==1}}<span>病害</span>{{/if}}
+                             {{if item.insectPests==1}}<span>虫害</span>{{/if}}
+                             {{if item.grassHarm==1}}<span>草害</span>{{/if}}
+                             {{if item.ifDeficiency==1}}<span>缺素症</span>{{/if}}
+                             {{if item.physiologicalStress==1}}<span>生理胁迫</span>{{/if}}
+                         </div>
+                      </div>
+                      {{/if}}
+                      <div class="solt">
+                      </div>
+            {{/each}}
+             <!-- {{each(i,item) eachData.data}}
+                         <div class="top" data-workId = "${item.id}">
+                             <div class="content clearfix">
+                               {{if item.workType==102}}
+                               <img class="left_icon" src="../../image/fieldManage/top.png" alt="">
+                               {{else}}
+                               <img class="left_icon" src="../../image/fieldManage/workType.png" alt="">
+                               {{/if}}
+                               <ul class="label">
+                                  <li class="where">去哪干活:</li>
+                                  <li class="person">派谁去干活:</li>
+                                  <li>派发时间:</li>
+                                </ul>
+                               <ul class="val">
+                                  <li>${item.landName}111</li>
+                                  <li>${item.username}</li>
+                                  {{if item.limitTime !=null}}
+                                  <li>${item.limitTime.split(" ")[0]}</li>
+                                  {{/if}}
+                                </ul>
+                                <i class="right_icon" onclick="api.call({type: 'tel_prompt',number: '${item.phone}' })"></i>
+                             </div>
+                         </div>
+                         {{if item.weak==120}}
+                         <div class="sick clearfix" data-number = "${i}">
+                            <div class="wrapper_list">
+                                {{if item.disease==1}}<span>病害</span>{{/if}}
+                                {{if item.insectPests==1}}<span>虫害</span>{{/if}}
+                                {{if item.grassHarm==1}}<span>草害</span>{{/if}}
+                                {{if item.ifDeficiency==1}}<span>缺素症</span>{{/if}}
+                                {{if item.physiologicalStress==1}}<span>生理胁迫</span>{{/if}}
+                            </div>
+                         </div>
+                         {{/if}}
+                         <div class="solt">
+                         </div>
+               {{/each}} -->
+     </script>
+      <script type="text/javascript">
+          var emptyImgUrl = "../../image/empty.png";
+          apiready = function(){
+            //alert(api.pageParam.growthCycleId+","+api.pageParam.farmId+","+api.pageParam.landId+","+api.pageParam.categoryId+","+api.pageParam.startDate+","+api.pageParam.endDate+","+120)
+            // 默认获取没干完的活的第一页
+            // alert(api.pageParam.growthCycleId)
+            // alert(api.pageParam.farmId)
+            // alert(api.pageParam.landId)
+            // alert(api.pageParam.categoryId)
+            // alert(api.pageParam.startDate)
+            // alert(api.pageParam.endDate)
+            // alert(api.pageParam.weak)
+            pathListData(page,pageSize,api.pageParam.growthCycleId,api.pageParam.farmId,api.pageParam.landId,api.pageParam.categoryId,api.pageParam.startDate,api.pageParam.endDate,api.pageParam.weak,api.pageParam.modelNum);
+            // 默认显示第一个tab的样式
+            // 点击tab切换第一页数据
+            // tabCheck();
+            $('#inner_w').on('click','.top',function(){
+              var buriedPoint = pds.buriedPoint();
+              buriedPoint.pageId = 'page_field_completed_list_the_growth_admin';
+              buriedPoint.eventId = 'button_check_the_details_page_field_completed_list_the_growth_admin';
+              pds.ajaxSubmit({
+              url:"app/buried_point/save",
+              data:{"point":buriedPoint},
+              success:function(v){
+              }
+            })
+               var detail_Id = $(this).attr('data-workId')
+               // $(this).css('backgroundColor','red')
+               //alert(detail_Id)
+             api.openWin({
+                   name : 'workView_win',
+                   url : '../management/workView_win.html',
+                   reload : true,
+                   pageParam: {
+                       detailID: detail_Id //发送任务id到下个页面
+                   }
+                 });
+           });
+          //   // 跳转详情页
+          //   api.addEventListener({
+          //         name:'scrolltobottom',
+          //     }, function(ret, err){
+          //         page++;
+          //         if(page*pageSize < total){
+          //             // alert('已滚动到底部');
+          //             $('.more span').text('加载中...');
+          //             $('.pull_icon').addClass('loading');
+          //             // alert(page);
+          //             if(work_type==1){
+          //                 pathListData(page,pageSize,"",106,"");
+          //             }else if(work_type==2){
+          //                 pathListData(page,pageSize,"","",120);
+          //             }else{
+          //                 pathListData(page,pageSize,"",105,"");
+          //             }
+          //         }else{
+          //           $('.more span').text('没有更多数据...');
+          //             // alert('没有更多数据了')
+          //             // api.toast({
+          //             //     msg: '没有更多数据了',
+          //             //     duration: 1000,
+          //             //     location: 'bottom'
+          //             // });
+          //         }
+          //
+          //
+          //     });
+          };
+          //跳转
+          // var detail_Id =$('.top').attr("data-workId");
+          // function goDetail(){
+          //     api.openWin({
+          //       name : 'workView_win',
+          //       url : '../management/workView_win.html',
+          //       reload : true,
+          //       pageParam: {
+          //           detailID: detail_Id //发送任务id到下个页面
+          //       }
+          //     });
+          // }
+          // Tab切换
+          var work_type = 1;
+          var page = 1;
+          var pageSize = 4;
+          var total ;
+          var paramObj = {};
+          var eachData;
+          function sendCall(dom){
+            var buriedPoint = pds.buriedPoint();
+            buriedPoint.pageId = 'page_field_completed_list_the_growth_admin';
+            buriedPoint.eventId = 'button_making_calls_page_field_completed_list_the_growth_admin';
+            pds.ajaxSubmit({
+            url:"app/buried_point/save",
+            data:{"point":buriedPoint},
+            success:function(v){
+              var phone = $(dom).attr('data-phone');
+              api.call({type: 'tel_prompt',number: phone });
+              event.stopPropagation();//阻止事件冒泡
+            }
+          })
+
+          }
+          function pathListData(page, pageSize,growthCycleId,farmId,landId,categoryId,startDate,endDate,weak,modelNum){
+                pds.ajaxSubmit({
+                   url:"app/task/cropModeltaskList",
+                   type : "GET",
+                   data:{
+                        "data":JSON.stringify({
+                          data:{
+                            "farmId": farmId,
+                            "weak":weak,
+                            "landId":landId,
+                            "categoryId":categoryId,
+                            "startDate":startDate,
+                            "endDate":endDate,
+                            "growthCycleId":growthCycleId,
+                            "modelNum":modelNum
+                        },
+                        page : page,
+                        pageSize : pageSize,
+                      })
+                   },
+                   success:function(e){
+                      // alert("success");
+                      // alert(page);
+                      //alert(JSON.stringify(e));
+                      total = e.total;
+                      // 无数据处理
+                      if(total == 0){
+                          $('.more span').text('暂无数据...');
+                          $('.pull_icon').removeClass('loading');
+                          emptyFrm.show("暂无相关工单~", 0, emptyImgUrl)
+                          return;
+                      }
+                      eachData =e;
+                      var resultData = eachData.data;
+                      if(resultData!=null && resultData!="" && resultData!=[]){
+                            //渲染模板
+                            $('.more span').text('加载中...');
+                            $("#inner_w").append($("#UserTmpl").tmpl(eachData));
+                            // 滚动监听
+                            if(page*pageSize < total){
+                              page++;
+                              api.addEventListener({
+                                    name:'scrolltobottom',
+                                }, function(ret, err){
+                                    //page++;
+                                        // alert('已滚动到底部');
+                                        $('.more span').text('加载中...');
+                                        $('.pull_icon').addClass('loading');
+                                        // alert(page);
+                                        // if(work_type==1){
+                                        //     pathListData(page,pageSize,"",106,"");
+                                        // }else if(work_type==2){
+                                            pathListData(page,pageSize,api.pageParam.growthCycleId,api.pageParam.farmId,api.pageParam.landId,api.pageParam.categoryId,api.pageParam.startDate,api.pageParam.endDate,api.pageParam.weak,api.pageParam.modelNum);
+                                        // }else{
+                                        //     pathListData(page,pageSize,"",105,"");
+                                        // }
+
+                                });
+                            }else{
+                                //page = null;
+                                $('.more span').text('暂无更多工单...');
+                                $('.pull_icon').removeClass('loading');
+                                api.removeEventListener({
+                                    name: 'scrolltobottom'
+                                });
+                            }
+
+                    }
+                   },
+                   error:function(e){
+                      $('.more span').text('上拉加载更多...');
+                      $('.pull_icon').removeClass('loading');
+                      api.alert({msg:"服务器异常，请联系管理员!"});
+                   }
+                });
+          };
+
+          //页面回到顶部
+          function scrollToTop(){
+            document.getElementById("wrapper").addEventListener("scroll",function(){
+              var scrollTop = $("#wrapper").scrollTop();
+              if(scrollTop >= 150){
+                $("#body_totop_btn").show().off("click").on("click",function(){
+                  $("#wrapper").animate({'scrollTop': '0px'}, 200);
+                })
+              }else{
+                $("#body_totop_btn").hide();
+              }
+            })
+          };
+
+      </script>
+  </body>
+
+  </html>

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>市场分析</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/common/public.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/common/header.css" />
+    <script type="text/javascript" src="../../../script/common/rem.js"></script>
+    <style>
+				body{
+					text-align: center;
+					position: relative;
+					background-color: #f3f4f4;
+				}
+        .header_search_input_clearMsg{
+          position: absolute;
+          top: 4px;
+          right: 4px;
+          z-index: 999;
+          height: 25px;
+          width: 25px;
+          background-image: url("../../../image/common/resend_password_emptyIcon.png");
+					background-position: center center;
+					background-repeat: no-repeat;
+          background-size: 15px 15px;
+          display: none;
+        }
+        .headerSearchBox{
+          position: relative;
+          width:100%;
+          height:0.7rem;
+          border-radius: 0.7rem;
+          /*background-color: rgba(0,0,0,0.2);*/
+					background-color: #fff;
+					display: -webkit-box;
+					display: -webkit-flex;
+					display:flex;
+
+					-webkit-box-orient: horizontal;
+					-webkit-flex-flow: row;
+					flex-flow: row;
+
+					-webkit-box-pack: center;
+					-webkit-justify-content: center;
+					justify-content: center;
+
+					-webkit-box-align: center;
+					-webkit-align-items: center;
+					align-items: center;
+        }
+				.headerSearchBox .name{
+						color: #00c558;
+						font-size: 0.32rem;
+						max-width: 70%;
+						height: 100%;line-height: 0.7rem;
+						overflow-x: auto;
+						overflow-y: hidden;
+						white-space: nowrap;
+				}
+				.headerSearchBox .name-icon{
+						width:15px;height: 8px;margin-left: 5px;
+						background-image: url('../../../image/market/more-green.png');
+						background-position: center center;
+						background-size: 100% 100%;
+						background-repeat: no-repeat;
+				}
+        input::-webkit-input-placeholder{
+            color: #999999;opacity:1;font-size: 0.28rem;
+        }
+        input::placeholder{
+            color: #999999;opacity:1;font-size: 0.28rem;
+        }
+
+				#body_totop_btn{
+						position: fixed;
+						bottom:0.5rem;
+						right:0.2rem;
+						width:1.2rem;
+						height:1.2rem;
+						z-index: 999;
+						line-height: 2.25rem;
+						font-size: 0.2rem;font-family: PingFangSC-Regular, sans-serif;color: #AEADAD;
+						text-align: center;
+						background: url("../../../image/common/rocket_up.png") no-repeat center 3px;
+						background-size: 70% 70%;
+						background-color: rgba(0,0,0,0);
+						border-radius: 6px;
+						font-size: 0.20rem;
+						color: #20c714;
+						display: none;
+				}
+				.nav{
+						height:0.95rem;
+						line-height: 0.95rem;
+						width: 100%;
+						background-color: #fff;
+						display: -webkit-box;
+						display: -webkit-flex;
+						display:flex;
+
+						-webkit-box-orient: horizontal;
+						-webkit-flex-flow: row;
+						flex-flow: row;
+
+						-webkit-box-pack: justify;
+						-webkit-justify-content: space-between;
+						justify-content: space-between;
+
+						-webkit-box-align: center;
+						-webkit-align-items: center;
+						align-items: center;
+				}
+				.nav li{
+				  font-size: 0.3rem;
+				  font-family: "PingFangSC-Regular";
+				  width: 33%;
+				  height: 0.95rem;
+				  text-align: center;
+				}
+				.nav li>span{
+				    display: inline-block;
+				    vertical-align: top;
+						box-sizing: border-box;
+				    height: 0.94rem;
+				    /*width: 55%;*/
+				    line-height: 0.94rem;
+				    font-size: 0.30rem;
+				    color: #666666;
+				}
+    </style>
+</head>
+<body>
+    <div id="header">
+        <div class="headerLeft" onclick="back();"></div><!-- width:0; -->
+        <div class="headerCenter"><!-- width:80%;margin-left:0.3rem; -->
+            <div class="headerSearchBox" onclick="openSearchWin(this);">
+          			<span data-id="" data-name="" class="name"></span>
+								<span class="name-icon"></span>
+            </div>
+        </div>
+        <div class="headerRight"></div>
+    </div>
+		<ul class="nav">
+				<li id="localPrice" pageId="page_price_quotations_admin" eventId="button_landprice_page_price_quotations_admin"><span>地头价</span></li>
+				<li id="marketPrice" pageId="page_price_quotations_admin" eventId="button_marketprice_page_price_quotations_admin"><span>市场价</span></li>
+				<li id="morePrice"><span>多市场对比</span></li>
+		</ul>
+		<div id="body_totop_btn">
+				返回顶部
+		</div>
+</body>
+<script type="text/javascript" src="../../../script/common/api.js"></script>
+<script type="text/javascript" src="../../../script/common/jquery.min.js"></script>
+<script type="text/javascript" src="../../../script/common/pds.ajax.js"></script>
+<script type="text/javascript">
+
+	var frmName = "";
+	apiready = function(){
+    //适配iOS7+，Android4.4+状态栏沉浸式效果，详见config文档statusBarAppearance字段
+    var header = $api.byId('header');
+    $api.fixStatusBar(header);
+    var headerH = $api.offset(header).h;
+		$("body").css("paddingTop",headerH);
+    var topHeight = $(".nav").height()+headerH;
+
+		//获取历史作物
+		//$api.rmStorage('plant')
+		//$api.rmStorage('plant')
+		var plantObj = $api.getStorage($api.getStorage('userId')+'plant');
+		if (plantObj != undefined && plantObj != "" && plantObj != null && plantObj != {}) {console.log(111+"*************")
+				plantDo(plantObj.name, plantObj.id);
+				//打开frm组
+				openFrmGroup(topHeight);
+		}else{
+				//plantDo("土豆", 7);//默认马铃薯（土豆）
+				//获取默认作物
+				//alert("初始化作物")
+				getPlant(topHeight);
+		};
+		// //打开frm组
+		// openFrmGroup(topHeight);
+	};
+
+	//获取作物初始默认值
+	function getPlant(topHeight){
+			pds.ajaxSubmit({
+					type: "GET",
+					url : "app/price/defaultStatCategory",
+					success:function(e){
+							//alert("success");
+							//alert(JSON.stringify(e));
+							if (e.status == "ok") {
+									if (e.data != "" && e.data != null && e.data != {}) {
+											var plantName = e.data.categoryName;
+											var plantId = e.data.id;
+											if (plantName != "" && plantName != null && plantId != "" && plantId != null) {
+													plantDo(plantName, plantId);
+											}else{
+													$(".name").text("点击选择作物").attr("data-id","").attr("data-name","");
+											};
+									}else{
+											$(".name").text("点击选择作物").attr("data-id","").attr("data-name","");
+									}
+							}else {
+									$(".name").text("点击选择作物").attr("data-id","").attr("data-name","");
+							};
+
+							//打开frm组
+							openFrmGroup(topHeight);
+
+					},
+					error : function(e){
+							$(".name").text("点击选择作物").attr("data-id","").attr("data-name","");
+					}
+			});
+	}
+
+	//打开frm组
+	function openFrmGroup(height){
+			var plantId = $(".name").attr("data-id");
+			var plantName = $(".name").attr("data-name");
+			api.openFrameGroup({
+			    name: 'marketFrmGroup',
+			    rect: {
+			        x: 0,
+			        y: height+10,
+			        w: 'auto',
+			        h: 'auto'
+			    },
+					scrollEnabled:true,
+					index:1,
+			    frames: [{
+			        name: 'empty-frm',
+			        url: '../../empty-frm.html',
+			    }, {
+			        name: 'marketPrice-frm',
+			        url: './marketPrice-frm.html',
+							pageParam : {
+								 plantId : plantId,
+								 plantName : plantName
+							}
+			    }, {
+			        name: 'morePrice-frm',
+			        url: './morePrice-frm.html',
+							pageParam : {
+								 plantId : plantId,
+								 plantName : plantName
+							}
+			    }]
+			}, function(ret, err) {
+			    var index = ret.index;
+					$(".nav li span").css({
+							"color":"#666666",
+							"border":"none",
+							"fontSize" :"0.3rem"
+					}).eq(index).css({
+							"color":"#00c558",
+							"border-bottom":"solid 1px #00c558",
+							"fontSize" :"0.32rem"
+					});
+					frmName = ret.name;
+			});
+
+			//导航切换
+			tabCheck();
+	}
+
+	//导航tab切换
+	function tabCheck(){
+			$(".nav li").off("touchend").on("touchend",function(){
+					$(".nav li span").css({
+							"color":"#666666",
+							"border":"none",
+							"fontSize" :"0.3rem"
+					});
+					$(this).find("span").css({
+							"color":"#00c558",
+							"border-bottom":"solid 1px #00c558",
+							"fontSize" :"0.32rem"
+					});
+					var index = $(this).index();
+					var pageId = $(this).attr("pageId")
+					var eventId = $(this).attr("eventId")
+					var buriedPoint = pds.buriedPoint();
+					buriedPoint.pageId = pageId;
+					buriedPoint.eventId = eventId;
+					pds.ajaxSubmit({
+					url:"app/buried_point/save",
+					data:{"point":buriedPoint},
+					success:function(v){
+					}
+				})
+					api.setFrameGroupIndex({
+					    name: 'marketFrmGroup',
+					    index: index
+					});
+			});
+
+			//默认触发今日
+			$("#marketPrice").trigger('touchend');
+
+	};
+
+	//操作作物名称
+	function plantDo(name, id){
+			if (name != "" && id !="") {
+					$(".name").text(name).attr("data-id",id).attr("data-name",name);
+			}else{
+					$(".name").text("点击选择作物").attr("data-id","").attr("data-name","");
+			};
+			var plantObj = {
+					name : name,
+					id : id
+			};
+			$api.setStorage($api.getStorage('userId')+'plant', plantObj);
+	};
+
+	//打开作物搜索页面***************************************************
+	function openSearchWin(obj){
+		//品种筛选埋点
+		var buriedPoint = pds.buriedPoint();
+		buriedPoint.pageId = 'page_price_quotations_admin';
+		buriedPoint.eventId = 'button_variety_selection_page_price_quotations_admin';
+		pds.ajaxSubmit({
+		url:"app/buried_point/save",
+		data:{"point":buriedPoint},
+		success:function(v){
+		}
+	})
+			var plantName = $(obj).find(".name").attr("data-name");
+			api.openWin({
+				name : "searchPlant-win",
+				url : "widget://html/home/marketInfo/searchPlant-win.html",
+				reload : true,
+				pageParam : {
+					plantName : plantName,
+					frmName : frmName
+				},
+				animation : {
+					type : "movein", //动画类型（详见动画类型常量）
+					subType : "from_right", //动画子类型（详见动画子类型常量）
+					duration : 300 //动画过渡时间，默认300毫秒
+				}
+			});
+	};
+
+	//返回上一级********************************************************************
+	function back() {
+			api.closeWin();
+	}
+</script>
+</html>

@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<title>我派出去的活</title>
+		<link rel="stylesheet" type="text/css" href="../../css/common/api.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/common/public.css"/>
+    <!-- <link rel="stylesheet" type="text/css" href="../../css/common/header.css"/> -->
+    <script type="text/javascript" src="../../script/common/rem-750.js"></script>
+    <style>
+		  body{
+		  	background-color: #f3f4f4;
+		  }
+			article{
+				padding-top: 0.20rem;
+				padding-left: 0.20rem;
+				padding-right: 0.20rem;
+				padding-bottom: 2rem;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        overflow-y: auto;
+				-webkit-overflow-scrolling:touch;
+        z-index: 1;
+			}
+			section{
+				clear: both;
+				background-color: #fff;
+				padding-top: 0.56rem;
+			}
+      p{
+      	clear: both;
+        width: 100%;
+				min-height: 0.8rem;
+        font-size: 0.16rem;
+        line-height: 0.32rem;
+        border-bottom: 1px solid #f6f3f3;
+      }
+      p>span{
+      	float: left;
+      	padding-top: 0.25rem;
+				padding-bottom: 0.25rem;
+      	font-size: 0.30rem;
+				color: #666666;
+      	padding-left: 0.20rem;
+      	text-align: left;
+      }
+      p>span+span{
+      	float: right;
+      	padding-right: 0.20rem;
+      	text-align: right;
+      }
+      i{
+        float: left;
+				padding-top: 0.13rem;
+				padding-bottom: 0.08rem;
+				/*margin-left: 0.2rem;*/
+				/*width: 6.72rem;*/
+				text-align: center;
+				width: 100%;
+				color:#FF6253;
+				font-style: normal;
+				font-size: 0.24rem;
+				background-color: rgb(254,239,236);
+				border-bottom: 1px solid #f6f3f3;
+      }
+			h4{
+				padding-top: 0.09rem;
+				padding-bottom: 0.05rem;
+				margin-bottom: 0.25rem;;
+				padding-left: 0.20rem;
+				width: 2rem;
+				font-size: 0.26rem;
+				/*height: 0.5rem;
+				line-height: 0.5rem;*/
+				font-weight: lighter;
+				color: #fff;
+				background-color: #20c714;
+				border-top-right-radius: 0.42rem;
+				border-bottom-right-radius: 0.42rem;
+			}
+			.resource>p{
+				border-bottom: 0;
+			}
+			.resource-p>span{
+				color: #82E268;
+			}
+			.warning{
+				border-bottom: 0;
+			}
+      #body_totop_btn{
+          position: fixed;
+          bottom:0.5rem;
+          right:0.2rem;
+          width:1.2rem;
+          height:1.2rem;
+          z-index: 999;
+          line-height: 2.25rem;
+          font-size: 0.2rem;font-family: PingFangSC-Regular, sans-serif;color: #AEADAD;
+          text-align: center;
+          background: url("../../image/common/rocket_up.png") no-repeat center 3px;
+          background-size: 70% 70%;
+          background-color: rgba(0,0,0,0);
+          border-radius: 6px;
+          font-size: 0.20rem;
+          color: #20c714;
+          display: none;
+      }
+			.img{
+				display: inline-block;
+				width: auto;
+				background-image: url("../../image/management/warning.png");
+				background-size: 0.24rem 0.24rem;
+				padding-left: 0.24rem;
+				background-repeat: no-repeat;
+				background-position: left center;
+			}
+			#close{
+				  display: inline-block;
+					float: right;
+					padding-top: 0.09rem;
+					padding-bottom: 0.05rem;
+					padding-right: 0.2rem;
+					margin-bottom: 0.25rem;
+					margin-right: 0.2rem;
+					padding-left: 0.2rem;
+					font-size: 0.24rem;
+					font-weight: lighter;
+					border-radius: 0.5rem;
+					background-color: #d3efc6;
+					color: #66BD14;
+			}
+			.bg{
+				display: inline-block;
+				margin-top: 0.05rem;
+				width: 0.3rem;
+				height: 0.2rem;
+				background:url("../../image/management/open.png") no-repeat center center;
+				background-size: 80% 80%;
+				border-bottom: 0;
+			}
+			.bp{
+				display: inline-block;
+				margin-top: 0.05rem;
+				width: 0.3rem;
+				height: 0.2rem;
+				background:url("../../image/management/close.png") no-repeat center center;
+				background-size: 90% 80%;
+				border-bottom: 0;
+			}
+			#close::after{
+				clear: both;
+			}
+			.fl{
+				float: left;
+			}
+			.solid{
+				height: 0.8rem;
+			}
+			#pic{
+				clear: both;
+				display: block;
+				padding-left: 0.25rem;
+				padding-right: 0.25rem;
+				width: 100%;
+				text-align: justify;
+				background-color: #fff;
+			}
+			#pic>img{
+				display: inline-block;
+				margin-left: 0.25rem;
+				margin-right: 0.25rem;
+				margin-bottom: 0.25rem;
+				width: 1.7rem;
+				height: 1.7rem;
+			}
+			.you{
+				width: 6rem !important;
+				height: 6rem !important;
+			}
+    </style>
+</head>
+<body>
+<!-- <header id="header">
+        <div class="headerLeft" onclick="api.closeWin()"></div>
+        <div class="headerCenter">
+            我派出去的活
+        </div>
+        <div class="headerRight"></div>
+</header> -->
+<article id="wrapper">
+	<section>
+		<h4>外部环境情况</h4>
+		<p>
+		  <span>种植作物：</span>
+		  <span id="categoryName"></span>
+		</p>
+		<p>
+		  <span>去哪干活：</span>
+		  <span id="landName"></span>
+		</p>
+		<p>
+		  <span>天气情况：</span>
+		  <span id="weather"></span>
+		</p>
+		<p>
+		  <span>气温：</span>
+		  <span id="temperature"></span>
+		</p>
+		<p>
+		  <span>空气质量：</span>
+		  <span id="airQuality"></span>
+		</p>
+		<!-- <p>
+		  <span>土壤温度：</span>
+		  <span id="soilTemperature">23℃</span>
+		</p>
+		<p>
+		  <span>土壤湿度：</span>
+		  <span id="soilMoisture">22%</span>
+		</p> -->
+</section>
+<section>
+	<div class="solid">
+	  <h4 class="fl">作物生长情况</h4>
+	  <span id="close"><i class="bg"></i>点我收起</span>
+	</div>
+	<div id="show">
+			<p>
+			  <span>生长周期：</span>
+			  <span id="growthCycleId">萌芽期</span>
+			</p>
+			<p class="warning">
+			  <span>有没有缺素症：</span>
+			  <span id="ifDeficiency">没有</span>
+			  <i>
+					<span class="img">缺素症是指作物缺少某种营养元素而生长异常</span>
+				</i>
+			</p>
+			<p class="warning">
+			  <span>生理胁迫情况：</span>
+			  <span id="physiologicalStress">没有</span>
+			  <i>
+					<span class="img">生理胁迫意思是出现不利于作物生长的自然灾害等</span>
+				</i>
+			</p>
+			<p>
+			  <span>有没有虫害：</span>
+			  <span id="insectPests">没有</span>
+			</p>
+			<p>
+			  <span>有没有草害：</span>
+			  <span id="grassHarm">没有</span>
+			</p>
+			<p>
+			  <span>有没有病害：</span>
+			  <span id="disease">没有</span>
+			</p>
+			<p>
+			  <span>其他情况：</span>
+			  <span id="others">柑橘长势良好！今年有好收成！</span>
+			</p>
+			<p>
+				<span>现场照片：</span>
+				<b id="pic"></b>
+			</p>
+  </div>
+</section>
+<section class="resource">
+  <h4>资源使用情况</h4>
+	<div id="resource">
+		<!-- <p>
+		  <span>碳酸氢铵：</span>
+		  <span>单价：</span>
+		</p>
+		<p class="resource-p">
+			<span>500kg</span>
+		  <span>10元/千克</span>
+		</p>
+		<p>
+		  <span>拖拉机：</span>
+		  <span>单价：</span>
+		</p>
+		<p class="resource-p">
+			<span>1台</span>
+		  <span>100元/台</span>
+		</p> -->
+	</div>
+</section>
+<!-- <section>
+  <h4>都谁干了活</h4>
+  <ul>
+    <li>
+      <p>曹阳派发工单</p>
+      <p>时间:2017-07-07 14:25:39</p>
+    </li>
+    <li>
+      <p>李连杰完成了工单，发现了草害、虫害、病害</p>
+      <p>时间:2017-07-07 14:25:39</p>
+    </li>
+    <li>
+      <p>李连杰反馈了工单，解决了病害</p>
+      <p>时间:2017-07-07 14:25:39</p>
+    </li>
+  </ul>
+</section> -->
+</article>
+<div id="body_totop_btn">
+    返回顶部
+</div>
+<script type="text/javascript" src="../../script/common/api.js"></script>
+<script type="text/javascript" src="../../script/common/zepto-1.2.0.min.js"></script>
+<script type="text/javascript" src="../../script/common/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/common/pds.ajax.js"></script>
+<script>
+		apiready=function(){
+      // var header = $api.byId('header');
+      //   $api.fixStatusBar(header);
+      //   var headerH = $api.offset(header).h;
+      //   $("body").css({"paddingTop":headerH+"px"});
+			var systemType = api.systemType;
+			if(systemType=="ios"){
+				$("h4").css("fontWeight","bold")
+			}
+			 scrollToTop();
+			 //alert(api.pageParam.detailID)
+			 //$("#pic").html('<img src="http://p2.gexing.com/shaitu/20130316/1310/5143fedf1c236.jpg" alt=""/><img src="http://p2.gexing.com/shaitu/20130316/1310/5143fedf1c236.jpg" alt=""/>')
+			  pds.ajaxSubmit({
+				// 	url:'app/task/taskDetail ',
+				// data:{values:{taskId:api.pageParam.taskId}}
+
+				//测试链接
+				url:'app/task/taskDetail',
+			 	data:{taskId:api.pageParam.detailID},
+				success:function(ret,err){
+					//alert(JSON.stringify(ret))
+					var data=ret.data
+					$("#categoryName").html(data.cropName+"-"+data.categoryName)
+					//alert(JSON.stringify(data))
+					$("#landName").html(data.landName)
+					$("#weather").html(data.weather)
+					$("#temperature").html(data.temperature+"℃")
+					$("#airQuality").html(data.airQuality)
+					// $("#soilTemperature").html(data.soilTemperature+"℃")
+					if(data.lifeCycleName==""||data.lifeCycleName==null){
+						$("#growthCycleId").parent().hide()
+					}else{
+						$("#growthCycleId").html(data.lifeCycleName)
+					}
+					// $("#soilMoisture").html(data.soilMoisture+"％")
+					if(data.ifDeficiency==1){
+						$("#ifDeficiency").html("有")
+					}else{
+						$("#ifDeficiency").html("没有")
+					}
+					if(data.physiologicalStress==1){
+						$("#physiologicalStress").html("有")
+					}else{
+						$("#physiologicalStress").html("没有")
+					}
+		      if(data.insectPests==1){
+						$("#insectPests").html("有")
+					}else{
+						$("#insectPests").html("没有")
+					}
+					if(data.grassHarm==1){
+						$("#grassHarm").html("有")
+					}else{
+						$("#grassHarm").html("没有")
+					}
+					if(data.disease==1){
+						$("#disease").html("有")
+					}else{
+						$("#disease").html("没有")
+					}
+					$("#others").html(data.others)
+					var pic=data.backPictureUrl.split(","),pl=pic.length,picl="",imgUrls=[];
+					if(!pl||pic[0]==""){
+							$("#pic").html('<div style="padding-bottom:0.3rem;text-align:center;font-weight:normal;font-size:0.28rem;">暂无图片信息</div>')
+					}else{
+							for(var j=0; j<pl; j++){
+								// picl+="<img  onclick='preview(this)' src="+pds.defaultUri+"app/attach/view/"+pic[j]+" >"
+								picl+="<img id="+j+" onclick='preview(this)' src="+pic[j]+">"
+								// picl+="<img src="+pic[j]+">"
+								imgUrls.push(pic[j])
+							}
+							$("#pic").html(picl)
+							picl=null;
+
+							window.preview = function (dom) {
+								// alert(JSON.stringify(imgUrl))
+								var imageBrowser = api.require('imageBrowser');
+								imageBrowser.openImages({
+									imageUrls: imgUrls,
+									activeIndex:$(dom).attr("id")
+								});
+							};
+
+					}
+
+					// $("#pic").on("click","img",function(){
+					// 	if($(this).hasClass("you")){
+					// 		$(this).removeClass("you")
+					// 	}else{
+					// 		$(this).addClass("you")
+					// 	}
+					// })
+
+					var res=data.resourceList,rl=res.length,rp="";
+					if(!rl){
+						$("#resource").html('<span style="padding-bottom:0.3rem;text-align:center;font-size:0.28rem;color:#666">在此工单执行过程中没有用到资源</span>')
+					}else{
+						for(var i=0; i<rl; i++){
+							// if(i%2){
+							// 		rp+="<p><span>"+res[i].resourceName+"</span><span>单价</span></p><p><span>"+res[i].resQuantity+res[i].resUnit+"</span><span>"+res[i].resPrice+res[i].resPriceUnit+"</span></p>"
+							// }else{
+									rp+="<p class='resource-p'><span>"+res[i].resourceName+"</span><span>单价</span></p><p><span>"+res[i].resQuantity+res[i].resUnitName+"</span><span>"+res[i].resPrice+res[i].resPriceUnitName+"</span></p>"
+							// }
+						}
+						$("#resource").html(rp)
+						rp=null;
+					}
+
+					//资源使用情况
+			 	},
+				error:function(e){
+					 api.alert({msg:"服务器异常，请联系管理员!"});
+				}
+			 });
+			//  $("#close").toggle(function(){
+			// 	 $("#close").html('<i class="bp"></i>点我展开')
+			//  },function(){
+			// 	 $("#close").html('<i class="bg"></i>点我收起')
+			//  })
+			var i=1
+			$("#close").bind("touchstart",function(){
+				$("#show").slideToggle(0)
+				// $("#close>i").toggleClass("bp")
+				if(i){
+					$("#close").html('<i class="bg"></i>点我展开')
+					i=null
+				}else{
+					$("#close").html('<i class="bp"></i>点我收起')
+					i=1
+				}
+			})
+		}
+    //页面回到顶部
+    function scrollToTop(){
+        $("#wrapper").on("scroll",function(){
+            var scrollTop = $("#wrapper").scrollTop();
+            if(scrollTop >= 200){
+                $("#body_totop_btn").show().off("click").on("click",function(){
+                    $("#wrapper").animate({'scrollTop': '0px'}, 400);
+                    //myScroll.scrollTo(0, 0, 300)
+                })
+            }else{
+                $("#body_totop_btn").hide();
+            }
+        })
+    };
+
+
+
+</script>
+</body>
+</html>

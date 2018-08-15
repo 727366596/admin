@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<title>资源选择</title>
+		<link rel="stylesheet" type="text/css" href="../../css/common/public.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/planting/resourceSelect.css"/>
+    <script type="text/javascript" src="../../script/common/rem-750.js"></script>
+</head>
+<body>
+<!-- <header id="mapLazyLoad">
+		<h4><span onclick="api.closeWin()"></span>作物长的怎么样</h4>
+</header> -->
+<aside id="side">
+</aside>
+<section id="section">
+</section>
+<footer>
+	<input id="equId" type="hidden">
+	<input id="equName" type="hidden">
+	<input id="resId" type="hidden">
+	<input id="resName" type="hidden">
+	<input id="resUnitName" type="hidden">
+	<input id="resCostUnitName" type="hidden">
+	<input id="resUnit" type="hidden">
+	<input id="resCostUnit" type="hidden">
+	<div class="btnConfirm" id="btnConfirm" onclick="cropGrowth()">我选好了</div>
+</footer>
+<script type="text/javascript" src="../../script/common/api.js"></script>
+<script type="text/javascript" src="../../script/common/zepto-1.2.0.min.js"></script>
+<script type="text/javascript" src="../../script/common/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/common/pds.ajax.js"></script>
+<script>
+apiready=function(){
+	  showCrop()
+}
+function showCrop(){
+	pds.ajaxSubmit({
+		url:'app/commons/resources',
+		type : "GET",
+		// data:{values:{level:"0"}}
+		success:function(ret,err){
+			//alert(JSON.stringify(ret))
+			var dt=ret.data,l=dt.length,pin="";
+			if(!l){
+				return
+			}
+			for(var i=0; i<l; i++){
+				pin+="<p id="+dt[i].categoryId+">"+dt[i].categoryName+"</p>"
+			}
+			$("#side").html(pin);
+			pin=null;
+			$("#side>p").eq(0).css("backgroundColor","#f3f4f4")
+			$("#side>p").eq(0).css("color","#82e268")
+			var dl=ret.data[0].list,li=dl.length,zi="";
+			for(var i=0; i<li; i++){
+				zi+="<p id="+dl[i].id+" ><span>"+dl[i].resSubIdName+"</span><input id="+dl[i].resCostUnit+" name='resCostUnitName' type='hidden' value="+dl[i].resCostUnitName+"><input id="+dl[i].resUnit+" name='resUnitName' type='hidden' value="+dl[i].resUnitName+"></p>"
+			}
+			$("#section").html(zi);
+			zi=null;
+			for(var j=0; j<li; j++){
+				$("#section>p").eq(j).on("touchstart",function(){
+					$("#section>p").css("backgroundColor","#fff")
+					$(this).css("backgroundColor","#e4ffdd")
+					$("#resId").val($(this).attr("id"))
+					$("#resName").val($(this).find("span").html())
+					$("#resUnitName").val($(this).find("input[name='resUnitName']").val())
+					$("#resCostUnitName").val($(this).find("input[name='resCostUnitName']").val())
+					$("#resUnit").val($(this).find("input[name='resUnitName']").attr("id"))
+					$("#resCostUnit").val($(this).find("input[name='resCostUnitName']").attr("id"))
+				})
+			}
+			for(var j=0; j<l; j++){
+				$("#side>p").eq(j).on("touchstart",function(){
+					$("#side>p").css("backgroundColor","#fff")
+					$("#side>p").css("color","#666")
+					$(this).css("color","#82e268")
+					$(this).css("backgroundColor","#f3f4f4")
+					var dl=ret.data[$(this).index()].list,li=dl.length,zi="";
+					for(var i=0; i<li; i++){
+						zi+="<p id="+dl[i].id+" ><span>"+dl[i].resSubIdName+"</span><input id="+dl[i].resCostUnit+" name='resCostUnitName' type='hidden' value="+dl[i].resCostUnitName+"><input id="+dl[i].resUnit+" name='resUnitName' type='hidden' value="+dl[i].resUnitName+"></p>"
+					}
+					$("#section").html(zi);
+					zi=null;
+					$("#side").css("height",$("#section").height())
+					for(var j=0; j<li; j++){
+						$("#section>p").eq(j).on("touchstart",function(){
+							$("#section>p").css("backgroundColor","#fff")
+							$(this).css("backgroundColor","#e4ffdd")
+							$("#resId").val($(this).attr("id"))
+							$("#resName").val($(this).find("span").html())
+							$("#resUnitName").val($(this).find("input[name='resUnitName']").val())
+							$("#resCostUnitName").val($(this).find("input[name='resCostUnitName']").val())
+							$("#resUnit").val($(this).find("input[name='resUnitName']").attr("id"))
+							$("#resCostUnit").val($(this).find("input[name='resCostUnitName']").attr("id"))
+						})
+					}
+				})
+			}
+
+
+			// 	} else {
+			// 		api.alert({msg:JSON.stringify(err)});
+			// 	};
+			// });
+
+			// 		api.showProgress({
+			// 				title: '努力加载中...',
+			// 				text: '先喝杯茶...',
+			// 				modal: true
+			// 		});
+			// 		$("#side>p").css("backgroundColor","#fff")
+			// 		$("#side>p").css("color","#666")
+			// 		$(this).css("color","#82e268")
+			// 		$(this).css("backgroundColor","#f3f4f4")
+			// 		$("#resId").val("")
+			// 		$("#resName").val("")
+			// 		api.ajax({
+			// 			url:pds.defaultUri + 'app/commons/dic/resources',
+			// 			data:{values:{parentId:$(this).attr("id"),level:1}}
+			// 		},function(ret,err){
+			// 			if (ret) {
+			// 				api.hideProgress();
+			// 				alert(JSON.stringify(ret))
+			// 				var dt=ret.data,l=dt.length,pin="";
+			// 				if(!l){
+			// 					return
+			// 				}
+			// 				for(var i=0; i<l; i++){
+			// 					pin+="<p id="+dt[i].id+">"+dt[i].name+"</p>"
+			// 				}
+			// 				$("#section").html(pin);
+			// 				$("#side").css("height",$("#section").height())
+			// 				pin=null;
+			// 				for(var j=0; j<l; j++){
+			// 					$("#section>p").eq(j).on("touchstart",function(){
+			// 						$("#section>p").css("backgroundColor","#fff")
+			// 						$(this).css("backgroundColor","#e4ffdd")
+			// 						$("#resId").val($(this).attr("id"))
+			// 						$("#resName").val($(this).html())
+			// 					})
+			// 				}
+			// 			} else {
+			// 				api.alert({msg:JSON.stringify(err)});
+			// 			};
+			// 		});
+			// 	})
+			// }
+			},
+		 error:function(e){
+				api.alert({msg:"服务器异常，请联系管理员!"});
+		 }
+	});
+}
+function cropGrowth() {
+	if(!$("#resId").val()){
+		api.alert({msg:"请点击选择资源名称"});
+		return
+	}
+	// alert("resource('"+$("#resId").val()+"','"+$("#resName").val()+"','"+$("#resCostUnitName").val()+"','"+$("#resUnitName").val()+"','"+$("#resCostUnit").val()+"','"+$("#resUnit").val()+"','"+api.pageParam.iptIndex+"')")
+	// alert($("#section").html())
+	switch(api.pageParam.param){
+		case 1:
+		api.execScript({
+			name: 'win_home',
+			frameName: 'planOut_frm',
+	    script: "resource('"+$("#resId").val()+"','"+$("#resName").val()+"','"+$("#resCostUnitName").val()+"','"+$("#resUnitName").val()+"','"+$("#resCostUnit").val()+"','"+$("#resUnit").val()+"','"+api.pageParam.iptIndex+"')"
+		});
+		break;
+	  case 2:
+		api.execScript({
+			name: 'plantPlan_win',
+		  frameName: 'plantPlan_frm',
+		  script: "resource('"+$("#resId").val()+"','"+$("#resName").val()+"','"+$("#resCostUnitName").val()+"','"+$("#resUnitName").val()+"','"+$("#resCostUnit").val()+"','"+$("#resUnit").val()+"','"+api.pageParam.iptIndex+"')"
+		});
+		break;
+		case 3:
+		api.execScript({
+			name: 'plantEditor_win',
+			frameName: 'plantEditor_frm',
+		  script: "resource('"+$("#resId").val()+"','"+$("#resName").val()+"','"+$("#resCostUnitName").val()+"','"+$("#resUnitName").val()+"','"+$("#resCostUnit").val()+"','"+$("#resUnit").val()+"','"+api.pageParam.iptIndex+"')"
+		});
+		break;
+		case 4:
+		api.execScript({
+			name: 'PlantPlanEditor_win',
+			frameName: 'PlantPlanEditor_frm',
+			script: "resource('"+$("#resId").val()+"','"+$("#resName").val()+"','"+$("#resCostUnitName").val()+"','"+$("#resUnitName").val()+"','"+$("#resCostUnit").val()+"','"+$("#resUnit").val()+"','"+api.pageParam.iptIndex+"')"
+		});
+		case 5:
+		api.execScript({
+			name: 'planOutEditor_win',
+			frameName: 'planOutEditor_frm',
+		  script: "resource('"+$("#resId").val()+"','"+$("#resName").val()+"','"+$("#resCostUnitName").val()+"','"+$("#resUnitName").val()+"','"+$("#resCostUnit").val()+"','"+$("#resUnit").val()+"','"+api.pageParam.iptIndex+"')"
+		});
+		break;
+	}
+	api.closeWin();
+}
+
+</script>
+</body>
+</html>

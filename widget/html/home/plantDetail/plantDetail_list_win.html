@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>派出去的种植工单win</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/common/public.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/common/header.css" />
+    <script type="text/javascript" src="../../../script/common/rem-750.js"></script>
+</head>
+<body>
+    <div id="moveHeader">
+        <div class="headerLeft" onclick="back()"></div>
+        <div class="headerCenter">
+            派出去的种植工单
+        </div>
+        <div class="headerRight"></div>
+    </div>
+
+</body>
+<script type="text/javascript" src="../../../script/common/api.js"></script>
+<script type="text/javascript" src="../../../script/common/zepto-1.2.0.min.js"></script>
+<script type="text/javascript">
+    apiready = function(){
+        //适配iOS7+，Android4.4+状态栏沉浸式效果，详见config文档statusBarAppearance字段
+        var header = $api.byId('moveHeader');
+        $api.fixStatusBar(header);
+        var headerH = $api.offset(header).h;
+        //$("body").css({"paddingTop":headerH+"px"});
+        var id_ = api.pageParam.id;
+
+        api.openFrame({
+            name: 'plantDetail_list_frm',
+            url: './plantDetail_list_frm.html',
+            bounces: false,
+            pageParam : {
+              id : id_
+            },
+            rect: {
+                x: 0,
+                y: headerH,
+                w: 'auto',
+                h: 'auto'
+            }
+        });
+
+        api.addEventListener({
+            name: 'keyback'
+        }, function(ret, err) {
+            //alert('按了返回键');
+            back();
+        });
+
+    };
+    //打开技术搜索页面***************************************************
+    function openSearch(){
+    	api.openWin({
+    		name : "employeePath_search_win",
+    		url : "widget://html/EmployeePath/employeePath_search_win_up.html",
+    		reload : true,
+    		slidBackEnabled : false,
+    		animation : {
+    			type : "movein", //动画类型（详见动画类型常量）
+    			subType : "from_right", //动画子类型（详见动画子类型常量）
+    			duration : 300 //动画过渡时间，默认300毫秒
+    		}
+    	});
+    };
+
+    function back(){
+        api.execScript({
+          name: 'win_home',
+          frameName: 'home_index',
+          //script: 'plantDetailTotal()'
+          script: 'location.reload();'
+        });
+        api.closeToWin({
+            name: 'win_home'
+        });
+
+    }
+</script>
+</html>

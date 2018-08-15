@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+<title>首页</title>
+<link rel="stylesheet" type="text/css" href="../../css/common/api.css"/>
+<link rel="stylesheet" type="text/css" href="../../css/login/common.css"/>
+<style>
+	#navTopLine{
+		width:100%;
+		height:1px;
+		background:#f2f2f2;
+		position:fixed;
+		left:0;
+		right:0;
+		bottom:50px;
+		/*opacity:0.3;*/
+		z-index: 999999;
+		/*-webkit-box-shadow: #666 0px 10px 0px;
+		box-shadow: #666 0px 10px 0px;*/
+	}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="main">
+
+  </div>
+</div>
+<div id="navTopLine"></div>
+<script type="text/javascript" src="../../script/common/api.js"></script>
+<script type="text/javascript" src="../../script/common/jquery.min.js"></script>
+<script type="text/javascript">
+var obj = null;
+apiready = function(){
+	var flag = api.pageParam.extend_params==undefined;// 是否是点击导航
+	//alert(flag)
+	api.addEventListener({name: 'keyback'}, function(ret, err){
+		//alert('按了返回键'+api.winName+","+api.frameName);
+
+		if(api.winName=='edit_win'){
+			api.execScript({
+				name : 'edit_win',
+				frameName : 'edit_win',
+				script : 'closeWin()'
+			});
+
+		}else{
+			api.closeWin();
+			// api.execScript({
+			//     name: 'root',
+			//     script: "window.location.reload();"
+			// });
+		}
+  });
+
+
+	var main = $api.byId('main');
+	var mainPos = $api.offset(main);
+	var iOS7StatusBarAppearance=0;
+  var strDM = api.systemType;
+  if (strDM == 'ios') {
+      var strSV = api.systemVersion;
+      var numSV = parseInt(strSV,10);
+      var fullScreen = api.fullScreen;
+      var iOS7StatusBarAppearance = api.iOS7StatusBarAppearance;
+      if (numSV >= 7 && !fullScreen && iOS7StatusBarAppearance) {
+          iOS7StatusBarAppearance = 0;//ios头部状态栏高度20px；
+      }
+  }
+	// var  index=0
+	if(flag){
+		obj = api.require('tabBar');
+		var index;
+		obj.open({
+		    bgImg:'widget://image/home/home_nav_bc.jpg',
+		    selectImg:'widget://res/selecte_tabBar.png',
+		    items:[
+		           {title:'首页',img:'widget://image/home/home_nav1_blur.jpg',color:'#999999',selected:'widget://image/home/home_nav1_act.jpg',selectedTitleColor:'#66BB6A'},
+		           {title:'种植',img:'widget://image/home/home_nav2_blur.jpg',color:'#999999',selected:'widget://image/home/home_nav2_act.jpg',selectedTitleColor:'#66BB6A'},
+		           {title:'田间',img:'widget://image/home/home_nav3_blur.jpg',color:'#999999',selected:'widget://image/home/home_nav3_act.jpg',selectedTitleColor:'#66BB6A'},
+		           {title:'采收',img:'widget://image/home/home_nav4_blur.jpg',color:'#999999',selected:'widget://image/home/home_nav4_act.jpg',selectedTitleColor:'#66BB6A'},
+		           {title:'我的',img:'widget://image/home/home_nav5_blur.jpg',color:'#999999',selected:'widget://image/home/home_nav5_act.jpg',selectedTitleColor:'#66BB6A'}
+		         ],
+		    selecteIndex:0,//api.pageParam.extend_params==undefined?'0':JSON.parse(api.pageParam.extend_params).selecteIndex||'0',
+		    perScreenBtn:5,
+		    h:'50'
+		},function(ret,err){
+				if(index===ret.index){
+					return;
+				}
+				index=ret.index;
+		    //var headerHtml = ""
+		    var frameName    = "";
+		    var frameUrl     = "";
+		    switch(ret.index){
+		        case 0:
+		    		//headerHtml = "首页";
+								// index        =  0
+                frameName    = "home_index";
+                frameUrl     = "../home/home_index.html";
+		    		break;
+	          case 1:
+								// index        =  1
+                frameName    = "plant_index_win";
+                frameUrl     = "../planting/plant_index_win.html";
+		    		break;
+			    	case 2:
+			    		//headerHtml = "田间管理";
+								// index        =  2
+                frameName    = "farmLand_index";
+                frameUrl     = "../farmLand/index/index.html";
+						break;
+						case 3:
+							//headerHtml = "采收管理";
+											// index        =  3
+			                 frameName    = "harvest_index";
+			               // frameUrl     = "./harvest/harvest_index.html";
+			                frameUrl     = "../harvt/index_win.html";
+						break;
+						case 4:
+							//headerHtml = "我的";
+								// index        =  4
+                frameName    = "mysettings_index(2)";
+                frameUrl     = "../mysetting/mysettings_index(2).html";
+						break;
+		    }
+		    //document.getElementById("head").innerHTML= headerHtml;
+
+		    var param_=null;
+		    if(!flag){
+			    param_=JSON.parse(api.pageParam.extend_params);
+			    param_.animation=null;
+		    }
+				// if(frameName !=="plant_index_win"){
+				// 	api.closeFrame({name:'plant_index_win'});
+				// }
+		    // 关闭farm_index的地图
+		    if(frameName!=="farmLand_index"){
+			//	api.closeFrame({name:'farmLand_index'});
+	    	api.execScript({
+					name : 'win_home',
+					frameName : 'farmLand_index',
+					script : "closePunch()"
+				});
+				api.execScript({
+					name : 'mypostion',
+					frameName : 'farm_index',
+					script : "closeMap()"
+				});
+		    }
+				if(frameName=="farm_index"){
+					api.execScript({
+						name : 'mypostion',
+						frameName : 'mypostion',
+						script : "closeMap()"
+					});
+				}
+
+        if(api.winName!='win_home'){
+        	api.closeToWin({
+			    name: 'win_home'
+				});
+				if(frameName=="farmLand_index"){
+					api.execScript({
+						name : 'win_home',
+						frameName : 'farm_index',
+						script : "keyOpenMap()"
+					});
+				}
+	        }
+			api.openFrame($.extend({}, {
+				name : frameName,
+			   	url :  frameUrl,
+		      pageParam : $.extend(api.pageParam,{iOS7StatusBarAppearance:iOS7StatusBarAppearance}),
+					reload : true,bounces: false,
+			    rect : {
+					x : 0,
+					y : 0+iOS7StatusBarAppearance,
+					w : 'auto',
+					h : api.winHeight-51-iOS7StatusBarAppearance
+				}
+			}, param_));
+			flag = true;
+		});
+		if(!flag && JSON.parse(api.pageParam.extend_params).own){//在当前win打开自己
+			obj.setSelect({
+			    index: JSON.parse(api.pageParam.extend_params).selecteIndex
+			});
+		}
+	}else{
+		var param_=null;
+	    param_=JSON.parse(api.pageParam.extend_params);
+	    param_.animation=null;
+			api.openFrame($.extend({}, {
+		      pageParam : $.extend(api.pageParam,{iOS7StatusBarAppearance:iOS7StatusBarAppearance}),
+					reload : true,bounces: false,
+			    rect : {
+					x : 0,
+					y : 0,
+					w : 'auto',
+					h : api.winHeight-51-iOS7StatusBarAppearance
+				}
+			}, param_));
+	}
+	//监听返回键
+	clickBack();
+	//  api.addEventListener({
+	// 			name: 'keyback'
+	// 	}, function(ret, err) {
+	// 		if(index==1){
+	// 			api.execScript({
+	// 				name: 'win_home',
+	// 				frameName: 'plant_index_win',
+	// 				script: "$('#tab_top').children().eq(0).click()"
+	// 			});
+	// 		}
+	// 	});
+}
+
+function setTabBarIndex(tabBarIndex){
+	obj.setSelect({
+	    index: tabBarIndex
+	});
+}
+
+function closeWin(){
+	api.closeWin();
+}
+
+// function back(){
+//      api.closeWidget({
+//     	silent:false,
+// 	    animation: {
+//         type: 'flip',
+//         subType: 'from_bottom',
+//         duration: 1500
+//     		}
+//      });
+//  };
+
+ //监听back键回退事件
+ function clickBack(){
+		 	// 	//绑定安卓的后退按钮事件 两秒内后退按钮点击两次 关闭应用
+		 	// 	var isAndroid = (/android/gi).test(navigator.appVersion);
+		 	// 	//alert(isAndroid)
+		 	// 	if (isAndroid) {
+	 	// 			var backSecond = 0;
+	 	// 			api.addEventListener({
+	 	// 					name: 'keyback'
+	 	// 			}, function(ret, err){
+	 	// 					var curSecond = new Date().getSeconds();
+	 	// 					if (Math.abs(curSecond - backSecond) > 2) {
+	 	// 							backSecond = curSecond;
+	 	// 							api.toast({
+	 	// 									msg: '连续按两次关闭系统',
+	 	// 									duration: 1000,
+	 	// 									location: 'bottom'
+	 	// 							});
+	 	// 					} else {
+	 	// 						api.closeWidget({
+	 	// 							id: 'A6916199515339', //这里改成自己的应用ID
+	 	// 							retData: {name:'closeWidget'},
+	 	// 							silent:true
+	 	// 						});
+	 	// 					}
+	 	// 			});
+	 	// 	}
+			api.addEventListener({
+					name: 'keyback'
+			}, function(ret, err) {
+					back();
+			});
+			function back(){
+					api.confirm({
+					    title: '退出提示',
+					    msg: '确定要退出程序吗？',
+					    buttons: ['确定', '取消']
+					}, function(ret, err) {
+					    var index = ret.buttonIndex;
+							if (index == 1) {
+									api.closeWidget({
+										silent:true,
+										animation: {
+											type: 'flip',
+											subType: 'from_bottom',
+											duration: 1500
+										}
+								 });
+							}
+					});
+
+		 }
+ };
+ function hide(){
+	  var tabBar = api.require('tabBar');
+		tabBar.hide();
+ }
+ function show(){
+	 var tabBar = api.require('tabBar');
+	 tabBar.show();
+ }
+</script>
+</body>
+</html>

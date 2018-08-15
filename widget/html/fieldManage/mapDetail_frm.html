@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>员工走的路frm</title>
+		<link rel="stylesheet" type="text/css" href="../../css/common/public.css" />
+    <script type="text/javascript" src="../../script/common/rem-750.js"></script>
+	</head>
+	<body>
+			<input type="hidden" id="deletePointId"/>
+	</body>
+	<script type="text/javascript" src="../../script/common/api.js"></script>
+	<script type="text/javascript" src="../../script/common/jquery.min.js"></script>
+  <script type="text/javascript" src="../../script/common/pds.ajax.js"></script>
+	<script type="text/javascript">
+			var map = null;
+			var dateTime;
+			var optionDownWidth = null;//下拉地块frm宽度
+			var optionDownHeight = null;
+			// 加载模块一定要在apiready方法里
+			apiready = function() {
+					optionDownWidth = api.pageParam.optionDownWidth;
+					optionDownHeight = api.pageParam.optionDownHeight;
+					lineBorderWidth = api.systemType == "ios" ? 3: 12;
+
+					api.parseTapmode();
+					var farmId = api.pageParam.farmId;
+
+					dateTime = api.pageParam.dateTime;
+					// 加载百度地图模块
+					map = api.require('bMap');
+					//alert(JSON.stringify(dateTime))
+					// 地块列表
+          getlandList()
+					var screenHeight = api.frameHeight;
+					//				$("#mapLazyLoad").css("height",screenHeight*0.72+"px");
+
+					// 判断定位功能是否开启
+					map.getLocationServices(function(ret, err) {
+						if (ret.enable) {
+							//alert(JSON.stringify(ret));
+						} else {
+							alert("未开启定位功能！");
+						}
+					});
+					// openMap();
+					// 监听到进入后台时停止定位
+					api.addEventListener({
+						name : 'pause'
+					}, function(ret, err) {
+						map.stopLocation();
+					});
+					// 查询已打的坐标（有时间改成只有已打点的才能查）
+          $api.rmStorage('landInfo')
+				//	$api.removeStorage('landInfo')
+		};
+		var topList = null;
+		// 请求地块列表
+    var firstLand = null;
+    //app/land/list
+		function getlandList(){
+					pds.ajaxSubmit({
+						 url:"app/staff/farmland/land_list",
+						 type : "GET",
+						 data:{
+									farmId: api.pageParam.farmId
+						 },
+						 success:function(e){
+								// alert("success");
+								// alert(page);
+								//alert(JSON.stringify(e));
+								// total = 5;
+								if(e.status=="ok" && e.data!='' && e.data!=null && e.data!=[]){
+								  	topList = e.data;
+										firstLand = topList[0];
+                    if(firstLand != {} && firstLand != null && firstLand != "" && firstLand.id != "" && firstLand.id != null && firstLand.id != undefined){
+                        landId = firstLand.id;
+												api.execScript({
+														script: "addContent('"+firstLand.name+"')"
+												});
+												openMap();
+										}
+										//渲染模板
+										// alert(2)
+
+
+								}
+                if(!topList || topList.length==0){
+									api.toast({
+									    msg: '暂无地块列表',
+									    duration: 2000,
+									    location: 'middle'
+									});
+									return
+								}
+
+						 },
+						 error:function(e){
+							  api.hideProgress();
+								api.alert({msg:"服务器异常，请联系管理员!"});
+						 }
+					});
+		};
+		// 显示option下拉列表
+		function getOption(){
+			// var numH = $api.getStorage('mapOptH');
+			//alert(JSON.stringify(api.pageParam.optionHeight))
+		  if (topList.length == 0) {
+					 return;
+		  };
+			var numH = topList.length;
+			var frmHeight = numH*api.pageParam.optionHeight;
+			//option选项
+			api.openFrame({
+					name:'mapOption_frm',
+					url:'./mapOption_frm.html',
+					rect:{
+							x : (api.winWidth-optionDownWidth)/2,
+							y : optionDownHeight-2,
+							w : optionDownWidth,
+							h : frmHeight
+					},
+					bgColor:'rgba(0,0,0,0)',
+					bounces:false,
+					vScrollBarEnabled:false,
+					hScrollBarEnabled:false,
+					pageParam: {
+			        name: topList,
+							openFlag:true
+			    }
+			});
+		}
+
+		//关闭地图
+		function closeMap(){
+			map.close();
+			//map.hide();
+		}
+		// 打开地图
+		function openMap() {
+				var rectY = 66;// 地图在y轴上的距离
+				var strDM = api.systemType;
+				if (strDM == 'ios') {
+					var strSV = api.systemVersion;
+					var numSV = parseInt(strSV, 10);
+					var fullScreen = api.fullScreen;
+					var iOS7StatusBarAppearance = api.iOS7StatusBarAppearance;
+					// 苹果系统 得向下移20
+					if (numSV >= 7 && !fullScreen && iOS7StatusBarAppearance) {
+						rectY = 66;
+					}
+				};
+
+				map.open({
+					// （可选项）模块的位置及尺寸
+					rect : {
+						x : 0, //（可选项）数字类型；地图左上角的 x 坐标（相对于所属的 Window 或 Frame）；默认：0
+						y : rectY, //（可选项）数字类型；地图左上角的 y 坐标（相对于所属的 Window 或 Frame）；默认：0
+						w : api.frameWidth, //（可选项）数字类型；地图的宽度；默认：所属的 Window 或 Frame 的宽度
+						h : api.frameHeight //（可选项）数字类型；地图的高度；默认：所属的 Window 或 Frame 的高度
+					},
+					zoomLevel : 18, //（可选项）设置百度地图缩放等级，取值范围：3-18级
+					showUserLocation : true, //（可选项）是否在地图上显示用户位置
+					//fixedOn : 'myposition_bmap_frm',//（可选项）模块视图添加到指定 frame 的名字（只指 frame，传 window 无效）
+					fixed : true //（可选项）模块是否随所属 window 或 frame 滚动
+				}, function(ret) {
+					if (ret.status) {
+						//alert('地图打开成功');
+						api.hideProgress();
+
+						// 显示用户的位置
+						map.showUserLocation({
+							isShow : true,
+							trackingMode : 'none'//罗盘compass
+						});
+						// 是否显示比例尺
+						map.setScaleBar({
+							show : true,
+							position : {
+								x : 25, //（可选项）数字类型；比例尺左上角的 x 坐标（相对于地图）；默认：0
+								y : api.frameHeight-60 //（可选项）数字类型；比例尺左上角的 y 坐标（相对于地图）；默认：0
+							}
+						});
+
+						// alert(JSON.stringify(firstLand));
+						// alert(JSON.stringify(firstLand.landFarmId))
+						selectCoordinatesByLandId(firstLand.id);
+
+					} else {
+						alert("地图打开失败");
+					}
+			});
+		}
+
+		//设置当前中心位置
+		function nowPosition(){
+			map.getLocation({
+			    accuracy: '10m',
+			    autoStop: true,
+			    filter: 10
+			}, function(ret, err) {
+					if (ret.status) {
+							map.setCenter({
+									coords: {
+											lon: ret.lon,
+											lat: ret.lat
+									},
+									animation: true
+							});
+					} else {
+						api.alert({msg:"获取位置信息失败，请重试!"});
+					}
+			});
+
+		}
+		// 判断覆盖物是否在地块内
+		var isOutOfRange = true;
+		// 获取地块所有坐标并展示
+		//	var landInfo = $api.getStorage('landInfo');
+		function selectCoordinatesByLandId(land_id) {
+			map.removeAnnotations({
+				ids : [ longPressAnnotationId,clickAnnotationId]
+			});
+
+			openDistance();
+			//alert(JSON.stringify(landInfo))
+			// 如果地图上有十字覆盖物就清除
+			clearOldLine([x, y]);
+			// 如果地图上有地块多边形·覆盖物就清除
+			clearOldLine([landPolygonId]);
+			pds.ajaxSubmit({
+				type : "GET",
+				url : "app/customer/selectLandCoordinate",
+				data : {
+					"id" : land_id
+				},
+				success : function(e) {
+					if (e.status == "ok") {
+
+						var coordinates = e.data;
+						if (coordinates != null && coordinates.length > 1) {
+							var points = new Array();
+
+							// 转换成需要的格式
+							for (var i = 0; i < coordinates.length; i++) {
+								if (coordinates[i] != null && coordinates[i].longitude !=null && coordinates[i].longitude !='' && coordinates[i].longitude != undefined) {
+									var coor = {};
+									coor.lon = coordinates[i].longitude;
+									coor.lat = coordinates[i].latitude;
+									points.push(coor);
+								}
+							}
+							// pointsArrs = points;
+							// pointsArrs.push(pointsArrs[0]);
+							// var allCoorArrs = initData();
+							// getArrowDynamic(allCoorArrs);
+
+							setTimeout(function(){
+								// 画地块
+								if(points != [] && points != null &&points != undefined && points.length > 1){
+												addPolygon(points);
+												// 添加覆蓋物
+												addAnnotations(points[0].lon,points[0].lat);
+												coorArr = points;
+												setCenter(points[0].lon,points[0].lat);
+											}else{
+												 alert('暂无地块坐标')
+											}
+
+									},500)
+
+						}else {
+							alert(e.message);
+						}
+				}
+			}
+		})
+}
+// 设置中心
+function setCenter(lon,lat){
+		var map = api.require('bMap');
+		map.setCenter({
+		    coords: {
+		        lon: lon,
+		        lat: lat
+		    },
+		    animation: false
+		});
+}
+
+			// 已打点地块形成多边形
+			function addPolygon(points){
+					if(points == null || points.length <= 1){
+							return;
+					}
+					map.addPolygon({
+					    id: landPolygonId,
+					    styles: {
+					        borderColor: 'rgba(246,231,202,0.6)',
+					        borderWidth: 3,
+					        fillColor:  'rgba(246,231,202,0.6)'
+					    },
+					    points: points
+					});
+					//for(var i = 0; i<points.length;i++){
+						// map.addLine({
+						// 		id: 12345678,
+						// 		styles: {
+						// 				borderColor: '#333333',
+						// 				borderWidth: 4
+						// 		 },
+						// 		 points: points
+						// });
+					//}
+			}
+
+			//打开距离frame
+		function openDistance(){
+		 api.openFrame({
+				 name:'distance_frm',
+				 url:'./distance_frm.html',
+				 rect:{
+						 x:api.winWidth-100,
+						 y:70,
+						 w:100,
+						 h:150
+				 },
+				 bounces:false,
+				 vScrollBarEnabled:false,
+				 hScrollBarEnabled:false
+		 });
+		}
+
+		var landPolygonId = 1314; // 地块多边形覆盖物ID
+		var coorArr = null;
+		var x = 1111; // 十字横线覆盖物ID
+		var y = 1112;// 十字纵线覆盖物ID
+
+	// 长按拖动图标的ID
+	var longPressAnnotationId = 321;
+	// 点击派单的ID
+	var clickAnnotationId = 322;
+
+	// 添加派单图片
+		function addAnnotations(lon, lat) {
+			//
+			map.removeAnnotations({
+				ids : [ longPressAnnotationId ]
+			});
+
+			// 添加长按拖动图片
+			map.addAnnotations({
+				annotations : [ {
+					id : longPressAnnotationId,
+					lon : lon,
+					lat : lat
+				} ],
+				icon : 'widget://image/fieldManage/annotation_long_press.png',
+				draggable : true
+			}, function(ret) {
+				// 拖动结束
+				if (ret.dragState == 'ending') {
+					var buriedPoint = pds.buriedPoint();
+	        buriedPoint.pageId = 'page_select_site_admin';
+	        buriedPoint.eventId = 'button_want_to_send_page_select_site_admin';
+	        pds.ajaxSubmit({
+	        url:"app/buried_point/save",
+	        data:{"point":buriedPoint},
+	        success:function(v){
+	        }
+	      })
+					map.getAnnotationCoords({
+						id : longPressAnnotationId
+					}, function(ret) {
+						if (ret) {
+							// 删除自己，再添加新的
+							map.removeAnnotations({
+								ids : [ longPressAnnotationId ]
+							});
+							//
+							addClickAnnotation(ret.lon, ret.lat);
+
+							var re = getIntersectData(ret, coorArr);
+							if (re.position == 0) {
+								//alert("點不在地塊内，帶個眼鏡吧");
+								isOutOfRange = true;
+								return;
+							} else {
+								// 画十字
+								isOutOfRange = false;
+								if (re.X && re.X != undefined && re.X[0] != null
+										&& re.X[1] != null) {
+									addLine(x, re.X[0].point, re.X[1].point);
+
+								}
+								if (re.Y && re.Y != undefined && re.Y[0] != null
+										&& re.Y[1] != null) {
+									addLine(y, re.Y[0].point, re.Y[1].point);
+								}
+								api.execScript({
+									name : 'workMap_win',
+									frameName : 'distance_frm',
+									script : "showDistances('"
+											+ JSON.stringify(ret) + "','"
+											+ JSON.stringify(re) + "')"
+								});
+
+							}
+
+						}
+
+
+					});
+				}
+			})
+
+		}
+
+
+
+		// 添加点击提醒图片
+		function addClickAnnotation(lon,lat) {
+			map.removeAnnotations({
+				ids : [ clickAnnotationId ]
+			});
+			map.addAnnotations({
+				annotations : [ {
+					id : clickAnnotationId,
+					lon : lon,
+					lat : lat
+				} ],
+				icon : 'widget://image/fieldManage/annotation_click.png',
+				draggable : true
+			}, function(ret) {
+				// 处理拖动事件
+				operateDragEvent(ret, clickAnnotationId);
+				// 处理点击事件
+				operateClickEvent(ret, clickAnnotationId);
+
+			})
+		}
+
+
+
+
+
+
+		// 处理拖动事件
+		function operateDragEvent(ret, annotationId) {
+
+			if (ret.eventType == 'drag') {
+				// 去除十字
+				var oldLineIds = [ x, y ];
+				clearOldLine(oldLineIds);
+				// 拖动结束
+				if (ret.dragState == 'ending') {
+					//alert("end:"+JSON.stringify(ret))
+					map.getAnnotationCoords({
+						id : annotationId
+					}, function(ret) {
+						if (ret) {
+							var re = getIntersectData(ret, coorArr);
+							//alert(JSON.stringify(re))
+							if (re.position == 0) {
+								//alert("點不在地塊内，帶個眼鏡吧");
+								isOutOfRange = true;
+								return;
+							} else {
+								isOutOfRange = false;
+								if (re.X && re.X != undefined && re.X[0] != null
+										&& re.X[1] != null) {
+									addLine(x, re.X[0].point, re.X[1].point);
+
+								}
+								if (re.Y && re.Y != undefined && re.Y[0] != null
+										&& re.Y[1] != null) {
+									addLine(y, re.Y[0].point, re.Y[1].point);
+								}
+								api.execScript({
+									name : 'workMap_win',
+									frameName : 'distance_frm',
+									script : "showDistances('"
+											+ JSON.stringify(ret) + "','"
+											+ JSON.stringify(re) + "')"
+								});
+
+							}
+
+						}
+					});
+				}
+
+
+
+			}
+
+		}
+
+		// 处理点击事件
+		function operateClickEvent(ret, annotationId) {
+			if (ret.eventType == 'click') {
+				if (isOutOfRange) {
+					api.alert({
+						msg : '点不在地块内，不能派发！'
+					});
+					return;
+				}
+
+				map.getAnnotationCoords({
+					id : annotationId
+				}, function(ret) {
+					if (ret) {
+						//api.alert({ msg: JSON.stringify(ret) });
+						var coordinates = ret;
+						// 发请派单
+						api.confirm({
+							title : '您确定派发此任务吗？',
+							//  msg: '您点击确定派发即可派发工单，点击取消派发则不会派发工单，您确认派发吗？',
+							buttons : [ '确定', '取消' ]
+						}, function(ret, err) {
+							var index = ret.buttonIndex;
+							if (index == '1') {
+								var buriedPoint = pds.buriedPoint();
+	           	 buriedPoint.pageId = 'page_select_site_admin';
+	           	 buriedPoint.eventId = 'button_send_page_select_site_admin';
+	             	pds.ajaxSubmit({
+	             		url:"app/buried_point/save",
+	             		data:{"point":buriedPoint},
+	             		success:function(v){
+
+	             		}
+	             	})
+								var tempLandId;
+								var landInfo = $api.getStorage('landInfo');
+								if (landInfo) {
+									tempLandId = landInfo.land_id;
+								} else {
+									tempLandId = firstLand.id;
+								}
+								sendWork(workType, workerId, coordinates.lon,
+										coordinates.lat, api.pageParam.farmId,
+										tempLandId, dateTime);
+
+							} else {
+								return;
+							}
+						});
+					}
+				});
+			}
+		}
+	//************************************						//alert(JSON.stringify(ret))
+
+		function addLine(id,one, two){
+				var points = new Array();
+				points.push(one);
+				points.push(two);
+				map.addLine({
+				    id: id,
+				    styles: {
+				        borderColor: '#333333',
+				        borderWidth: api.systemType == 'ios'?1:4
+				     },
+				     points: points
+				});
+		}
+
+		function clearOldLine(idArr){
+				map.removeOverlay({
+				    ids: idArr
+				});
+		}
+		//(1)取出派单人的姓名和id
+
+		 if($api.getStorage('employInfo')){
+			 var employInfo = $api.getStorage('employInfo');
+			 var workerId = employInfo.employId;
+		 }
+
+		 var workType = 101;
+
+	 //(2)完成时间time
+
+		//  if(dateTime){
+		// 		var limitTime = dateTime;
+		//  }
+
+   //var landId;
+	    // var dateTime = $api.dataTime;
+		function sendWork(workType,workerId,longitude,latitude,farmId,landId,limitTime){
+						// var landInfo = $api.getStorage('landInfo');
+						// if(landInfo){
+						// 	 landId = landInfo.land_id;
+						//
+						// }
+						 //alert(landId)
+					//	return;
+						pds.ajaxSubmit({
+							 url:"app/task/addTask",
+							 type : "POST",
+							 data:{
+										"data":JSON.stringify({
+											data:{
+												workType:workType,
+												workerId:workerId,
+												longitude:longitude,
+												latitude:latitude,
+												farmId:api.pageParam.farmId,
+												landId:landId,
+												limitTime:limitTime
+										}
+									})
+							 },
+							 success:function(e){
+									// alert("success");
+									//alert(JSON.stringify(e));
+									if(e.status == 'ok'){
+
+										// api.toast({
+										//     msg: '派单成功!',
+										//     duration: 3000,
+										//     location: 'middle'
+										// });
+										api.alert({
+										    msg: '派单成功！'
+										});
+
+										setTimeout(function(){
+											map.close();
+											api.closeToWin({
+												name: 'win_home'
+											});
+											api.sendEvent({
+												name: 'openMapEvent'
+											})
+										},300)
+
+									}
+							 },
+							 error:function(e){
+									api.alert({msg:"服务器异常，请联系管理员!"});
+							 }
+						});
+
+		}
+		function back(){
+			  map.close();
+				api.closeWin({
+				});
+			// 	api.sendEvent({
+			// 	 name: 'openMapEvent'
+			//  } )
+
+		}
+//===================================================計算============================================
+/**
+	 *
+	 * 获取地图中相交线上的相关数据
+	 * @param lon 中间点经度longitude
+	 * @param lat 中间点纬度latitude
+	 * @param coorArr{Array} 形成闭合区域坐标点
+	 * @return {Object} 如果position为1说明点在多边形内，为0说明不在多边形内;
+	 	需要特别说时的是，如果有经度为0和纬度为0的情况不能用以下代码，如果要用需要更改平行情况的返回值
+	 	结果示例：
+	 	{
+	 		"position":1,// 说明在多边形内
+	 		"X":[{
+	 				"position":"X-R",// 与X轴右边相交的点
+	 				"point":{lon:109.122,lat:39.125}
+	 			},
+	 			{
+	 				"position":"X-L",// 与X轴左边相交的
+	 				"point":{lon:104.122,lat:39.125}
+	 			},
+	 		   ],
+	 		"Y":[{
+ 				"position":"Y-U", // 与Y轴上方相交的点
+ 				"point":{lon:105.122,lat:39.125}
+ 			},
+ 			{
+ 				"position":"X-L",// 与Y轴下方相交的点
+ 				"point":{lon:105.122,lat:36.125}
+ 			},
+ 		   ]
+	 	}
+	 */
+	function getIntersectData(clickPoint, coorArr) {
+			if (coorArr == null || coorArr == "" || coorArr == "undefined"
+					|| coorArr.length == 0) {
+				return null;
+			}
+			// 存放与X轴相交的所有点
+			var dataX = [];
+			// 存放与Y轴相交的所有点
+			var dataY = [];
+			// 射线与多边形的交点个数
+			var intersectNum = 0;
+
+			//
+			for (var i = 0; i < coorArr.length; i++) {
+
+					var one = coorArr[i];
+					var two;
+					// 判断下标越界情况
+					if(i == coorArr.length-1){
+						two = coorArr[0];
+					}else{
+						two = coorArr[i + 1];
+					}
+				//	alert(i)
+
+
+					/**不符合要求的点的几种情况：
+						1. 打的点与地块的某个点重合
+						2. 打的点在地块边线上
+						3. 打的点在地块外边
+					*/
+
+					// 打的点与地块的某个点重合（即与线段的两个段点相重合）时，打的点不符合要求
+					if((one.lon == clickPoint.lon && one.lat == clickPoint.lat)||
+							(two.lon == clickPoint.lon && two.lat == clickPoint.lat)){
+						break;
+					}
+					//alert("没有重合")
+					/* 说明：根据射线法理论，只需比较X轴的正方向、或X轴的负方向、或Y轴的正方向、或Y轴的负方向其中一个射线与多边形的交点即可
+					 * 下面选择的是X轴正方向这条射线。回转数法理论相对复杂，不建议使用
+					 */
+
+					// 计算横坐标(X轴)的交点
+					var x = calculateIntersectPointX(one.lon, one.lat,
+							two.lon, two.lat, clickPoint);
+							//alert("焦点x:"+x)
+							//alert("clickPoint.lon:"+clickPoint.lon)
+					if(x != 0){
+						// 与线段相交，且就在线段上
+						if(x == clickPoint.lon){
+							break;
+						}
+
+						// 将与X轴相交且符合条件的点放入容器中（相交点位置在在线段之间的符合条件），如果相交点与两个点之间的某个点重合也符合条件
+						if ((clickPoint.lat <= one.lat && clickPoint.lat >= two.lat) ||
+								(clickPoint.lat >= one.lat && clickPoint.lat <= two.lat) ) {
+							var intersectCoor = {};
+							intersectCoor.lon = x;
+							intersectCoor.lat = clickPoint.lat;
+							dataX.push(intersectCoor);
+							if(x > clickPoint.lon){
+								intersectNum ++;
+							}
+
+						}
+					}
+
+					// 计算纵坐标(Y轴)的交点
+					var y = calculateIntersectPointY(one.lon, one.lat,
+							two.lon, two.lat, clickPoint);
+							//alert("焦点Y："+y)
+					if(y != 0){
+						// 与线段相交，且就在线段上
+						if(y == clickPoint.lat){
+							break;
+						}
+						// 将与Y轴相交且符合条件的点放入容器中
+						if ((clickPoint.lon <= one.lon && clickPoint.lon >= two.lon) || (clickPoint.lon >= one.lon && clickPoint.lon <= two.lon) ) {
+							var intersectCoor = {};
+							intersectCoor.lon =clickPoint.lon;
+							intersectCoor.lat = y
+						//	alert("y坐標： "+JSON.stringify(intersectCoor))
+							dataY.push(intersectCoor);
+						}
+					}
+
+		}
+		var result = {};
+		//alert("射線焦點個數："+intersectNum)
+		// 0 ：不符合，1：符合
+		result.position = intersectNum % 2 ;
+		if(result.position == 1 ){
+			//result.pointArr = d????计算出最后的四个点
+			if(dataX.length == 1){
+				alert("与X轴相交的点个数为1个");
+			}
+			if(dataX.length > 1){
+				result.X = getIntersectPointX(dataX, clickPoint);
+
+			}
+			if(dataY.length == 1){
+				alert("与Y轴相交的点个数为1个");
+			}
+			if(dataY.length > 1){
+				result.Y = getIntersectPointY(dataY, clickPoint);
+			}
+		}
+		//console.log(JSON.stringify(result))
+		return result;
+	}
+
+	// 得到与X轴相交的2个最终点
+	function getIntersectPointX(pointArr, clickPoint){
+		var leftPoint = null;
+		var rightPoint = null;
+		for(var i=0; i < pointArr.length; i++){
+			var p = pointArr[i];
+			var distance = p.lon-clickPoint.lon;
+			var point = {"distance":distance,point:p};
+			// 相交点在右侧
+			if(distance > 0){
+				if(rightPoint == null){
+					rightPoint = point;
+				}else{
+					if(point.distance < rightPoint.distance){
+						rightPoint = point;
+						rightPoint.position = "X-R";
+					}
+				}
+				continue;
+			}
+			// 相交点在左侧
+			if(leftPoint == null){
+				leftPoint = point;
+			}else{
+				if(point.distance > leftPoint.distance){
+					leftPoint = point;
+					leftPoint.position = "X-L";
+				}
+			}
+
+
+		}
+		var xpoint = [];
+		xpoint.push(leftPoint);
+		xpoint.push(rightPoint);
+		return xpoint;
+	}
+
+	// 得到与Y轴相交的2个最终点
+	function getIntersectPointY(pointArr, clickPoint){
+		//console.log(JSON.stringify(pointArr))
+	//	alert("Y轴交点个数："+pointArr.length)
+		var upPoint = null;
+		var downPoint = null;
+		for(var i=0; i < pointArr.length; i++){
+			var p = pointArr[i];
+			var distance = p.lat-clickPoint.lat;
+			var point = {"distance":distance,point:p};
+			// 相交点在上方
+			if(distance > 0){
+				if(upPoint == null){
+					upPoint = point;
+				}else{
+					if(point.distance < upPoint.distance){
+						upPoint = point;
+						upPoint.position = "Y-U";
+					}
+				}
+				continue;
+			}
+			// 相交点在下方
+			if(downPoint == null){
+				downPoint = point;
+			}else{
+				if(point.distance > downPoint.distance){
+					downPoint = point;
+					downPoint.position = "Y-D";
+				}
+			}
+
+
+		}
+		var ypoint = [];
+		ypoint.push(upPoint);
+		ypoint.push(downPoint);
+		return ypoint;
+	}
+
+
+	// 获取两点连线与X轴交点的横坐标（即经度）
+	function calculateIntersectPointX(xa, ya, xb, yb, clickPoint) {
+		//console.dir(xa+":"+ya+","+xb+":"+yb)
+		if(xa == xb){
+			return xa;
+		}
+		var k = calculateK(xa, ya, xb, yb);
+		//alert("k:"+k)
+		// 与X轴平行无交点，直接返回0
+		if(k == 0){
+			return 0;
+		}
+		var b = calculateB(xa, ya, k);
+		var x = (clickPoint.lat - b) / k;
+		return x;
+	}
+
+	// 获取两点连线与Y轴交点的纵坐标（即纬度）
+	function calculateIntersectPointY(xa, ya, xb, yb, clickPoint) {
+		// 与Y轴平行,直接返回0
+		if(xa == xb){
+			return 0;
+		}
+		var k = calculateK(xa, ya, xb, yb);
+		var b = calculateB(xa, ya, k);
+		var y = clickPoint.lon * k + b;
+		return y;
+	}
+
+	// 计算两点形的直线函数的斜率k（y=kx+b）:由调用者保证传参的正确性
+	function calculateK(xa, ya, xb, yb) {
+		var k = (ya - yb) / (xa - xb)
+		return k;
+	}
+
+	// 计算两点形的直线函数的常值b（y=kx+b）:由调用者保证传参的正确性
+	function calculateB(x, y, k) {
+		var b = y - k * x;
+		return b;
+	}
+	// **************************************地图动态轨迹*******************************************
+	// 后台轨迹坐标数据
+	// 步增值(经纬度角度)
+	var diffSingle = 0.00005;
+	// 步增间隔时间（毫秒）
+	var interValTime = 50;
+	// 线宽
+	var lineBorderWidth;
+	// 存放将后台查回的所有坐标生成新的坐标数组
+	var allCoorArr = [];
+	// 计时器
+	var interval ;
+	function removeLine(ids){
+		map.removeOverlay({
+				ids: ids
+		});
+	}
+	var pointsArrs;
+	// 初始化数据：生成更多步增点
+	function initData(){
+		// 生成假数据
+		// for(var i = 0;i<100;i++){
+		// 	var p = {"lon":pointsArrs[0].lon+Math.random()/1000,"lat":pointsArrs[0].lat+Math.random()/1000};
+		// 	pointsArrs.push(p);
+		// }
+		// 拿到所有步增坐标
+		for(var i=0;i<pointsArrs.length;i++){
+				if(i ==  pointsArrs.length-1){
+					allCoorArr.push(pointsArrs[i]);
+					break;
+				}
+				var childern = getChildrenCoorArr(pointsArrs[i],pointsArrs[i+1]);
+				allCoorArr.push(pointsArrs[i]);
+				for(var j = 0;j<childern.length; j++){
+					allCoorArr.push(childern[j]);
+				}
+		}
+		return allCoorArr;
+	}
+
+	// 获取两点间按步增值生成的子坐标点
+	function getChildrenCoorArr(p1,p2){
+		var children = [];
+		var k = calculateKK(p1.lon,p1.lat,p2.lon,p2.lat);
+		if(k == null){// 垂直
+			var sonLen = Math.abs(Math.floor((p1.lat-p2.lat)/diffSingle));
+			var Latsymbol = (p2.lat >= p1.lat) ? 1 : -1;
+			var p = p1;
+			for(var i=0;i<sonLen; i++){
+				var son = {};
+				son.lon = p.lon;
+				son.lat = p.lat+(diffSingle*Latsymbol);
+				if(Math.abs(p2.lat - son.lat) <= diffSingle){
+					break;
+				}
+				children.push(son);
+				p = son;
+			}
+		}else{
+			var sonLen = Math.abs(Math.floor((p1.lon-p2.lon)/diffSingle));
+			// 步增的正负
+			var Lonsymbol = (p2.lon >= p1.lon) ? 1 : -1;
+			var p = p1;
+			for(var i=0;i<sonLen; i++){
+				var son = {};
+				son.lon = p.lon+diffSingle*Lonsymbol;
+				son.lat = p.lat+k*(son.lon - p.lon);
+				if(Math.abs(p2.lon - son.lon) <= diffSingle){
+					break;
+				}
+				children.push(son);
+				p = son;
+			}
+		}
+		return children;
+	}
+
+	// 存放动态生成的数组
+	var dynamicPointArr = [];
+	// 存放点击停止动画时最后生成的一条直线的ID，以备后面删除用
+	var lastId = 0 ;
+	// 动态生成轨迹
+	function getArrowDynamic(coorArr) {
+		if(coorArr == "undefined" || coorArr == null || coorArr.length <2 ){
+			return;
+		}
+		var i = 0;
+		interval =self.setInterval(function(){
+			// 最后一个时停止动画
+			if(i == coorArr.length -1){
+				window.clearInterval(interval);
+				return;
+			}
+			// 添加临时线段：两个点之间的直线
+			map.addLine({
+					id: 10000,
+					styles: {
+							borderColor: '#99ce00',
+							borderWidth: lineBorderWidth
+					 },
+					 points: [coorArr[i],coorArr[i+1]]
+			});
+			// 移除上一点，避免与后面的重复
+			if(i > 0){
+				dynamicPointArr.pop();
+			}
+			dynamicPointArr.push(coorArr[i]);
+			dynamicPointArr.push(coorArr[i+1]);
+			var newLineId = 1314521+i;
+			lastId = newLineId;
+			// 添加新线
+			map.addLine({
+					id: newLineId,
+					styles: {
+							borderColor: '#99ce00',
+							borderWidth: lineBorderWidth
+					 },
+					 points: dynamicPointArr
+			});
+			// 移除旧线，一定要在添加新线后面
+			if(i > 0){
+				removeLine([newLineId-1]);
+			}
+			// 移除临时线段
+			removeLine([10000]);
+			i++;
+		},interValTime)
+	}
+
+	// 停止动画
+	function stopAnimation(){
+			if (pointsArrs.length == 0) {
+					api.toast({
+							msg: '暂无轨迹数据',
+							duration: 1000,
+							location: 'bottom'
+					});
+					return;
+			};
+			api.confirm({
+					title: '提示',
+					msg: '查看该员工所有轨迹？',
+					buttons: ['确定', '取消']
+			}, function(ret, err){
+					var index = ret.buttonIndex;
+					if (index == 1) {
+							// 停止
+							window.clearInterval(interval);
+							// 移除之前的
+							removeLine([lastId]);
+							// 直接连线
+							map.addLine({
+									id: 9999999,
+									styles: {
+											borderColor: '#99ce00',
+											borderWidth: lineBorderWidth
+									 },
+									 points: pointsArrs
+							});
+					}
+			});
+
+	}
+
+	// 移除所有轨迹
+	function removeArrow(){
+		map.removeOverlay({
+				ids: arrowIdArr
+		});
+	}
+
+	// 计算两点形的直线函数的斜率k（y=kx+b）,两点连线与x轴垂直时返回null
+	function calculateKK(xa, ya, xb, yb) {
+		if (xa == xb) {
+			return null;
+		}
+		var k = (ya - yb) / (xa - xb)
+		return k;
+	}
+
+	</script>
+</html>

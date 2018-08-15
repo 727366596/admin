@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>市场价</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/common/public.css" />
+    <script type="text/javascript" src="../../../script/common/rem.js"></script>
+    <style>
+				html,body{
+					text-align: center;
+					position: relative;
+					height: 100%;width: 100%;
+					overflow-x: hidden;
+					overflow-y: auto;
+					-webkit-overflow-scrolling:touch;
+					background-color: #fff;
+				}
+				body>div,body>ul{
+					background-color: #fff;
+				}
+				.marketTitleBox{
+						height: 1.1rem;
+						width: 100%;
+						display: -webkit-box;
+						display: -webkit-flex;
+						display:flex;
+
+						-webkit-box-orient: horizontal;
+						-webkit-flex-flow: row;
+						flex-flow: row;
+
+						-webkit-box-pack: center;
+						-webkit-justify-content: center;
+						justify-content: center;
+
+						-webkit-box-align: center;
+						-webkit-align-items: center;
+						align-items: center;
+				}
+				.marketTitleBox .marketTitle{
+						color: #666666;
+						font-size: 0.32rem;
+						min-width: 2.0rem;
+						max-width: 70%;
+						text-align: center;
+						height: 100%;line-height: 1.1rem;
+						overflow-x: auto;
+						overflow-y: hidden;
+						white-space: nowrap;
+						text-overflow: ellipsis;
+				}
+				.marketTitleBox .marketTitle-icon{
+						width:15px;height: 8px;margin-left: 5px;
+						background-position: center center;
+						background-size: 100% 100%;
+						background-repeat: no-repeat;
+						background-image: url('../../../image/market/more-grey.png');
+				}
+				.nav{
+						width: 100%;
+						padding: 0.2rem;
+						display: -webkit-box;
+						display: -webkit-flex;
+						display:flex;
+
+						-webkit-box-orient: horizontal;
+						-webkit-flex-flow: row;
+						flex-flow: row;
+
+						-webkit-box-pack: justify;
+						-webkit-justify-content: space-around;
+						justify-content: space-around;
+
+						-webkit-box-align: center;
+						-webkit-align-items: center;
+						align-items: center;
+				}
+				.nav li{
+				  width: 26%;
+				  height: 0.75rem;
+					background-color: #fff;
+					color: #00c558;
+					border: solid 1px #00c558;
+					border-radius: 4px;
+					display: -webkit-box;
+					display: -webkit-flex;
+					display:flex;
+
+					-webkit-box-orient: horizontal;
+					-webkit-flex-flow: row;
+					flex-flow: row;
+
+					-webkit-box-pack: center;
+					-webkit-justify-content: center;
+					justify-content: center;
+
+					-webkit-box-align: center;
+					-webkit-align-items: center;
+					align-items: center;
+				}
+				.nav li.nav-active{
+					background-color: #00c558;
+					color: #fff;
+				}
+				.nav li>span{
+				    font-size: 0.3rem;
+						margin-right: 3px;
+				}
+				.nav li>span.date-icon{
+						margin-top: -2px;
+						width: 13px;
+						height: 15px;
+						background-position: center center;
+						background-size: 100% 100%;
+						background-repeat: no-repeat;
+				}
+				.content{
+						width: 100%;
+						/*height: 6.0rem;*/
+						position: relative;
+				}
+				.content>div.contentBox{
+						width: 100%;
+						height: 7.0rem;
+						padding: 0.1rem 0.2rem 0.5rem 0.2rem;
+						background-color: #fff;
+						/*position: absolute;
+						left: 0;
+						top: 0;*/
+						display: none;
+				}
+				.content>div.contentBox>div.chartBox{
+						width: 100%;
+						height: 100%;
+						background-color: #fff;
+						border-radius: 4px;
+						border: solid 1px #00c558;
+						display: -webkit-box;
+						display: -webkit-flex;
+						display:flex;
+
+						-webkit-box-orient: horizontal;
+						-webkit-flex-flow: row;
+						flex-flow: row;
+
+						-webkit-box-pack: center;
+						-webkit-justify-content: center;
+						justify-content: center;
+
+						-webkit-box-align: center;
+						-webkit-align-items: center;
+						align-items: center;
+				}
+
+				.chartEmpty{
+						font-size: 0.32rem;
+						color: #999999;
+						background: url('../../../image/market/worn.png') no-repeat left center;
+						background-size: 15px 15px;
+						padding-left: 20px;
+				}
+    </style>
+</head>
+<body>
+		<input type="hidden" name="plant" id="plantId">
+		<div class="marketTitleBox">
+				<span data-id="" data-provinceId="" class="marketTitle" id="nameBox" onclick="openMarketWin(this);"></span>
+				<span class="marketTitle-icon"></span>
+		</div>
+		<ul class="nav">
+				<li data-date="7" pageId="page_marketprice_admin" eventId="button_7days_page_marketprice_admin" id="week_" class="nav-active"><span class="date-icon" style="background-image:url(../../../image/market/week.png)"></span class="dateStr"><span>近7天</span></li>
+				<li data-date="30" pageId="page_marketprice_admin" eventId="button_30days_page_marketprice_admin" id="month_"><span class="date-icon" style="background-image:url(../../../image/market/month.png)"></span><span class="dateStr">近30天</span></li>
+				<li data-date="" pageId="page_marketprice_admin" eventId="button_lastyear_page_marketprice_admin" id="year_"><span class="date-icon" style="background-image:url(../../../image/market/year.png)"></span><span class="dateStr">去年同期</span></li>
+		</ul>
+		<div class="content">
+				<div class="contentBox" style="display:block;">
+						<div class="chartBox" class="week_" id="week"></div>
+				</div>
+				<div class="contentBox">
+						<div class="chartBox" class="month_" id="month"></div>
+				</div>
+				<div class="contentBox">
+						<div class="chartBox" class="year_" id="year"></div>
+				</div>
+		</div>
+</body>
+<script type="text/javascript" src="../../../script/common/api.js"></script>
+<script type="text/javascript" src="../../../script/common/jquery.min.js"></script>
+<script type="text/javascript" src="../../../script/common/pds.ajax.js"></script>
+<script type="text/javascript" src="../../../script/common/echarts.common.min.js"></script>
+<script type="text/javascript">
+	var color = ['#75a1fa', '#f5c130'];//echart颜色合集；'#f5c130',
+	var chartH = null;//chart盒子高
+	var chartW = null;//chart盒子宽
+	apiready = function(){
+			api.parseTapmode();
+			chartH = $('.chartBox').height();//chart盒子高
+			chartW = $('.chartBox').width();//chart盒子宽
+			//作物Id
+			plantDo(api.pageParam.plantId, api.pageParam.plantName);
+			//导航切换
+			tabCheck();
+			//获取历史市场
+			//$api.rmStorage('market')
+			var marketObj = $api.getStorage($api.getStorage('userId')+'market');
+			if (marketObj != undefined && marketObj != "" && marketObj != null && marketObj != {}) {
+					nameDo("nameBox",marketObj.marketName, marketObj.marketId, marketObj.provinceId)
+					//初始化数据
+					dataInit();
+			}else{
+					//nameDo("nameBox","北京光彩馆",22,2);//默认马铃薯（土豆）
+					//获取默认市场
+					//alert("初始化市场")
+					getMarket();
+			};
+
+	};
+
+	//获取默认市场
+	function getMarket(){
+			pds.ajaxSubmit({
+					type: "GET",
+					url : "app/price/defaultStatMarket",
+					success:function(e){
+							//alert("success");
+							//alert(JSON.stringify(e));
+							if (e.status == "ok") {
+									if (e.data != "" && e.data != null && e.data != {}) {
+											var marketName = e.data.name;
+											var marketId = e.data.id;
+											var provinceId = e.data.provinceId;
+											if (marketName != "" && marketName != null && marketId != "" && marketId != null && provinceId != "" && provinceId != null) {
+													nameDo("nameBox", marketName, marketId, provinceId);
+											}else{
+													$("#nameBox").text("点击选择市场").attr("data-id","").attr("data-provinceId","");
+											};
+									}else{
+											$("#nameBox").text("点击选择市场").attr("data-id","").attr("data-provinceId","");
+									}
+							}else {
+									$("#nameBox").text("点击选择市场").attr("data-id","").attr("data-provinceId","");
+							};
+
+					},
+					error : function(e){
+							$("#nameBox").text("点击选择市场").attr("data-id","").attr("data-provinceId","");
+					}
+			});
+
+			setTimeout(function(){
+					//初始化数据
+					dataInit();
+			},1000)
+	}
+
+	//input框赋值
+	function nameDo(nameBox, name, id, provinceId){
+			$("#"+nameBox).text(name).attr("data-id",id).attr("data-provinceId",provinceId);
+			var marketObj = {
+					marketName : name,
+					marketId : id,
+					provinceId : provinceId
+			};
+			$api.setStorage($api.getStorage('userId')+'market', marketObj);
+	}
+
+	//作物Id赋值
+	function plantDo(id, name){
+			$("#plantId").val(id);
+			var plantObj = {
+					name : name,
+					id : id
+			};
+			$api.setStorage($api.getStorage('userId')+'plant', plantObj);
+	};
+
+	//导航tab切换
+	function tabCheck(){
+			$(".nav li").off("touchend").on("touchend",function(){
+				//导航埋点
+				var pageId = $(this).attr("pageId");
+				var eventId = $(this).attr("eventId")
+				var buriedPoint = pds.buriedPoint();
+				buriedPoint.pageId = pageId;
+				buriedPoint.eventId = eventId;
+				pds.ajaxSubmit({
+				url:"app/buried_point/save",
+				data:{"point":buriedPoint},
+				success:function(v){
+				}
+			})
+					$(".nav li").each(function(index, el){
+							var bcId = $(this).attr("id");
+							var bcIndex = bcId.indexOf("_");
+							var bcClassName = bcId.slice(0,bcIndex);
+							$(this).removeClass("nav-active").find(".dateStr").css({
+									"color":"#00c558",
+									"fontSize" :"0.3rem",
+							});
+							$(this).find(".date-icon").css({
+									"backgroundImage" : "url(../../../image/market/"+ bcClassName +".png)"
+							});
+					});
+
+					var boxActiveClassName = $(this).attr("id");
+					var index_ = boxActiveClassName.indexOf("_");
+					var boxActiveClassName_ = boxActiveClassName.slice(0,index_);
+					$(this).addClass("nav-active").find(".dateStr").css({
+							"color":"#fff",
+							"fontSize" :"0.32rem",
+					});
+					$(this).find(".date-icon").css({
+							"backgroundImage" : "url(../../../image/market/"+ boxActiveClassName +".png)"
+					});
+					//显示对应div
+					$("#"+boxActiveClassName_).parent().show().siblings().hide();
+
+			});
+			//默认触发近七天
+			$("#week_").trigger('touchend');
+	};
+
+	//创建折线图
+
+	function dataInit(){
+			var chartBoxs = $(".chartBox");
+			var plantId = $("#plantId").val();//获取作物id
+			//var plantId = $api.getStorage('plant').id;
+			if (plantId == "" || plantId == null) {
+					api.toast({
+					    msg: '请选择作物',
+					    duration: 2000,
+					    location: 'middle'
+					});
+					chartBoxs.each(function(index,el){
+							var dataBoxId = $(this).attr("id");//chart盒子ID
+							$("#"+dataBoxId).html('<span class="chartEmpty">请选择作物后，再查看数据~</span>')
+					})
+					return;
+			};
+			var marketId = $(".marketTitle").attr("data-id");//市场ID
+			if (marketId == "" || marketId == null) {alert("hahahha"+marketId)
+					api.toast({
+					    msg: '请选择市场',
+					    duration: 3000,
+					    location: 'bottom'
+					});
+					chartBoxs.each(function(index,el){
+							var dataBoxId = $(this).attr("id");//chart盒子ID
+							$("#"+dataBoxId).html('<span class="chartEmpty">请选择市场后，再查看数据~</span>')
+					})
+					return;
+			};
+			//区分数据请求地址
+			var chartDataUrl = "";
+			chartBoxs.each(function(index, el){
+					var dataBoxId = $(this).attr("id");//chart盒子ID
+					var statDays = $("#"+dataBoxId+"_").attr("data-date");
+					if (statDays != "") {
+							chartDataUrl = "app/price/dayStat";
+					}else{
+							chartDataUrl = "app/price/monthStat";
+					};
+					getChartData(dataBoxId, plantId, marketId, statDays, chartDataUrl);
+			})
+
+
+	};
+
+	//或取图表数据
+	function getChartData(boxId, plantId, marketId, statDays, url){
+			console.log(plantId+"********"+marketId+"*******"+statDays+"********"+url)
+			// //初始化图表
+			var myChart = echarts.init(document.getElementById(boxId));
+			myChart.clear();
+			//显示加载进度
+			myChart.showLoading({
+					default: {
+						// text: 'loading',
+						color: '#c23531',
+						textColor: '#000',
+						maskColor: 'rgba(255, 255, 255, 0.8)',
+						zlevel: 0
+					}
+			});
+			var option = {};
+			if (statDays == "") {
+					option = {
+							marketId : marketId,
+							categoryId : plantId
+					}
+			}else{
+					option = {
+							marketId : marketId,
+							categoryId : plantId,
+							statDays : statDays
+					}
+			};
+			//alert(JSON.stringify(option))
+			pds.ajaxSubmit({
+					type: "GET",
+					url : url,
+					data : option,
+					success:function(e){
+							//alert("success");
+							//alert(JSON.stringify(e));
+							myChart.hideLoading();
+							if (e.status == "ok") {
+									if (e.data != "" && e.data != null && e.data != {}) {
+											var optionData = createData(e.data, statDays, boxId, myChart);
+											createChart(boxId, optionData, statDays, myChart)
+									}else{
+											myChart.dispose();
+											$("#"+boxId).html('<span class="chartEmpty">暂无同期价格信息，换个条件看看吧~</span>')
+									}
+							}else {
+									myChart.dispose();
+									//api.alert({msg: '获取数据失败，请重试！'});
+									$("#"+boxId).html('<span class="chartEmpty">获取数据失败，请重试~</span>')
+							}
+
+					},
+					error : function(e){
+							myChart.dispose();
+							//api.alert({msg: '获取数据失败，请重试！'});
+							$("#"+boxId).html('<span class="chartEmpty">获取数据失败，请重试~</span>')
+					}
+			});
+	};
+
+	//解析数据
+	function createData(data, statDays, boxId, myChart){
+			var chartOptionObj = {	//保存chart配置项参数
+					xAxisData : [],
+					yAxisName : "",
+					series : [],
+					legend : []
+			};
+			if (statDays == "") {//去年同期
+					//console.log("去年同期啦*****************")
+					var thisYearList = data.thisYear;//今年数据
+					//今年统计数据
+					if (thisYearList != "" && thisYearList != null && thisYearList != []) {
+							var thisYearSeriesData = [];//今年折线数据
+							for (var i = 0; i < thisYearList.length; i++) {
+									var date = thisYearList[i].month;
+											chartOptionObj.xAxisData[i] = date+"月份";
+									var price = thisYearList[i].price;
+									if (price == null) {
+											price = "无";
+									}else{
+											price = price.toFixed(2); //输出结果为两位小数
+									};
+									thisYearSeriesData.push(price);
+									chartOptionObj.yAxisName = thisYearList[i].unit;
+							};
+							var thisName = "今年";
+									chartOptionObj.legend.push(thisName);
+							var priceObj = {
+									name : thisName,
+									type :'line',
+									//stack : '总量',
+									lineStyle : {
+											narmal : {
+													width : 1
+											}
+									},
+									data : thisYearSeriesData
+							};
+							chartOptionObj.series.push(priceObj);
+					};
+					//去年统计数据
+					var lastYearList = data.lastYear;//去年数据
+					//alert(JSON.stringify(lastYearList))
+					if (lastYearList != "" && lastYearList != null && lastYearList != []) {
+							var lastYearSeriesData_ = [];//今年折线数据
+							for (var j = 0; j < lastYearList.length; j++) {
+									var date_ = lastYearList[j].month;
+											chartOptionObj.xAxisData[j] = date_+"月份";
+									var price_ = lastYearList[j].price;
+									if (price_ == null) {
+											price_ = "无";
+									}else{
+											price_ = price_.toFixed(2); //输出结果为两位小数
+									};
+									lastYearSeriesData_.push(price_);
+									chartOptionObj.yAxisName = lastYearList[j].unit;
+							};
+							var thisName_ = "去年";
+									chartOptionObj.legend.push(thisName_);
+							var priceObj_ = {
+									name : thisName_,
+									type :'line',
+									//stack : '总量',
+									lineStyle : {
+											narmal : {
+													width : 1
+											}
+									},
+									data : lastYearSeriesData_
+							};
+							chartOptionObj.series.push(priceObj_);
+							//创建图表
+							//createChart(boxId, xAxisData, series, legend, yAxisName, myChart)
+					}else{
+							//$("#"+boxId).html('<span class="chartEmpty">暂无价格信息，换个条件看看吧~</span>')
+					};
+
+
+			}else{//其他
+					var dataList = data.list;
+					if (dataList != "" && dataList != null && dataList != []) {
+							//console.log("有数据啦*****************")
+							var seriesData = [];
+							for (var i = 0; i < dataList.length; i++) {
+									var date = dataList[i].statDate.split("-");
+									var data_ = date[1]+"-"+date[2];
+									chartOptionObj.xAxisData.push(data_);
+									var price = dataList[i].price;
+									if (price == null) {
+											price = "无";
+									}else{
+											price = price.toFixed(2); //输出结果为两位小数
+									};
+									seriesData.push(price);
+									chartOptionObj.yAxisName = dataList[i].unit;
+							};
+							var priceObj = {
+									name : "价格",
+									type :'line',
+									//stack : '总量',
+									lineStyle : {
+											narmal : {
+													width : 1
+											}
+									},
+									data : seriesData
+							};
+							chartOptionObj.series.push(priceObj);
+							//createChart(boxId, xAxisData, series, legend, yAxisName, myChart)
+					}else{
+							$("#"+boxId).html('<span class="chartEmpty">近'+ statDays +'天暂无价格信息，换个条件看看吧~</span>')
+					}
+			}
+			return chartOptionObj;
+	}
+
+	//创建图表
+	function createChart(boxId, chartOptionObj, statDays, myChart){
+			//alert(boxId+"***************"+JSON.stringify(chartOptionObj));
+			//var myChart = echarts.init(document.getElementById(boxId));
+			if (chartOptionObj.series.length == 0 || chartOptionObj.xAxisData.length == 0) {console.log("哈哈")
+					//如果空值，则不绘制图表，并销毁之前创建echart实例；很重要，否则数据该表后，新绘制的图表展现不出来；
+					myChart.dispose();
+					if (statDays == "") {
+							statDays = "去年同期";
+					}else{
+							statDays = "近"+statDays+"天";
+					};
+					$("#"+boxId).html('<span class="chartEmpty">暂无'+ statDays +'价格信息，换个条件看看吧~</span>')
+					return;
+			};
+			//参数配置
+			var myOption = {
+					tooltip: {//弹窗
+							trigger: 'axis',
+							triggerOn : 'mousemove|click',//'mousemove|click'
+							backgroundColor : 'rgba(50,50,50,0.7)',
+							textStyle:{
+					　　		align:'left'
+					　　}
+					},
+					color : color,
+					legend: {//图例
+							data : chartOptionObj.legend,
+							//bottom : 10
+							top : '3%'
+					},
+					grid: {
+							left: '7%',
+							right: '7%',
+							bottom: '8%',
+							top : '15%',
+							containLabel: true,
+							borderColor:'#f09d71'
+					},
+					xAxis: {//X轴
+							type: 'category',
+							boundaryGap: false,
+							axisLine:{
+									lineStyle:{
+											color : '#f09d71',
+											//shadowBlur: 10
+									}
+							},
+							data: chartOptionObj.xAxisData
+					},
+					yAxis: {//Y轴
+							type: 'value',
+							name: chartOptionObj.yAxisName,
+							boundaryGap: ['10%', '50%'],
+							axisLine:{
+									lineStyle:{
+											color : '#f09d71',
+											//shadowBlur: 10
+									}
+							},
+					},
+					series: chartOptionObj.series
+			};
+			myChart.setOption(myOption);
+			//固定图表大小
+			//console.log(boxId+"***************"+chartW+"******"+chartH)
+			myChart.resize({
+					width : chartW,
+					height : chartH
+			});
+	}
+
+	//打开市场页面***************************************************
+	function openMarketWin(obj){
+		//市场埋点
+		var buriedPoint = pds.buriedPoint();
+		buriedPoint.pageId = 'page_marketprice_admin';
+		buriedPoint.eventId = 'button_marketselect_page_marketprice_admin';
+		pds.ajaxSubmit({
+		url:"app/buried_point/save",
+		data:{"point":buriedPoint},
+		success:function(v){
+		}
+	})
+			var nameBox = $(obj).attr("id");
+			var marketName = $(obj).text();
+			var provinceId = $(obj).attr("data-provinceId");
+			var marketId = $(obj).attr("data-id");
+			api.openWin({
+				name : "market-choose-win",
+				url : "widget://html/home/marketInfo/market-choose-win.html",
+				reload : true,
+				pageParam : {
+						provinceId : provinceId,
+						marketId : marketId,
+						frmName : api.frameName,
+						nameBoxId : nameBox
+				},
+				animation : {
+					type : "movein", //动画类型（详见动画类型常量）
+					subType : "from_right", //动画子类型（详见动画子类型常量）
+					duration : 300 //动画过渡时间，默认300毫秒
+				}
+			});
+	};
+
+	//获取当前时间，格式YYYY-MM-DD
+  function getNowFormatDate() {
+        var date = new Date();
+        var seperator1 = "-";
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = year + seperator1 + month + seperator1 + strDate;
+        return currentdate;
+    }
+
+	//返回上一级********************************************************************
+	function back(){
+			api.closeFrame();
+	}
+</script>
+</html>

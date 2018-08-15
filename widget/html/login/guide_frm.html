@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>引导页frm</title>
+    <link rel="stylesheet" href="../../css/common/api.css">
+    <link rel="stylesheet" href="../../css/common/public.css">
+    <link rel="stylesheet" href="../../css/common/swiper.min.css">
+    <style media="screen">
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .banner {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .swiper-container,
+        .swiper-wrapper,
+        .swiper-slide,
+        .swiper-slide img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .end {
+            position: relative;
+        }
+
+        .end img {
+            position: absolute;
+        }
+
+        .letGo {
+          position: absolute;
+          bottom: 8%;
+          left: 0;
+          right: 0;
+          margin: 0 auto;
+          border-radius: 0.85rem;
+          width: 5.6rem;
+          height: 0.9rem;
+        }
+
+        .swiper-pagination-custom {
+            bottom: 10px;
+            left: 0;
+            width: 100%;
+        }
+
+        .swiper-pagination-customs {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            background: #000;
+            opacity: .3;
+            margin: 0 5px;
+        }
+
+        .swiper-pagination-customs-active {
+            opacity: 1;
+            background-color: #F78E00;
+        }
+    </style>
+    <script type="text/javascript" src="../../script/common/rem.js"></script>
+    <script type="text/javascript" src="../../script/common/api.js"></script>
+    <script type="text/javascript" src="../../script/common/jquery.min.js"></script>
+    <script type="text/javascript" src="../../script/common/swiper.min.js"></script>
+</head>
+
+<body>
+    <!-- 轮播 -->
+    <div class="banner">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <img src="../../image/guide/guide1.png" alt="">
+                </div>
+                <div class="swiper-slide">
+                    <img src="../../image/guide/guide2.png" alt="">
+                </div>
+                <div class="swiper-slide">
+                    <img src="../../image/guide/guide3.png" alt="">
+                </div>
+                <div class="swiper-slide end">
+                    <img src="../../image/guide/guide4.png" alt="">
+                    <div class="letGo" id="letGo"></div>
+                </div>
+            </div>
+            <!-- 分页器 -->
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+</body>
+
+<script type="text/javascript">
+    apiready = function() {
+        api.parseTapmode();
+        var mySwiper = new Swiper('.swiper-container', {
+            direction: 'horizontal',
+            autoplay: 0,
+            speed: 300,
+            loop: false,
+            paginationClickable: true,
+            autoplayDisableOnInteraction: false,
+            pagination: '.swiper-pagination',
+            paginationType: 'custom',
+            paginationCustomRender: function(swiper, current, total) {
+                var _html = '';
+                for (var i = 1; i <= total; i++) {
+                    if (current == i) {
+                        _html += '<span class="swiper-pagination-customs swiper-pagination-customs-active"></span>';
+                    } else {
+                        _html += '<span class="swiper-pagination-customs"></span>';
+                    }
+                }
+                return _html; //返回所有的页码html
+            },
+            onReachEnd: function(swiper) {
+                $('#letGo').on('click', function() {
+                    $api.setStorage('showGuide', 1);
+                    // if ($api.getStorage('userId')) {
+              			// 		api.openWin({
+              			// 				name: 'win_home',
+              			// 				url: '../win_home/win_home.html',
+              			// 				slidBackEnabled: false,
+              			// 				animation:{
+              			//             type:"movein",                //动画类型（详见动画类型常量）
+              			//             subType:"from_right",       //动画子类型（详见动画子类型常量）
+              			//             duration:300                //动画过渡时间，默认300毫秒
+              			//         }
+              			// 		});
+              			// }else{
+              					api.openWin({
+              							name: 'login_new',
+              							url: './login_new.html',
+              							slidBackEnabled: false,
+              							animation:{
+              			            type:"movein",                //动画类型（详见动画类型常量）
+              			            subType:"from_right",       //动画子类型（详见动画子类型常量）
+              			            duration:300                //动画过渡时间，默认300毫秒
+              			        }
+              					});
+              			// }
+
+                })
+            }
+        });
+    };
+</script>
+
+</html>

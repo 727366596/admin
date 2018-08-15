@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="../../css/common/public.css"/>
+      <link rel="stylesheet" type="text/css" href="../../css/common/header.css"/>
+      <link rel="stylesheet" type="text/css" href="../../css/planting/choose_index_win.css"/>
+      <style>
+          body{
+
+          }
+      </style>
+  </head>
+  <body>
+    <div id="plan_content">
+         <div class="plan_title" class="clearfix">
+             <i></i><span>请先选择计划</span><i></i>
+         </div>
+    </div>
+    <div id="plan_list">
+         <div class="choose">
+              <div>
+                  <select id="year" class="selectClass" name="" onchange="changeYear()">
+                  </select>
+                  <i class="icon_select"></i>
+              </div>
+              <div>
+                  <select id="farm" class="selectClass" name="" onchange="changeFarm()">
+                    <!-- <option value="">基地一</option>
+                    <option value="">基地二</option> -->
+                  </select>
+                  <i class="icon_select"></i>
+              </div>
+         </div>
+         <div id="land_list">
+
+         </div>
+    </div>
+  </body>
+  <script type="text/javascript" src="../../script/common/api.js"></script>
+  <script type="text/javascript" src="../../script/common/zepto-1.2.0.min.js"></script>
+  <script type="text/javascript" src="../../script/common/jquery.min.js"></script>
+  <script type="text/javascript" src="../../script/common/jquery.tmpl.js"></script>
+  <script type="text/javascript" src="../../script/common/rem-750.js"></script>
+  <script type="text/javascript" src="../../script/common/pds.ajax.js"></script>
+  <script type="text/template" id='tastList'>
+            <ul class="tastList">
+               {{each(i,item) plantList.data}}
+                <li class="wrapper">
+                      <div class="task_detail clearfix" onclick='changeStyle(this)' data-largeId="${item.planItemVo.id}">
+                           <i class="task_icon task_l"></i>
+                            <span>${item.planItemVo.name}</span>
+                           <i class="task_icon task_r"></i>
+                      </div>
+                      <ul class="planDetail" >
+                      {{each(j,temp) item.landList}}
+                            <li class="lands tabClass" onclick="go(this)" data-landName="${temp.landName}" data-landId="${temp.landId}" data-planId = "${temp.planId}">
+                                <i></i>
+                                <span>${temp.landName}</span>
+                            </li>
+                      {{/each}}
+                    </ul>
+                </li>
+                 {{/each}}
+            </ul>
+
+  </script>
+      <script type="text/javascript">
+          var yearFlag;
+          var farmIdFlag;
+          var yearSelect;
+          var farmName;
+          var farmId;//
+          var largeId;//大计划id
+          apiready = function(){//$api.clearStorage();
+                  api.parseTapmode();
+                  getYear();
+                  getFarm();
+                  // 跳转到计划外派单dd
+                  $('#tab_top').children().eq(1).on('touchend',function(){
+                    api.openWin({
+                      name : 'planOut_win',
+                      url : './planOut_win.html',
+                      reload : true,
+                    });
+                  })
+          };
+
+          // 跳转至工序列表
+          function go(dom){
+            var buriedPoint = pds.buriedPoint();
+            buriedPoint.pageId = 'page_planned_send_admin';
+            buriedPoint.eventId = 'button_big_plan_page_planned_send_admin';
+            pds.ajaxSubmit({
+            url:"app/buried_point/save",
+            data:{"point":buriedPoint},
+            success:function(v){
+            }
+          })
+            var landId = $(dom).attr("data-landId");//地块id
+            var planId = $(dom).attr("data-planId");//小计划id
+            var landName = $(dom).attr("data-landName");//地块
+            largeId  =  $(dom).parents().siblings('.task_detail').attr('data-largeId')
+            farmId =$('#farm option:selected').attr('data-id');
+            yearSelect =$('#year option:selected').val();
+            //alert(largeId);
+            //alert(planId)
+            api.openWin({
+              name : 'stepList_win',
+              url : './stepList_win.html',
+              reload : true,
+              pageParam: {
+                 landId:landId,
+                 planId:planId,
+                 farmId:farmId,
+                 largeId:largeId,
+                 year:yearSelect,
+                 landName:landName
+              }
+            });
+          }
+          function changeYear(){
+            var buriedPoint = pds.buriedPoint();
+            buriedPoint.pageId = 'page_planned_send_admin';
+            buriedPoint.eventId = 'button_year_selection_page_planned_send_admin';
+            pds.ajaxSubmit({
+            url:"app/buried_point/save",
+            data:{"point":buriedPoint},
+            success:function(v){
+            }
+          })
+              yearSelect =$('#year option:selected').val();
+              farmId =$('#farm option:selected').attr('data-id');
+              $('#land_list').html("");
+              getPlans(yearSelect,farmId);
+          }
+          function changeFarm(){
+            var buriedPoint = pds.buriedPoint();
+            buriedPoint.pageId = 'page_planned_send_admin';
+            buriedPoint.eventId = 'button_base_selection_page_planned_send_admin';
+            pds.ajaxSubmit({
+            url:"app/buried_point/save",
+            data:{"point":buriedPoint},
+            success:function(v){
+            }
+          })
+            //  基地名称
+              yearSelect =$('#year option:selected').val();
+              farmName =$('#farm option:selected').val()
+            //  基地id
+              farmId =$('#farm option:selected').attr('data-id');
+
+              // alert(JSON.stringify(farmId))
+              // alert(yearSelect)
+              $('#land_list').html("");
+              getPlans(yearSelect,farmId);
+
+          }
+          var i=null
+          function changeStyle(dom){
+            var buriedPoint = pds.buriedPoint();
+            buriedPoint.pageId = 'page_planned_send_admin';
+            buriedPoint.eventId = 'button_check_the_details_page_process_list_admin';
+            pds.ajaxSubmit({
+            url:"app/buried_point/save",
+            data:{"point":buriedPoint},
+            success:function(v){
+            }
+          })
+              //$(dom).toggleClass(".tabClass");
+               if(i){
+                  $(dom).siblings().hide()
+                  // $(dom).parents().siblings().children('.planDetail').show()
+                  $(dom).children('.task_r').css("transform","rotate(0deg)");
+                 i=null
+               }else{
+                 $(dom).siblings().show()
+                 $(dom).parents().siblings().children('.planDetail').hide()
+                 $(dom).parents().find('.task_r').css("transform","rotate(0deg)");
+                 $(dom).children('.task_r').css("transform","rotate(180deg)");
+                 i=1
+               }
+          }
+
+          //获取时间列表
+          function getYear(){
+                pds.ajaxSubmit({
+                   url:"app/plant/selectYear",
+                   type : "GET",
+                   success:function(e){
+                      //var inArry=0
+                      //alert(JSON.stringify(e));
+                      if(e.status =='ok' && e.data != null && e.data != [] && e.data.length!=0){
+                           yearFlag = 1;
+                          //  yearSelect = e.data[0];
+                           var yearList = e.data;
+                           var yearData="";
+                           //inArry=$.inArray(new Date().getFullYear(),yearList)
+                           for (var i = 0; i < yearList.length; i++) {
+                                var every = yearList[i]
+                                    if(every.type==1){
+                                      yearData += '<option selected value="'+ every.year +'">'+ every.year +'</option>'
+                                    }else{
+                                      yearData += '<option value="'+ every.year +'">'+ every.year +'</option>'
+                                    }
+                           }
+                           $('#year').html(yearData);
+                          //  $("#year").val(new Date().getFullYear())
+                           var yearSelect =$('#year option:selected').val();
+                           var farmId =$('#farm option:selected').attr('data-id');
+                           if(farmId){
+                             getPlans(yearSelect,farmId);
+                           }
+
+
+                      }else{
+                          yearFlag = 2
+                          $('#plan_content').html('<span style="font-size:0.3rem;color:#666666;text-align:center;">暂无数据</span>').css('padding-bottom','0.3rem')
+                          $('#plan_list').css('display',"none")
+                      }
+                      // $("#year").val(new Date().getFullYear())
+                      // var yearSelect =$('#year option:selected').val();
+                      // var farmId =$('#farm option:selected').attr('data-id');
+                      // if(farmId){
+                      //   getPlans(yearSelect,farmId);
+                      // }
+                   },
+                   error:function(e){
+                      api.alert({msg:"服务器异常，请联系管理员!"});
+                   }
+                });
+          };
+          //获取农场
+          function getFarm(){
+                pds.ajaxSubmit({
+                   url:"app/plant/selectFarm",
+                   type : "GET",
+                   success:function(e){
+                      //alert(JSON.stringify(e))
+                      if(e.status =='ok' && e.data != null && e.data != [] && e.data.length!=0){
+
+                           farmIdFlag  = 1;
+                          // farmId = e.data[0].farmId;
+                          // farmName = e.data[0].farmName;
+                           var farmList = e.data;
+                           var farmData ="";
+                           for (var i = 0; i < farmList.length; i++) {
+                                var item = farmList[i];
+                                if (item.type == 1) {
+                                  farmData += "<option data-id="+item.farmId+" selected=true>"+ item.farmName+"</option>"
+
+                                }else{
+
+                                  farmData += "<option data-id="+item.farmId+">"+ item.farmName+"</option>"
+                                }
+                           }
+                           $('#farm').append(farmData);
+                           var yearSelect =$('#year option:selected').val();
+                           var farmId =$('#farm option:selected').attr('data-id');
+                           if(yearSelect){
+                             getPlans(yearSelect,farmId);
+                           }
+
+                      }else{
+                        farmIdFlag  = 2;
+                        $('#plan_content').html('<span style="font-size:0.3rem;color:#666666;text-align:center;">暂无数据</span>').css('padding-bottom','0.3rem')
+                        $('#plan_list').css('display',"none")
+                      }
+
+                   },
+                   error:function(e){
+                      api.alert({msg:"服务器异常，请联系管理员!"});
+                   }
+                });
+          };
+          //获取农场
+          var plantList;
+
+          function getPlans(year,farmId){
+                if (!year || !farmId) {
+                    $('#land_list').html('<span style="font-size:0.3rem;color:#666666;text-align:center;">暂无计划</span>')
+                    return;
+                };
+                pds.ajaxSubmit({
+                   url:"app/plant/selectPlan",
+                   type : "GET",
+                   data:{
+                            year:year,
+                            farmId:farmId,
+                   },
+                   success:function(e){
+                      //alert("success");
+                    //  alert(JSON.stringify(e));
+                      if(e.status =='ok' && e.data != null && e.data != [] && e.data.length!=0){
+                             plantList = e;
+                             $("#land_list").append($("#tastList").tmpl(plantList));
+
+                      }else{
+                            $('#land_list').html('<span style="font-size:0.3rem;color:#666666;text-align:center;">暂无计划</span>')
+                      }
+                   },
+                   error:function(e){
+                      api.alert({msg:"服务器异常，请联系管理员!"});
+                   }
+                });
+          };
+          function back(){
+              api.closeWin({
+
+              });
+          }
+          // var plantList ={
+          //     data:[
+          //       {'crop':{'task':"西蓝花种植"},
+          //        "plan":[{'landName':'基地一'},{'landName':'基地二'},]
+          //      },
+          //      {'crop':{'task':"西蓝花种植"},
+          //       "plan":[{'landName':'基地一'},{'landName':'基地二'},]
+          //      },
+          //      {'crop':{'task':"西蓝花种植"},
+          //      "plan":[{'landName':'基地一'},{'landName':'基地二'},]
+          //      }
+          //     ],
+          //     "status": "ok"
+          // }
+      </script>
+  </script>
+  </html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>员工轨迹列表搜索</title>
+    <link rel="stylesheet" type="text/css" href="../../css/common/public.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common/header.css" />
+    <script type="text/javascript" src="../../script/common/rem-750.js"></script>
+    <style>
+        .header_search_input_clearMsg{
+          position: absolute;
+          top: 4px;
+          right: 4px;
+          z-index: 999;
+          height: 25px;
+          width: 25px;
+          background: url("../../image/common/resend_password_emptyIcon.png") no-repeat center center;
+          background-size: 15px 15px;
+          display: none;
+        }
+        .headerSearchBox{
+          position: relative;
+          width:100%;
+          height:0.7rem;
+          border-radius: 0.7rem;
+          background-color: rgba(0,0,0,0.2);
+        }
+        .headerSearchBox>input{
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 0.7rem;
+          border-radius: 0.7rem;
+          padding: 0 0.6rem;
+          line-height: 0.7rem;
+          text-align: center;
+          outline: none;
+          background-image: url("../../image/common/search_icon.png");
+          background-repeat: no-repeat;
+          background-position: 1.2rem 0.18rem;
+          background-size: 0.32rem 0.32rem;
+
+          font-size: 0.28rem;font-family: PingFangSC-Regular, sans-serif;color: #fff;
+        }
+
+        input::-webkit-input-placeholder{
+            color: #fff;opacity:1;font-size: 0.28rem;
+        }
+        input::placeholder{
+            color: #fff;opacity:1;font-size: 0.28rem;
+        }
+
+        #wrapper, #wrapper .scroller, #wrapper .scroller>ul, #wrapper .scroller>ul>li{
+            width:100%;
+						text-align:center;
+        }
+
+        .search_history_list{
+            width: 95%;
+						display: inline-block;
+						border: solid 1px #f2f2f2;
+						margin:10px auto;
+        }
+        .search_history_title{
+          width: 100%;
+          height: 0.8rem;
+					line-height: 0.85rem;
+					padding-left: 40px;
+					background: url("../../image/common/time.png") no-repeat 15px center;
+					background-size: 20px 20px;
+					text-align: left;
+          font-size: 0.32rem;font-family: PingFangSC-Regular, sans-serif;color: #717475;
+        }
+        .search_history_list_content{
+          padding: 15px;
+					text-align: center;
+					font-size: 0.32rem;font-family: PingFangSC-Regular, sans-serif;color: #717475;
+        }
+        .searchSpan{
+        	/*position: relative;*/
+          float: left;
+          min-width: 1.5rem;
+          padding: 5px 10px;
+          text-align: center;
+          border: solid 1px #717475;
+					color: #717475;
+					background-color: #f2f2f2;
+					margin:5px 10px 5px 0;
+          border-radius: 5px;
+          font-size: 0.28rem;font-family: PingFangSC-Regular, sans-serif;
+        }
+				.searchSpan_active{
+					/*position: relative;*/
+          float: left;
+          min-width: 1.5rem;
+          padding: 5px 10px;
+          text-align: center;
+          border: solid 1px #82e268;
+					color: #82e268;
+					background-color: #fff;
+					margin:5px 10px 5px 0;
+          border-radius: 5px;
+          font-size: 0.28rem;font-family: PingFangSC-Regular, sans-serif;
+				}
+        .clear_search_history_btn{
+          display: none;
+          border: solid 1px blue;
+          padding: 5px 10px;
+          border-radius: 6px;
+          margin: 0.5rem auto;
+          outline: none;
+          font-size: 0.28rem;font-family: PingFangSC-Regular, sans-serif;color: #00f;
+        }
+
+				.ok{
+					position: absolute;
+					right: 0;
+					top: 0;
+					width: 0;
+			    height: 0;
+			    border-top: 16px solid #82e268;
+			    border-left: 20px solid transparent;
+				}
+				.ic{
+					position: absolute;
+					right:2px;
+					top: -14px;
+					height: 5px;
+					width: 8px;
+					background: url("../../image/common/delimit_ic.png") no-repeat left center;
+					background-size: 100% 100%;
+					z-index: 99;
+				}
+				.infoListWidth{
+						width:75%;
+				}
+    </style>
+</head>
+<body>
+    <div id="header">
+        <div class="headerLeft" onclick="back()"></div>
+        <div class="headerCenter">
+            <span class="headerSearchBox"><input type="text" name="header_search_input" id="header_search_input" placeholder="请输入搜索内容"/><i class="header_search_input_clearMsg"></i></span>
+        </div>
+        <div class="headerRight"></div>
+    </div>
+
+    <div id="wrapper">
+        <div class="scroller">
+            <ul>
+                <!-- <li onclick="openTechTransferInfo(1)">
+                   <div class="transferContent">
+                       <p>晚熟大王柑橘秋季管理要点：做好三点，带来丰产！</p>
+                       <p>2017-08-09</p>
+                   </div>
+                   <div class="transferImg">
+                       <img src="../../../image/home_technology_transfer_03.png">
+                   </div>
+                </li> -->
+
+            </ul>
+        </div>
+				<div class="search_history_list">
+            <p class="search_history_title">最近搜索</p>
+            <div class="search_history_list_content clearFloat">
+                <!-- <span>马铃薯</span>
+                <span>西蓝花</span>
+                <span>马铃薯</span>
+                <span>河北省丰安天下第一种植基地</span>
+                <span>马铃薯</span>
+                <span>西蓝花</span>
+                <span>马铃薯</span>
+                <span>河北省丰安天下第一种植基地</span> -->
+            </div>
+        </div>
+        <button type="button" name="button" class="clear_search_history_btn" onclick="empty_search_history()">清空历史记录</button>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/common/api.js"></script>
+<script type="text/javascript" src="../../script/common/zepto-1.2.0.min.js"></script>
+<script type="text/javascript" src="../../script/common/pds.ajax.js"></script>
+<script type="text/javascript">
+	apiready = function(){
+    //适配iOS7+，Android4.4+状态栏沉浸式效果，详见config文档statusBarAppearance字段
+    var header = $api.byId('header');
+    $api.fixStatusBar(header);
+    var headerH = $api.offset(header).h;
+    $("body").css({"paddingTop":headerH+"px"});
+		//获取搜索历史信息
+		getHistoryData();
+    //监听搜索框
+    var url = "/app/content/techContentList";//搜索接口地址
+    inputListen(url);
+
+	};
+
+
+  //监听input框
+  function inputListen(url){
+      //监听软键盘回车事件
+      $('#header_search_input').bind('keypress', function(event) {   //回车事件绑定
+          if (event.keyCode == "13") {  //js监测到为为回车事件时 触发
+              event.preventDefault();   //阻止页面自动刷新，重复加载
+              var searchStr = $(this).val();;
+              getData(searchStr, url);
+          }
+      });
+      //实时监听input框值变化
+      $("#header_search_input").bind("input propertychange", function(e){
+          var this_ = $(this);
+          if (e.type === "input" || e.orignalEvent.propertyName === "value") {
+              var strLength = this.value.length;
+              if(strLength > 0){
+                  this_.css({"backgroundImage" : "none"});
+                  $(".header_search_input_clearMsg").show().click(function(){
+                      this_.val("").css({"backgroundImage" : "url('../../image/common/search_icon.png')"});
+                      $(this).hide();
+                  });
+              }else {
+                  this_.css({"backgroundImage" : "url('../../image/common/search_icon.png')"});
+                  $(".header_search_input_clearMsg").hide();
+              }
+
+          }
+      })
+  };
+
+  //搜索请求数据
+	var search_history_arr;
+  function getData(searchStr, url){
+      alert("搜索条件改变，开始获取搜索数据啦")
+			//保存搜索历史加入本地缓存
+			var search_obj = {
+					'searchStr' : searchStr
+			};
+			search_history_arr = $api.getStorage('search_history_list');
+			//alert(JSON.stringify(search_history_arr));
+			if(search_history_arr != [] && search_history_arr != null && search_history_arr != "" && search_history_arr != undefined){
+					var search_history_flag = false;//记录是否追加本地缓存
+					var search_history_flag_ = (function(){
+							for (var j = 0; j < search_history_arr.length; j++) {
+									if(search_history_arr[j].searchStr == searchStr){
+											search_history_flag = true;//遍历本地缓存，有等值则不追加；否则追加
+											return search_history_flag
+									};
+							};
+					})();
+					//通过flag判断是否追加本地缓存
+					if(!search_history_flag_){
+							search_history_arr.unshift(search_obj);
+					};
+			}else{
+					search_history_arr.unshift(search_obj);
+			};
+			//需延时处理
+			setTimeout(function(){
+					$api.setStorage('search_history_list', search_history_arr);
+					//重新获取历史搜索数据
+					//alert(JSON.stringify(search_history_arr))
+					if(!search_history_flag_){//有新增时才会重新请求搜索记录
+							getHistoryData();
+					};
+			},500);
+			pds.ajaxSubmit({
+				 url:url,
+				 type : "get",
+				 data:{"data":JSON.stringify({
+						 page : 1,
+						 pageSize : 10,
+						 data : {
+								 title : searchStr,
+		 						 author : searchStr
+						 }
+				 })},
+         success:function(e){
+						alert("success");
+						alert(JSON.stringify(e));
+
+         }
+     });
+  }
+
+  //搜索历史数据
+  function getHistoryData(){
+      var search_history_list_arr = $api.getStorage('search_history_list');
+			//alert(JSON.stringify(search_history_list_arr));
+			if(search_history_list_arr != '' && search_history_list_arr != null && search_history_list_arr != []  && search_history_list_arr != undefined){
+					$(".clear_search_history_btn").show();
+					var search_history_list_str = "";
+					for (var i = 0; i < search_history_list_arr.length; i++) {
+						search_history_list_str += '<span class="spans searchSpan_active" onclick="getData($(this).text())">'+ search_history_list_arr[i].searchStr +'<i class="span_ok"><i><i class="span_ic"></i></span>';
+					};
+					//alert(JSON.stringify(search_history_list_str));
+					$(".search_history_list_content").html(search_history_list_str);
+					checkActive();
+			}else{
+					empty_search_history();
+			}
+  }
+  //清空input框
+  function emptyInput(){
+	    $("#header_search_input").val("");
+	    $(".header_search_input_clearMsg").hide();
+  }
+  //清空搜索历史
+  function empty_search_history(){
+      $(".search_history_list_content").html("暂无搜索历史记录");
+			$("#wrapper .scroller ul").html("");
+			$api.setStorage('search_history_list', []);
+			//$api.clearStorage('search_history_list');
+			$(".clear_search_history_btn").hide();
+			emptyInput();
+  };
+
+	//搜索历史字段按钮点击样式
+	function checkActive(){
+			$(".search_history_list_content span").off("click").on("click",function(){
+					$(".spans").css({"backgroundColor" : "#fff"})
+					$(this).css({
+							"backgroundColor" : "#E4FFDD"
+					});
+					// $(".span_ok").removeClass("ok");
+					// $(".span_ic").removeClass("ic");
+					//$(this).removeClass("searchSpan").addClass("searchSpan_active");
+					// $(this).next(".span_ok").addClass("ok");
+					// $(this).next(".span_ic").addClass("ic");
+			})
+	}
+
+	//打开技术详情页面***************************************************
+	function openTechTransferInfo(id){
+		api.openWin({
+			name : "frm_home_tech_transfer_info",
+			url : "widget://html/home/techTransfer/win_home_tech_transfer_info.html",
+			reload : true,
+			selecteIndex : '3',
+			slidBackEnabled : false,
+			pageParam : {
+					contentId : id
+			},
+			animation : {
+				type : "movein", //动画类型（详见动画类型常量）
+				subType : "from_right", //动画子类型（详见动画子类型常量）
+				duration : 300 //动画过渡时间，默认300毫秒
+			}
+		});
+	};
+
+	//返回上一级********************************************************************
+	function back() {
+			api.closeWin();
+	}
+</script>
+</html>

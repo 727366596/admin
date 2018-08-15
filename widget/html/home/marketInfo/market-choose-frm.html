@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>市场选择</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/common/public.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/common/header.css" />
+    <script type="text/javascript" src="../../../script/common/rem.js"></script>
+    <style type="text/css">
+				html,body{
+					height: 100%;width: 100%;
+					display: -webkit-box;
+					display: -webkit-flex;
+					display:flex;
+
+					-webkit-box-orient: horizontal;
+					-webkit-flex-flow: row;
+					flex-flow: row;
+
+					-webkit-box-pack: justify;
+					-webkit-justify-content: space-between;
+					justify-content: space-between;
+
+					-webkit-box-align: center;
+					-webkit-align-items: center;
+					align-items: center;
+				}
+				.leftBox{
+					width: 30%;height:100%;background-color: #f3f4f4;padding-right: 0.3rem;
+					overflow-x: hidden;overflow-y: auto;-webkit-overflow-scrolling: touch;
+					padding-bottom: 0.3rem;
+				}
+				.leftBox::-webkit-scrollbar {
+				    display: none;
+				}
+				.nav{
+					width: 100%;background-color: #fff;
+				}
+				.nav>li{
+					width: 100%;height: 1.0rem;border-bottom: solid 1px #f3f4f4;
+					line-height: 1.0rem;text-align: center;font-size: 0.3rem;color: #999999;
+				}
+				.nav>li.nav-active{
+					color: #00c558;
+					font-size: 0.32rem;
+					border-left: solid 3px #00c558;
+				}
+
+				.rightBox{
+					width: 70%;height: 100%;background-color: #fff;padding: 0.3rem;
+					overflow-x: hidden;overflow-y: auto;-webkit-overflow-scrolling: touch;
+				}
+				.rightBox::-webkit-scrollbar {
+				    display: none;
+				}
+				.box{
+					width: 100%;
+				}
+				.box>li{
+					position: relative;
+					width: 100%;
+					height: 0.8rem;
+					line-height: 0.8rem;text-align: left;border: solid 1px #00c558;
+					border-radius: 4px;
+					overflow-x: hidden;overflow-y: hidden;text-overflow: ellipsis;
+					white-space:nowrap; padding: 0 0.25rem;background-color: #fff;
+					font-size: 0.3rem;color: #00c558;margin-bottom: 0.3rem;
+				}
+				.box>li.box-active{
+					background-color: #e8ffdb;
+				}
+				.box::-webkit-scrollbar {
+						display: none;
+				}
+				.box>li::-webkit-scrollbar {
+						display: none;
+				}
+				.select{
+						position: absolute;
+						top: 0;
+						right: 0;
+						z-index: 999;
+						margin-right: -1px;
+						height: 0.4rem;
+						width: 0.6rem;
+						border-radius: 4px;
+						border-top:solid 0.2rem #f00;
+						border-bottom:solid 0.2rem rgba(0,0,0,0);
+						border-right:solid 0.29rem #f00;
+						border-left:solid 0.3rem rgba(0,0,0,0);
+						display: none;
+				}
+				.spanShow{
+						display: block;
+				}
+				span.select>i{
+						position: absolute;
+						right: 2px;
+						top: 0;
+						width: 12px;
+						height:8px;
+						margin-right:-12px;
+						margin-top:-8px;
+						background-image: url('../../../image/market/select.png');
+						background-repeat: no-repeat;
+						background-size: 100% 100%;
+						background-position: center;
+				}
+    </style>
+</head>
+<body>
+		<div class="leftBox">
+				<ul class="nav">
+						<!-- <li class="nav-active">全国</li>
+						<li>全国</li> -->
+
+				</ul>
+		</div>
+		<div class="rightBox">
+				<ul class="box">
+						<!-- <li>新发地农贸批新发地农贸批新发地农贸批新发地农贸批发市场发市场<span class="select"><i></i></span></li> -->
+				</ul>
+		</div>
+		<!-- <div id="body_totop_btn">
+				返回顶部
+		</div> -->
+</body>
+<script type="text/javascript" src="../../../script/common/api.js"></script>
+<script type="text/javascript" src="../../../script/common/jquery.min.js"></script>
+<script type="text/javascript" src="../../../script/common/pds.ajax.js"></script>
+<script type="text/javascript">
+	apiready = function(){
+			//获取导航省份数据
+			//alert(JSON.stringify(api.pageParam.obj))
+			//alert(api.pageParam.marketIdArr + "*******" + api.pageParam.provinceId + "*******" + api.pageParam.frmName)
+			var provinceId = api.pageParam.provinceId;
+			var marketId = api.pageParam.marketId;
+			var obj = api.pageParam.nameBoxId;
+
+			getNavData(obj,provinceId, marketId);
+	};
+
+	//获取左侧省份导航
+	function getNavData(obj, provinceId, marketId){
+			pds.ajaxSubmit({
+					type: "GET",
+					url:"app/customer/findCityList?id=0",
+					success:function(e){
+							//alert("success");
+							//alert(JSON.stringify(e));
+							if (e.status == "ok") {
+									var data = e.data;
+									if (data != "" && data != null && data != []) {
+											var provinceListStr = "";
+											for (var i = 0; i < data.length; i++) {
+													if (data[i].name != "" && data[i].name != null && data[i].id != "" && data[i].id != null){
+															if (data[i].name != "钓鱼岛") {
+																	var province_ =  (data[i].name).slice(0,2);
+																	if (data[i].name == "中国") {
+																			province_ = "全国";
+																			continue;
+																	};
+																	if (data[i].name == "黑龙江省") {
+																			province_ = (data[i].name).slice(0,3);
+																	};
+																	provinceListStr += '<li data-provinceId="'+ data[i].id +'">'+ province_ +'</li>'
+															}else{
+																	provinceListStr += '<li data-provinceId="'+ data[i].id +'">'+ data[i].name +'</li>'
+															}
+													};
+											};
+											$(".nav").html(provinceListStr);
+											$(".box").html('<li style="border:solid 1px #999999;color:#999999;text-align:center;">点击左侧导航获取市场列表</li>');
+
+											//启动省份导航
+											tabCheck(obj, provinceId, marketId);
+
+									}
+							}
+
+					},
+					error : function(e){
+							api.alert({msg: '获取数据失败，请重试！'});
+					}
+			});
+	}
+	//导航tab切换
+	function tabCheck(obj, provinceId, marketId){
+			$(".nav li").each(function(index, el){
+					var provinceId_ = $(this).attr("data-provinceId");
+					$(this).off("click").on("click",function(){
+							$(this).addClass("nav-active").siblings().removeClass("nav-active");
+							if (provinceId_ == 1) {
+									provinceId_ = ""
+							};
+							getMarketData(obj, provinceId_, marketId);
+					});
+
+					if (provinceId_ == provinceId) {
+							$(this).trigger("click");
+					}
+			})
+	};
+
+	//获取市场数据
+	function getMarketData(obj, id, marketId){
+			pds.ajaxSubmit({
+					type: "GET",
+					url:"app/price/markets",
+					data : {
+							provinceId : id
+					},
+					success:function(e){
+							//alert("success");
+							//alert(JSON.stringify(e));
+							if (e.status == "ok") {
+									var data = e.data;
+									if (data != "" && data != null && data != []) {
+											var marketListStr = "";
+											for (var i = 0; i < data.length; i++) {
+													if (data[i].name != "" && data[i].name != null && data[i].id != "" && data[i].id != null){
+															var marketSelectClassName = "";
+															if (data[i].id == marketId) {//alert(data[i].id+"******"+marketId+"*********"+data[i].name)
+																	marketSelectClassName = "spanShow";
+															};
+															//标记多市场对比页面是否回显市场
+															var addMarketFlag = false;
+															if (api.pageParam.frmName == "morePrice-frm") {
+																	var selectMarkets = api.pageParam.marketIdArr;
+																	//alert(JSON.stringify(selectMarkets)+"*********"+marketId);
+																	if (selectMarkets != [] && selectMarkets != "" && selectMarkets != null) {
+																			for (var j = 0; j < selectMarkets.length; j++) {
+																					if (selectMarkets[j] != "" && selectMarkets[j] != null) {
+																							if (data[i].id == selectMarkets[j]) {
+																									//marketListStr += '<li data-name="'+ data[i].name +'" data-provinceId="'+ data[i].provinceId +'" data-city="'+ data[i].fVC +'" data-title="'+ data[i].abbreviation +'" data-id="'+ data[i].id +'">'+ data[i].name +'<span class="select '+ marketSelectClassName +'"><i></i></span></li>'
+																									addMarketFlag = true;//alert(addMarketFlag)
+																									break;
+																							}
+																					}
+																			};
+																	};
+															};
+															if (!addMarketFlag) {
+																	marketListStr += '<li data-name="'+ data[i].name +'" data-provinceId="'+ data[i].provinceId +'" data-city="'+ data[i].fVC +'" data-title="'+ data[i].abbreviation +'" data-id="'+ data[i].id +'">'+ data[i].name +'<span class="select '+ marketSelectClassName +'"><i></i></span></li>';
+															}
+													};
+											};
+											$(".box").html(marketListStr);
+											//启动市场点击导航
+											marketDo(obj);
+
+									}else{
+											$(".box").html('<li style="border:solid 1px #999999;color:#999999;text-align:center;">暂无该地区市场数据</li>');
+									}
+							}else{
+									api.alert({msg: '获取数据失败，请重试！'});
+							}
+					},
+					error : function(e){
+							api.alert({msg: '获取数据失败，请重试！'});
+					}
+			});
+	}
+
+	//市场点击
+	function marketDo(obj){
+			$(".box li").on("touchstart",function(){
+					$(this).addClass("box-active");
+			}).on("touchend",function(){
+					$(this).removeClass("box-active");
+			});
+			$(".box li").each(function(index, el){
+					var selectObj = $(this).find("span");
+					if (selectObj.hasClass("spanShow")) {
+							$(this).off("click").on("click",function(){
+									// api.toast({
+									//     msg: '已选择该市场，换个试试！',
+									//     duration: 2000,
+									//     location: 'bottom'
+									// });
+									api.closeWin();
+							});
+					}else{
+							$(this).one("click",function(){
+									var marketName = null;
+									var marketId = $(this).attr("data-id");
+									var provinceId = $(this).attr("data-provinceId");
+									//调用win页面方法写入市场
+									var jsfun = '';
+									var frameName = api.pageParam.frmName;
+									if (frameName == "marketPrice-frm") {
+											marketName = $(this).attr("data-name");
+									}else if(frameName == "morePrice-frm"){
+											marketName = $(this).attr("data-title");
+									};
+									var nameBoxId = api.pageParam.nameBoxId;
+									if (frameName == "marketPrice-frm") {
+											jsfun = 'nameDo("'+ nameBoxId +'","'+ marketName +'","'+ marketId +'","'+ provinceId +'")';
+									}else if(frameName == "morePrice-frm"){
+											var allMarketName = $(this).attr("data-name");
+											jsfun = 'nameDo("'+ nameBoxId +'","'+ marketName +'","'+ marketId +'","'+ provinceId +'","'+ allMarketName +'")';
+									};
+									api.execScript({
+											name: 'market-index-win',
+											frameName: frameName,
+											script: jsfun
+									});
+									setTimeout(function(){
+											//调用win页面获取数据方法
+											api.execScript({
+													name: 'market-index-win',
+													frameName: frameName,
+													script: 'dataInit()'
+											});
+											api.closeWin();
+									},300)
+							})
+					}
+			})
+	}
+</script>
+</html>

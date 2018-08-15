@@ -1,0 +1,103 @@
+html{
+	background-color: #fff;
+}
+body {
+	background-color: #fff;
+	padding-bottom:1.2rem
+}
+section {
+	clear:both;
+	background-color:#fff
+}
+ul {
+	padding-top:.25rem;
+	font-size:.3rem;
+	color:#666;
+	text-align:center
+}
+li {
+	text-align:center
+}
+span {
+	display:inline-block;
+	position:relative
+}
+input {
+	height:.7rem!important;
+	padding-left:.4rem;
+	font-size:.26rem;
+	color:#d1cdcd;
+	border-radius:.05rem!important;
+	border:1px solid #b1bbb0
+}
+.section-title {
+	padding-top:.1rem;
+	padding-bottom:.1rem;
+	padding-left:.1rem;
+	text-align:left;
+	font-size:.3rem;
+	color:#333;
+	border-bottom:1px solid #f6f3f3
+}
+.filed {
+	text-align:left;
+	padding-top:.25rem;
+	padding-bottom:.2rem;
+	padding-left:.2rem;
+	padding-right:.2rem
+}
+.filed>p {
+	display:inline-block;
+	margin-left:.1rem;
+	margin-top:.15rem;
+	padding-top:.02rem;
+	padding-bottom:.02rem;
+	padding-left:.2rem;
+	padding-right:.2rem;
+	border-radius:.05rem;
+	color:#82e268;
+	font-size:.28rem;
+	border-radius:.05rem;
+	border:1px solid #82e268
+}
+.filed2>p {
+	border-radius:.34rem
+}
+.btnConfirm {
+	position:fixed;
+  right: 0;
+  left: 0;
+	bottom:0;
+	width:100%;
+	height:.8rem;
+	line-height:.8rem;
+	color:#fffefe;
+	font-size:.30rem;
+	text-align:center;
+	background-color:#ff7a00
+}
+.border1 {
+	border-left:2px solid #ffd400
+}
+.border2 {
+	border-left:2px solid #79b2ff
+}
+.border3 {
+	border-left:2px solid #82e268
+}
+.border4 {
+	border-left:2px solid #f9b099
+}
+i {
+	position:absolute;
+	display:inline-block;
+	width:.3rem;
+	height:.3rem;
+	background:url("../../image/management/arrow.png") no-repeat center center;
+	background-size:80% 50%;
+	top:.2rem;
+	right:.1rem
+}
+.small {
+	font-size:.24rem
+}

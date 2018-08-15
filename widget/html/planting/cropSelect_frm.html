@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<title>作物选择</title>
+		<link rel="stylesheet" type="text/css" href="../../css/common/public.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/planting/cropSelect.css"/>
+    <script type="text/javascript" src="../../script/common/rem-750.js"></script>
+</head>
+<body>
+<!-- <header id="mapLazyLoad">
+		<h4><span onclick="api.closeWin()"></span>作物长的怎么样</h4>
+</header> -->
+<article>
+	<section id="section3">
+		<nav class="section-title border3">
+				选择作物品名<span class="small">（必选）</span>
+		</nav>
+		<div class="filed filed2" id="spic">
+			<!-- <p>数据库暂时为空，这是展示页面</p> -->
+		</div>
+	</section>
+	<section id="section3">
+		<nav class="section-title border4">
+				选择作物品种<span class="small">（必选）</span>
+		</nav>
+		<div class="filed" id="pin">
+			<!-- <p>数据库暂时为空，这是展示页面</p> -->
+		</div>
+	</section>
+	<input id="idCat" type="hidden">
+	<input id="nameCat" type="hidden">
+</article>
+<div class="btnConfirm" id="btnConfirm" onclick="cropGrowth()">我选好了</div>
+<script type="text/javascript" src="../../script/common/api.js"></script>
+<script type="text/javascript" src="../../script/common/zepto-1.2.0.min.js"></script>
+<script type="text/javascript" src="../../script/common/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/common/pds.ajax.js"></script>
+<script>
+apiready=function(){
+	  showCrop()
+}
+var catName=""
+function showCrop(){
+	pds.ajaxSubmit({
+		url:'app/crop/categoryList',
+		type : "GET",
+		data:{farmId:api.pageParam.farmId},
+		success:function(ret){
+    //alert(JSON.stringify(ret))
+			var dt=ret.data,l=dt.length,spic="";
+			if(!l){
+				return
+			}
+			for(var i=0; i<l; i++){
+				spic+="<p id="+dt[i].id+">"+dt[i].catName+"</p>"
+			}
+			$("#spic").html(spic);
+			spic=null;
+		  $("#spic>p").eq(0).css("backgroundColor","#e4ffdd")
+			pds.ajaxSubmit({
+				url:'app/crop/findCategoryList',
+				type : "GET",
+				data:{id:$("#spic>p").eq(0).attr("id")},
+				success:function(ret){
+					var dt=ret.data,l=dt.length,pin="";
+					if(!l){
+						return
+					}
+					for(var i=0; i<l; i++){
+						pin+="<p id="+dt[i].id+">"+dt[i].catName+"</p>"
+					}
+					$("#pin").html(pin);
+					pin=null;
+					for(var j=0; j<l; j++){
+						$("#pin>p").eq(j).on("touchstart",function(){
+							$("#pin>p").css("backgroundColor","#fff")
+							$(this).css("backgroundColor","#e4ffdd")
+							$("#idCat").val($(this).attr("id"))
+							$("#nameCat").val($(this).html())
+						})
+					}
+				},
+ 			error:function(e){
+ 				 api.alert({msg:"服务器异常，请联系管理员!"});
+ 			}
+ 		 });
+			for(var j=0; j<l; j++){
+				$("#spic>p").eq(j).on("touchstart",function(){
+					$("#spic>p").css("backgroundColor","#fff")
+					$(this).css("backgroundColor","#e4ffdd")
+					pds.ajaxSubmit({
+						url:'app/crop/findCategoryList',
+						type : "GET",
+						data:{id:$(this).attr("id")},
+						success:function(ret,err){
+							var dt=ret.data,l=dt.length,pin="";
+							if(!l){
+								return
+							}
+							for(var i=0; i<l; i++){
+								pin+="<p id="+dt[i].id+">"+dt[i].catName+"</p>"
+							}
+							$("#pin").html(pin);
+							pin=null;
+							for(var j=0; j<l; j++){
+								$("#pin>p").eq(j).on("touchstart",function(){
+									$("#pin>p").css("backgroundColor","#fff")
+									$(this).css("backgroundColor","#e4ffdd")
+									$("#idCat").val($(this).attr("id"))
+									$("#nameCat").val($(this).html())
+								})
+							}
+							},
+						 error:function(e){
+								api.alert({msg:"服务器异常，请联系管理员!"});
+						 }
+					});
+				})
+			}
+		},
+			 error:function(e){
+					api.alert({msg:"服务器异常，请联系管理员!"});
+			 }
+		});
+}
+function cropGrowth() {
+	if(!$("#idCat").val()){
+		api.alert({msg:"请点击选择作物品种"});
+		return
+	}
+	switch(api.pageParam.pageParam){
+		case 1:
+		api.execScript({
+			name: 'win_home',
+			frameName: 'planOut_frm',
+			script: "process('"+$("#idCat").val()+"','"+$("#nameCat").val()+"')"
+		});
+		break;
+		case 2:
+		api.execScript({
+			name: 'planOutEditor_win',
+      frameName: 'planOutEditor_frm',
+			script: "process('"+$("#idCat").val()+"','"+$("#nameCat").val()+"')"
+		});
+		break;
+		case 3:
+		api.execScript({
+			name: 'plantEditor_win',
+			frameName: 'plantEditor_frm',
+			script: "process('"+$("#idCat").val()+"','"+$("#nameCat").val()+"')"
+		});
+		break;
+	}
+	api.closeWin();
+}
+</script>
+</body>
+</html>

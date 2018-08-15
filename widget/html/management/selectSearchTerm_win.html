@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<title>选择查询条件</title>
+	  <link rel="stylesheet" type="text/css" href="../../css/common/public.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/common/header.css"/>
+</head>
+<body>
+<!-- <header id="mapLazyLoad">
+		<h4><span onclick="api.closeWin()"></span>作物长的怎么样</h4>
+</header> -->
+<header id="header">
+        <div class="headerLeft" onclick="api.closeWin()"></div>
+        <div class="headerCenter">
+            选择查询条件
+        </div>
+        <div class="headerRight"></div>
+</header>
+<script type="text/javascript" src="../../script/common/api.js"></script>
+<script>
+	apiready = function(){
+			//适配iOS7+，Android4.4+状态栏沉浸式效果，详见config文档statusBarAppearance字段
+			var header = $api.byId('header');
+			$api.fixStatusBar(header);
+			var headerH = $api.offset(header).h;
+			api.openFrame({
+					name: 'selectSearchTerm_frm',
+					url: './selectSearchTerm_frm.html',
+					bounces: false,
+					pageParam : {
+						farmId : api.pageParam.farmId,
+					},
+					rect: {
+							x: 0,
+							y: headerH,
+							w: 'auto',
+							h: 'auto'
+					}
+			});
+	};
+</script>
+</body>
+</html>

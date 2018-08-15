@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"
+		/>
+		<title>
+			工单详情
+		</title>
+		<link rel="stylesheet" type="text/css" href="../../../css/common/public.css"/>
+		<link rel="stylesheet" type="text/css" href="../../../css/common/header.css"/>
+		<style>
+				#liu {
+					width: 22%;
+					text-align: center;
+				}
+				.headerCenter {
+					width:50%
+				}
+				.headerLeft {
+					width:25%
+				}
+		</style>
+		<script type="text/javascript" src="../../../script/common/rem-750.js"></script>
+	</head>
+	<body>
+		<header id="header">
+			<div class="headerLeft" onclick="api.closeWin()">
+			</div>
+			<div class="headerCenter">
+				工单详情
+			</div>
+			<div id="liu" class="headerRight">
+
+			</div>
+		</header>
+		<script type="text/javascript" src="../../../script/common/api.js"></script>
+		<script type="text/javascript" src="../../../script/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../../script/common/pds.ajax.js"></script>
+	</body>
+	<script type="text/javascript">
+	    apiready = function(){
+	        //适配iOS7+，Android4.4+状态栏沉浸式效果，详见config文档statusBarAppearance字段
+	        var header = $api.byId('header');
+	        $api.fixStatusBar(header);
+	        var headerH = $api.offset(header).h;
+	        //$("body").css({"paddingTop":headerH+"px"});
+	        var id_ = api.pageParam.id;
+
+	        api.openFrame({
+	            name: 'plantDetailInfo_complete_frm',
+	            url: './plantDetailInfo_complete_frm.html',
+	            bounces: false,
+	            pageParam : {
+	              plantDetailId : api.pageParam.plantDetailId,
+								navId:api.pageParam.navId
+	            },
+	            rect: {
+	                x: 0,
+	                y: headerH,
+	                w: 'auto',
+	                h: 'auto'
+	            }
+	        });
+	    };
+			function liu(name){
+				$("#liu").html("流转记录")
+				$("#liu").on("touchstart",function(){
+					//alert(n)
+					api.openWin({
+							name : 'circulation_record_win',
+							url : '../../planting/circulation_record_win.html',
+							reload : true,
+							slidBackEnabled : false,
+							pageParam : {
+								 plantDetailId : api.pageParam.plantDetailId,
+								 navId:api.pageParam.navId,
+								 name:name
+							}
+					})
+				})
+			}
+			</script>
+</html>

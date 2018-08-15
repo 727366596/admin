@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>种苗测算-首页</title>
+	<script type="text/javascript" src="../../../script/common/rem.js"></script>
+	<link rel="stylesheet" href="../../../css/common/public.css" />
+	<link rel="stylesheet" href="../../../css/common/header.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/common/swiper.min.css">
+	<style>
+		html,
+		body {
+			font-size: 0.28rem;
+			color: #204e41;
+			background: #dadada;
+			height: 100%;
+		}
+
+		/*#header {
+			background-color: #204e41;
+		}*/
+
+		.headerLeft {
+			background: url("../../../image/cal_img/index/pressedbtn-fanhui@3x.png") no-repeate left;
+		}
+
+		.swiper-container {
+			padding-top: 66px;
+			width: 100%;
+			height: 100%;
+		}
+		/*.swiper-container,.swiper-wrapper,.swiper-slide{
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+			}*/
+
+		.swiper-slide {
+			padding-top: 0.77rem;
+			box-sizing: border-box;
+		}
+		/*第一页样式*/
+
+		.content {
+			width: 100%;
+			overflow: hidden;
+			background: #dadada;
+		}
+
+		.content .item {
+			width: 100%;
+			height: 0.7rem;
+			line-height: 0.7rem;
+			padding: 0 1.3rem;
+			box-sizing: border-box;
+			overflow: hidden;
+			margin-bottom: 0.4rem;
+		}
+
+		.item .name {
+			width: 1.58rem;
+			text-align: right;
+			float: left;
+			padding-right: 0.4rem;
+			box-sizing: border-box;
+		}
+
+		.item .item-r {
+			width: 3.3rem;
+			float: right;
+			/*background: #fff;*/
+			border-radius: 2px;
+			position: relative;
+		}
+
+		.item .item-r .right-pic {
+			position: absolute;
+			right: 1.2rem;
+			top: 0;
+			line-height: 0.7rem;
+		}
+
+		.item .item-r input {
+			display: inline-block;
+			width: 100%;
+			height: 0.7rem;
+			color: #204e41;
+			padding: 0 1.6rem 0 0.2rem;
+			box-sizing: border-box;
+			text-align: right;
+		}
+
+		.con-tit {
+			width: 100%;
+			font-size: 0.3rem;
+			line-height: 0.8rem;
+			padding-left: 0.75rem;
+			box-sizing: border-box;
+		}
+
+		.top-img {
+			width: 100%;
+			height: 1.66rem;
+			padding: 0 0.72rem 0 0.73rem;
+			box-sizing: border-box;
+			margin-bottom: 0.88rem;
+		}
+
+		.top-img img {
+			width: 100%;
+			height: 1.66rem;
+		}
+
+		.seeding-img {
+			width: 100%;
+			height: 3.15rem;
+			padding: 0 1.12rem 0 1.97rem;
+			box-sizing: border-box;
+			margin-bottom: 0.55rem;
+			position: relative;
+		}
+
+		.seeding-img img {
+			width: 100%;
+			height: 3.15rem;
+		}
+
+		.row-spacing {
+			position: absolute;
+			left: 1.11rem;
+			top: 1.16rem;
+		}
+
+		.ridge-distance {
+			position: absolute;
+			left: 2.93rem;
+			top: 0.1rem;
+		}
+		/*第二页样式*/
+
+		.calculated-data {
+			width: 100%;
+			padding-left: 0.76rem;
+			box-sizing: border-box;
+			font-size: 0.3rem;
+			line-height: 0.55rem;
+			margin-bottom: 0.82rem;
+		}
+
+		.calculated-data span {
+			display: inline-block;
+		}
+
+		.seeding-show-img {
+			width: 100%;
+			height: 5.83rem;
+			padding: 0 0.74rem;
+			box-sizing: border-box;
+		}
+
+		.seeding-show-img img {
+			width: 100%;
+			height: 5.83rem;
+		}
+		/*第三页样式*/
+
+		.calculated-num {
+			font-size: 0.26rem;
+		}
+
+		.line {
+			width: 100%;
+			padding: 0 0.73rem;
+			box-sizing: border-box;
+			overflow: hidden;
+		}
+
+		.line span {
+			width: 100%;
+			height: 1px;
+		}
+
+		.line .ddd {
+			background: #ddd;
+		}
+
+		.line .eee {
+			background: #eee;
+		}
+
+		.line .white {
+			background: #fff;
+		}
+
+		.btn-item {
+			width: 100%;
+			overflow: hidden;
+			padding: 0 0.6rem;
+			box-sizing: border-box;
+			margin-top: 0.53rem;
+		}
+
+		.btn-item .btn {
+			width: 100%;
+			text-align: center;
+			line-height: 0.8rem;
+			background: #c3a256;
+			color: #fff;
+			font-size: 0.3rem;
+			border-radius: 0.1rem;
+		}
+
+		.investment {
+			width: 100%;
+			overflow: hidden;
+			padding: 0.3rem 0.72rem 0.3rem 1.11rem;
+			box-sizing: border-box;
+		}
+
+		.investment .top-tit {
+			width: 100%;
+			text-align: center;
+			font-size: 0.3rem;
+			margin-bottom: 0.15rem;
+		}
+
+		.investment .cost {
+			width: 100%;
+			line-height: 22px;
+			overflow: hidden;
+			font-size: 0.26rem;
+			margin-top: 2px;
+			text-align: center;
+		}
+
+		.investment .cost span {
+			float: left;
+			width: 1.2rem;
+			background: #fff;
+		}
+
+		.investment .cost .cost-back {
+			float: left;
+			width: 3.8rem;
+			background: #9f0500;
+			color: #ff0800;
+			text-align: left;
+			padding-left: 0.9rem;
+			box-sizing: border-box;
+		}
+
+		.investment .use .cost-back {
+			width: 2.8rem;
+		}
+
+		.r-investment .cost .cost-back {
+			background: #5b8c14;
+			color: #fff;
+		}
+
+		.row-spacing span,
+		.ridge-distance span {
+			display: inline-block;
+		}
+
+		.swiper-container {
+			position: relative;
+		}
+
+		.swiper-pagination {
+			right: 0.2rem;
+			top: 23%;
+			width: 10px;
+			height: 50px;
+		}
+	</style>
+</head>
+
+<body>
+	<header id="header">
+		<div class="headerLeft" onclick="closeToWin()"></div>
+		<div class="headerCenter">种苗测算</div>
+		<div class="headerRight"></div>
+	</header>
+
+	<div class="swiper-container">
+		<div class="swiper-wrapper">
+			<!-- 第一页 -->
+			<div class="swiper-slide">
+				<div class="top-img">
+					<img src="../../../image/cal_img/seeding-top-img.png" alt="">
+				</div>
+				<div class="seeding-img">
+					<img src="../../../image/cal_img/seeding-img.png" alt="">
+					<!-- 株距 -->
+					<div class="row-spacing"><span id="plan-text"></span>cm</div>
+					<!-- 垄距 -->
+					<div class="ridge-distance"><span id="dist-text"></span>cm</div>
+				</div>
+				<!-- 种苗测算填写页 -->
+				<div class="content">
+					<div class="con-tit">您的种植方式:</div>
+					<div class="item">
+						<div class="name">株距:</div>
+						<div class="item-r">
+							<input type="number" id="row-input" readonly>
+							<div class="right-pic">cm</div>
+						</div>
+					</div>
+					<div class="item">
+						<div class="name">垄距:</div>
+						<div class="item-r">
+							<input type="number" id="dist-input" readonly>
+							<div class="right-pic">cm</div>
+						</div>
+					</div>
+					<div class="item">
+						<div class="name">每垄行数:</div>
+						<div class="item-r">
+							<input type="number" id="line" readonly>
+							<div class="right-pic">行</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- 第二页 -->
+			<div class="swiper-slide">
+				<div class="top-img" style="margin-bottom:0.55rem;">
+					<img src="../../../image/cal_img/seeding-top-img.png" alt="">
+				</div>
+				<div class="calculated-data">
+					<div>经测算:</div>
+					<div class="calculated-num">
+						每亩地种薯用量为<span id="count"></span>千克，约<span id="num-text"></span>颗/亩。
+					</div>
+				</div>
+				<div class="seeding-show-img">
+					<img src="../../../image/cal_img/seeding-show-img.png" alt="">
+				</div>
+
+			</div>
+			<!-- 第三页 -->
+			<div class="swiper-slide">
+				<div class="top-img" style="margin-bottom:0.26rem;">
+					<img src="../../../image/cal_img/seeding-top-img.png" alt="">
+				</div>
+				<!-- 分割线 -->
+				<div class="line">
+					<span class="ddd"></span>
+					<span class="eee"></span>
+				</div>
+
+				<div class="calculated-data" style="padding:0.1rem 0.6rem;margin-bottom:0;">
+					<div>测算结果:</div>
+					<div class="calculated-num">
+						理想情况下，建议投入成本为<span id="idea-cost"></span>元，建议每亩投入种薯<span id="idea-num"></span>千克<span id="save-cost"></span></div>
+				</div>
+				<!-- 分割线 -->
+				<div class="line">
+					<span class="eee"></span>
+				</div>
+				<div id="mineShow" style="display:none;">
+					<div class="investment">
+						<div class="top-tit">您的投入</div>
+						<!-- <div class="cost">
+									<span>投入成本</span>
+									<div class="cost-back">178,722元</div>
+								</div> -->
+						<div class="cost use">
+							<div style="float:left;width:20%;margin-top:0.02rem;">
+								<span style="margin-bottom: 0.1rem;">投入成本</span>
+								<span>种薯用量</span>
+							</div>
+							<!-- <div class="cost-back">200千克/亩</div>  -->
+							<div id="echarts" style="float:right;width:80%;height:45px;    margin-top: 0.05rem;"></div>
+						</div>
+
+					</div>
+					<!-- 分割线 -->
+					<div class="line">
+						<span class="ddd"></span>
+						<span class="white"></span>
+					</div>
+				</div>
+
+
+					<div class="investment r-investment">
+						<div class="top-tit">建议投入</div>
+						<div class="cost use">
+							<div style="float:left;width:20%;margin-top:0.02rem;">
+								<span style="margin-bottom: 0.1rem;">投入成本</span>
+								<span>种薯用量</span>
+							</div>
+							<!-- <div class="cost-back">200千克/亩</div>  -->
+							<div id="echarts2" style="float:right;width:80%;height:45px;margin-top: 0.05rem;"></div>
+						</div>
+								<!-- <div class="cost">
+									<span>投入成本</span>
+									<div class="cost-back">178,722元</div>
+								</div>
+								<div class="cost use">
+									<span>种薯用量</span>
+									<div class="cost-back">200千克/亩</div>
+								</div> -->
+					</div>
+					<!-- 分割线 -->
+					<div class="line">
+						<span class="eee"></span>
+					</div>
+
+				<div class="btn-item" onclick="closeWin();">
+					<div class="btn">重新测算</div>
+				</div>
+			</div>
+
+
+
+		</div>
+	</div>
+	<!-- 分页器 -->
+	<div class="swiper-pagination"></div>
+	</div>
+
+</body>
+<script type="text/javascript" src="../../../script/common/api.js"></script>
+<script type="text/javascript" src="../../../script/common/jquery.min.js"></script>
+<!-- <script type="text/javascript" src="../../../script/common/pds.ajax.js"></script> -->
+<script type="text/javascript" src="../../../script/common/swiper.min.js"></script>
+<script type="text/javascript" src="../../../script/common/echarts.common.min.js"></script>
+<script>
+	apiready = function() {
+		$('#plan-text').text(api.pageParam.colSpacing);
+		$('#dist-text').text(api.pageParam.ridgeSpacing);
+		$('#row-input').val(api.pageParam.colSpacing);
+		$('#dist-input').val(api.pageParam.ridgeSpacing);
+		$('#line').val(api.pageParam.linesOnRidge);
+
+		$('#count').text(api.pageParam.recommendEfficiency);
+		$('#num-text').text(api.pageParam.count);
+
+		$('#idea-cost').text(api.pageParam.recommendInput);
+		$('#idea-num').text(api.pageParam.recommendEfficiency);
+		var saveMoney = api.pageParam.saveMoney;
+		$('#idea-cost').text(api.pageParam.recommendInput);
+		$('#idea-num').text(api.pageParam.recommendEfficiency);
+		if (saveMoney === null) {
+
+		} else if (saveMoney > 0) {
+			$('#mineShow').show();
+			$('#save-cost').text('您可以省下' + saveMoney + '元');
+			mineCost(api.pageParam.actualInput, api.pageParam.actualEfficiency);
+		} else {
+			$('#mineShow').show();
+			$('#save-cost').text('经过测算发现您是种植大牛，给种植专家跪下啦');
+			mineCost(api.pageParam.actualInput, api.pageParam.actualEfficiency);
+		}
+		mineRealCost(api.pageParam.recommendInput, api.pageParam.recommendEfficiency);
+
+		var mySwiper = new Swiper('.swiper-container', {
+			direction: 'vertical',
+			pagination: '.swiper-pagination'
+		})
+
+	};
+	//返回按钮操作
+	function closeToWin() {
+		api.closeToWin({
+			name: 'index_win'
+		});
+	};
+	//重新测算
+	function closeWin() {
+		api.closeWin();
+	};
+
+
+	//echarts
+	function mineCost(value1, value2) {
+		var myChart = echarts.init(document.getElementById('echarts'));
+		var seriesLabel = {
+			normal: {
+				show: true,
+				color: '#ff0800',
+				lineHeight: 56,
+				formatter: function(params) {
+					if (params.dataIndex === 0) {
+						return params.value + '元';
+					} else {
+						return params.value + '千克/亩';
+					}
+				}
+			}
+		}
+
+		var option = {
+			color: '#fff',
+			xAxis: {
+				show: false
+			},
+			yAxis: {
+				show: false,
+				type: 'category',
+				inverse: true,
+			},
+			grid: {
+				left: "2%",
+				bottom: 50,
+				top: 48
+			},
+			series: [{
+				type: 'bar',
+				data: [value1, value2],
+				label: seriesLabel,
+				barWidth: 25,
+				barMinHeight: 100,
+				itemStyle: {
+					normal: {
+						color: '#9f0500',
+					},
+				}
+			}]
+		};
+
+		/*调用option生成图表*/
+		myChart.setOption(option);
+	}
+
+	function mineRealCost(value3, value4) {
+		var myChart = echarts.init(document.getElementById('echarts2'));
+		var seriesLabel = {
+			normal: {
+				show: true,
+				color: '#fff',
+				lineHeight: 56,
+				formatter: function(params) {
+					if (params.dataIndex === 0) {
+						return params.value + '元';
+					} else {
+						return params.value + '千克/亩';
+					}
+				}
+			}
+		}
+		var option = {
+			color: '#fff',
+			xAxis: {
+				show: false
+			},
+			yAxis: {
+				show: false,
+				type: 'category',
+				inverse: true,
+			},
+			grid: {
+				left: "2%",
+				bottom: 50,
+				top: 52
+			},
+			series: [{
+				type: 'bar',
+				data: [value3, value4],
+				label: seriesLabel,
+				barWidth: 22,
+				barMinHeight: 100,
+				itemStyle: {
+					normal: {
+						color: '#5b8c14',
+					},
+				}
+			}]
+		};
+
+		/*调用option生成图表*/
+		myChart.setOption(option);
+	}
+</script>
+
+</html>

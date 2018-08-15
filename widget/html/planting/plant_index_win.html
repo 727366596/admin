@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="../../css/common/public.css"/>
+      <link rel="stylesheet" type="text/css" href="../../css/common/header.css"/>
+      <link rel="stylesheet" type="text/css" href="../../css/planting/choose_index_win.css"/>
+      <style>
+          body{
+
+          }
+          .you{
+            background: none;
+          }
+      </style>
+  </head>
+  <body>
+    <header id="header">
+      <div id="arrow" class="headerLeft you" onclick="$('#tab_top').children().eq(0).click()"></div>
+      <div class="headerCenter">种植</div>
+      <div class="headerRight"></div>
+    </header>
+    <ul id='tab_top' class="clearfix">
+         <li>
+           <!-- <img src="../../image/planting/planA.png" alt=""> -->
+           <i class="tab_plan planA currentA"></i>
+           <span class="planA_s special">计划内派单</span>
+         </li>
+         <li>
+            <!-- <img src="../../image/planting/planB.png" alt=""> -->
+            <i class="tab_plan planB"></i>
+            <span  class="planB_s">计划外派单</span>
+         </li>
+    </ul>
+  </body>
+  <script type="text/javascript" src="../../script/common/api.js"></script>
+  <script type="text/javascript" src="../../script/common/zepto-1.2.0.min.js"></script>
+  <script type="text/javascript" src="../../script/common/jquery.min.js"></script>
+  <script type="text/javascript" src="../../script/common/jquery.tmpl.js"></script>
+  <script type="text/javascript" src="../../script/common/rem-750.js"></script>
+  <script type="text/javascript" src="../../script/common/pds.ajax.js"></script>
+    <script>
+      var show=null
+      apiready = function(){
+        var buriedPoint = pds.buriedPoint();
+        buriedPoint.pageId = 'page_cultivate_admin';
+        buriedPoint.eventId = 'button_cultivate_page_cultivate_admin';
+        pds.ajaxSubmit({
+        url:"app/buried_point/save",
+        data:{"point":buriedPoint},
+        success:function(v){
+        }
+      })
+        var header = $api.byId('header');
+        var tab_top = $api.byId('tab_top');
+        $api.fixStatusBar(header);
+        var headerH = $api.offset(header).h;
+        var tabH = $api.offset(tab_top).h;
+        $("body").css({"paddingTop":headerH+"px"});
+          api.openFrame({
+              name: 'plant_index_frm',
+              url: './plant_index_frm.html',
+              reload: true,
+              bounces: false,
+              rect: {
+                  x: 0,
+                  y: headerH+tabH,
+                  w: 'auto',
+                  h: api.winHeight-headerH-tabH-50
+              }
+          });
+
+        // 跳转到计划外派单dd
+        $('#tab_top').children().eq(0).on('click',function(){
+          if($("#arrow").hasClass("you")){
+            return
+          }
+          var buriedPoint = pds.buriedPoint();
+          buriedPoint.pageId = 'page_cultivate_admin';
+          buriedPoint.eventId = 'button_planned_send_page_cultivate_admin';
+          pds.ajaxSubmit({
+          url:"app/buried_point/save",
+          data:{"point":buriedPoint},
+          success:function(v){
+          }
+        })
+          $("#arrow").addClass("you")
+          $(this).children('i').addClass('currentA');
+          $(this).children('span').addClass('special');
+          $('.planB').removeClass('currentB').addClass('.currentB1');
+          $('.planB_s').removeClass('special');
+          api.execScript({
+              name: 'win_home',
+              script: 'show();'
+          });
+
+          api.closeFrame({
+              name: 'planOut_frm'
+          });
+          api.openFrame({
+            name : 'plant_index_frm',
+            url : './plant_index_frm.html',
+            reload : true,
+            bounces: false,
+            // animation:{
+            //       type:"reveal",
+            //       subType:"from_right",
+            //       duration:300
+            //   },
+            rect: {
+                x: 0,
+                y: headerH+tabH,
+                w: 'auto',
+                h: api.winHeight-headerH-tabH-50
+
+            }
+          });
+        })
+
+        $('#tab_top').children().eq(1).on('click',function(){
+          if(!$("#arrow").hasClass("you")){
+            return
+          }
+          var buriedPoint = pds.buriedPoint();
+          buriedPoint.pageId = 'page_cultivate_admin';
+          buriedPoint.eventId = 'button_unplanned_send_page_cultivate_admin';
+          pds.ajaxSubmit({
+          url:"app/buried_point/save",
+          data:{"point":buriedPoint},
+          success:function(v){
+          }
+        })
+          $("#arrow").removeClass("you")
+          $(this).children('i').addClass('currentB');
+          $(this).children('span').addClass('special');
+          $('.planA').removeClass('currentA').addClass('.currentA1');
+          $('.planA_s').removeClass('special');
+          api.execScript({
+              name: 'win_home',
+              script: 'hide();'
+          });
+
+          api.closeFrame({
+              name: 'plant_index_frm'
+          });
+          api.openFrame({
+            name : 'planOut_frm',
+            url : './planOut_frm.html',
+            reload : true,
+            bounces: false,
+            // animation:{
+            //       type:"reveal",
+            //       subType:"from_right",
+            //       duration:300
+            //   },
+            pageParam : {
+              gao:api.winHeight-headerH-tabH
+            },
+            rect: {
+                x: 0,
+                y: headerH+tabH,
+                w: 'auto',
+                h: api.winHeight-headerH-tabH
+            }
+          });
+        })
+      };
+    </script>
+  </html>

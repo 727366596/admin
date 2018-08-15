@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>win页面提示语</title>
+		<link rel="stylesheet" type="text/css" href="../../../../css/common/api.css"/>
+		<script src="../../../../script/common/zepto-1.2.0.min.js"></script>
+		<script type="text/javascript" src="../../../../script/common/api.js"></script>
+
+</head>
+<style type="text/css">
+body {
+    background: rgba(0,0,0,0.5);
+    padding: 0;
+    margin: 0;
+}
+.info {
+    position: relative;
+    background: url("../../../../image/settings/infoFrm_info.png") no-repeat 15px 8px;
+    background-size: 15px 15px;
+    background-color: #fff;
+    color: #555;
+    font-size: 12px;
+    height: 35px;
+    line-height: 32px;
+    text-align: left;
+    padding-left: 35px;
+}
+.delInfo{
+  display: inline-block;
+  vertical-align: middle;
+  position: absolute;
+  right: 10px;
+  top:6px;
+  height: 18px;
+  width:18px;
+  border-radius: 50%;
+  background : url("../../../../image/settings/infoFrm_delBc.png") no-repeat center center;
+}
+</style>
+<body>
+<div class="info aui-ellipsis-1" id="info">当前地块为：<span id="landName"></span><span class="delInfo" onclick="infoSlideUp()"></span></div>
+</body>
+
+<script type="text/javascript">
+    apiready = function(){
+        api.parseTapmode();
+        $("#landName").text(api.pageParam.landName)
+    }
+    function setInfo(address){
+        $api.text($api.byId("info"),address);
+    }
+    function infoSlideUp(){
+      api.closeFrame({
+          name: 'myposition_bmap_info_frm',
+          animation: {
+            type:"curl",
+            subType:"from_bottom",
+            duration:"1000"
+          }
+      });
+    }
+</script>
+</html>

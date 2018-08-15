@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>定价测算</title>
+    <script type="text/javascript" src="../../../script/common/rem.js"></script>
+    <link rel="stylesheet" href="../../../css/common/public.css" />
+    <link rel="stylesheet" href="../../../css/common/header.css" />
+		<link rel="stylesheet" href="../../../css/common/swiper.min.css" />
+		<link rel="stylesheet" href="../../../css/common/animate.min.css" />
+		<style>
+		html,body{
+			/*padding-top:1rem;*/
+			box-sizing:border-box;
+			height: 100%;
+      width: 100%;
+		}
+
+		*{
+			margin:0;
+			padding:0;
+		}
+		.swiper-container {
+		  /*  width: 320px;
+		    height: 480px;*/
+			width: 100%;
+		    height: 100%;
+			background:#000;
+			    padding-top: 1rem;
+
+		}
+
+		.swiper-slide{
+			width:100%;
+			height:100%;
+			background-size:100% 100%;
+		}
+		img{
+			display:block;
+		}
+		.swiper-pagination-bullet {
+		width: 6px;
+		height: 6px;
+		background: #fff;
+		opacity: .4;
+		}
+		.swiper-pagination-bullet-active {
+		opacity: 1;
+		}
+		@-webkit-keyframes start {
+			0%,30% {opacity: 0;-webkit-transform: translate(0,10px);}
+			60% {opacity: 1;-webkit-transform: translate(0,0);}
+			100% {opacity: 0;-webkit-transform: translate(0,-8px);}
+		}
+		@-moz-keyframes start {
+			0%,30% {opacity: 0;-moz-transform: translate(0,10px);}
+			60% {opacity: 1;-moz-transform: translate(0,0);}
+			100% {opacity: 0;-moz-transform: translate(0,-8px);}
+		}
+		@keyframes start {
+			0%,30% {opacity: 0;transform: translate(0,10px);}
+			60% {opacity: 1;transform: translate(0,0);}
+			100% {opacity: 0;transform: translate(0,-8px);}
+		}
+		.ani{
+			position:absolute;
+			}
+		.txt{
+			position:absolute;
+		}
+		#array{
+			position:absolute;z-index:999;-webkit-animation: start 1.5s infinite ease-in;
+		}
+
+
+			/*#header{
+				background-color: #204e41;
+			}*/
+			.headerLeft{
+				background: url("../../../image/cal_img/index/pressedbtn-fanhui@3x.png") no-repeate left;
+			}
+			.slidPage{
+				width: 100%;
+				height: 100%;
+				background-color: #dadada;
+				overflow: hidden;
+				position: relative;
+			}
+			/*第一页*/
+			.dimg{
+	      width: 100%;
+	      height: 100%;
+	      background-color: #dadada;
+	      /*overflow: hidden;*/
+				position: relative;
+	    }
+			.item{
+				/*overflow: hidden;*/
+				display: inline-block;
+				background-size: 100% 100%;
+				box-sizing: border-box;
+			}
+			/*老头*/
+	       .item0{
+	         width: 100%;
+	         height: 100%;
+	         position: absolute;;
+	        padding: 4rem 0.26rem 1.08rem 0.26rem;
+	        z-index: 99;
+	      }
+	      .price0{
+	        width: 6.98rem;
+	        height: 6.49rem;
+	      }
+				/*折线*/
+	        .item_1a{
+	          width: 100%;
+	          height: 100%;
+	          position: absolute;
+	          top: 0.5rem;
+	          left: 1.5rem;
+	        }
+	        .price_1a{
+	          width: 5.1rem;
+	          height: 7.33rem;
+	        }
+					/*草草卖掉*/
+	        .item_1b{
+	          width: 100%;
+	          height:100%;
+	          position: absolute;
+	          top: 7.5rem;
+	          left: 2.5rem;
+						z-index: 999;
+	        }
+	        .price_1b{
+						width: 2.78rem;
+						height: 0.89rem;
+	        }
+					/*第一个圆圈*/
+					.item_2a{
+						width: 100%;
+	          height:100%;
+	          position: absolute;
+	          top:0.8rem;
+	          left: 4.9rem;
+						z-index: 9999;
+					}
+					.price_2a{
+						width: 1.49rem;
+	          height: 1.49rem;
+					}
+					/*第二个圆圈*/
+					.item_2b{
+						width: 100%;
+	          height:100%;
+	          position: absolute;
+	          top: 2.3rem;
+	          left: 3.8rem;
+					}
+					.price_2b{
+						width: 1.73rem;
+	          height: 1.73rem;
+					}
+					/*第三个圆圈*/
+					.item_2c{
+						width: 100%;
+	          height:100%;
+	          position: absolute;
+	          top: 4rem;
+	          left: 4.8rem;
+					}
+					.price_2c{
+						width: 1.94rem;
+	          height: 1.94rem;
+					}
+					/*怎么定价*/
+					.item_3a{
+						width: 100%;
+						height:100%;
+						position: absolute;
+						top: 0.6rem;
+						left: 1.4rem;
+					}
+					.price_3a{
+						width: 2.54rem;
+						height: 1.5rem;
+					}
+					/*赚*/
+					.item_3b{
+						width: 100%;
+						height:100%;
+						position: absolute;
+						top: 2.3rem;
+						left: 1.4rem;
+					}
+					.price_3b{
+						width: 1.88rem;
+						height: 2.47rem;
+					}
+
+					/*第二页*/
+					/*老人*/
+		      .item01{
+						width: 100%;
+						height: 100%;
+		        position: absolute;;
+		        z-index: 99;
+						top: 0.7rem;
+		      }
+					.laoren1{
+						width: 7.5rem;
+						height: 10.4rem;
+					}
+		      /*左四图*/
+		      .item_1a1{
+		        width:100%;
+		        height:100%;
+		        position: absolute;;
+		        top: 6.1rem;
+		        left: 5.67rem;
+		        z-index: 99;
+		      }
+					.price_1a1{
+						width:1.17rem;
+		        height: 0.78rem;
+					}
+		      /*左三图*/
+		      .item_1b1{
+						width:100%;
+		        height:100%;
+		        position: absolute;
+		        top: 5.88rem;
+		        left: 4.4rem;
+		        z-index: 999;
+		      }
+					.price_1b1{
+						width:1.23rem;
+		        height: 0.93rem;
+					}
+		      /*左二图*/
+		      .item_1c1{
+						width:100%;
+		        height:100%;
+		        position: absolute;
+						top: 5.65rem;
+		    		left: 3.1rem;
+		        z-index: 9999;
+		      }
+					.price_1c1{
+						width:1.23rem;
+		        height: 1.19rem;
+					}
+		      /*左一图*/
+		      .item_1d1{
+						width:100%;
+						height:100%;
+		        position: absolute;
+		        top: 5.25rem;
+		        left: 1.25rem;
+		        z-index: 99999;
+		      }
+					.price_1d1{
+						width:1.78rem;
+						height: 1.6rem;
+					}
+		      /*底部文字*/
+		      .item_2a1{
+						width:100%;
+						height:100%;
+		        position: absolute;
+		        top: 6.9rem;
+		        left: 2rem;
+						z-index: 99999;
+		      }
+					.price_2a1{
+						width:3.92rem;
+		        height: 0.5rem;
+					}
+		      /*右侧文字*/
+		      .item_2b1{
+						width:100%;
+						height:100%;
+		        position: absolute;
+		        top: 4.3rem;
+		        left: 5.3rem;
+						z-index: 99;
+		      }
+					.price_2b1{
+						width:1.1rem;
+		        height: 0.7rem;
+					}
+					/*头部文字*/
+					.item_2c1{
+						width:100%;
+						height:100%;
+		        position: absolute;
+		        top: 0.5rem;
+		        left: 1.8rem;
+					}
+					.price_2c1{
+						width:3.96rem;
+		        height: 5.91rem;
+					}
+					/*第三页*/
+					/*图表*/
+					.item02{
+						width: 100%;
+						height: 100%;
+						position: absolute;;
+						z-index: 999;
+						margin: 5.28rem 0.32rem 0.75rem 0.5rem;
+					}
+					.laoren2{
+						width: 6.68rem;
+						height:5.43rem;
+					}
+					/*市场*/
+					.item_1a2{
+						width:100%;
+						height:100%;
+						position: absolute;;
+						margin: 4.35rem 2.31rem 6.45rem 2.13rem;
+						z-index: 999;
+					}
+					.price_1a2{
+						width:3.06rem;
+						height: 0.65rem;
+					}
+					/*采收*/
+					.item_1b2{
+						width:100%;
+						height:100%;
+						position: absolute;
+						margin: 3.12rem 2.77rem 7.33rem 1.04rem;
+						z-index: 999;
+					}
+					.price_1b2{
+						width:3.69rem;
+						height: 1.06rem;
+					}
+					/*老头*/
+					.item_1c2{
+						width:100%;
+						height:100%;
+						position: absolute;
+						margin: 1.3rem 0.18rem 0.76rem 0.33rem;
+						z-index: 777;
+					}
+					.price_1c2{
+						width:6.99rem;
+						height: 9.22rem;
+					}
+					/*一切*/
+					.item_1d2{
+						width:100%;
+						height:100%;
+						position: absolute;
+						margin: 0.3rem 2.93rem 8.27rem 1.7rem;
+						z-index: 9;
+					}
+					.price_1d2{
+						width:2.87rem;
+						height: 3.2rem;
+					}
+					/*简单*/
+					.item_2a2{
+						width:100%;
+						height:100%;
+						position: absolute;
+						margin: 0.3rem 1.64rem 6.62rem 4.85rem;
+						z-index: 999;
+					}
+					.price_2a2{
+						width:1.01rem;
+						height: 4.87rem;
+					}
+
+					/*第四页*/
+					/*建议*/
+		      .item03{
+						width: 100%;
+						height: 100%;
+		        position: absolute;;
+		        /*z-index: 999;*/
+		        margin: 1.3rem 1.23rem 8.71rem 1.39rem;
+		      }
+					.laoren3{
+						width:4.88rem;
+						height:2.19rem;
+					}
+		      /*定价*/
+		      .item_1a3{
+		        width:100%;
+		        height:100%;
+		        position: absolute;;
+		        margin: 6.5rem 3.6rem 3.35rem 1rem;
+		        /*z-index: 999;*/
+		      }
+					.price_1a3{
+						width:2.84rem;
+		        height: 2.1rem;
+					}
+		      /*元*/
+		      .item_1b3{
+						width:100%;
+		        height:100%;
+		        position: absolute;
+		        margin: 8.55rem 0.46rem 1.33rem 0.97rem;
+		        /*z-index: 999;*/
+		      }
+					.price_1b3{
+						width:6.07rem;
+		        height: 2.06rem;
+					}
+		      /*图表*/
+		      .item_1c3{
+						width:100%;
+		        height:100%;
+		        position: absolute;
+						margin: 5.9rem 2.04rem 2.71rem 3.08rem;
+		        z-index: 666;
+		      }
+					.price_1c3{
+						width:2.38rem;
+		        height: 3.4rem;
+					}
+		      /*成本定价*/
+		      .item_1d3{
+						width:100%;
+						height:100%;
+		        position: absolute;
+		        margin: 3.4rem 1.39rem 7.67rem 3.27rem;
+		        z-index: 666;
+		      }
+					.price_1d3{
+						width:2.84rem;
+						height: 0.59rem;
+					}
+		      /*老人*/
+		      .item_2a3{
+						width:100%;
+						height:100%;
+		        position: absolute;
+		        margin: 1.75rem 1.23rem 5.22rem 0.69rem;
+						/*z-index: 999;*/
+		      }
+					.price_2a3{
+						width:5.58rem;
+		        height: 4.94rem;
+					}
+
+					/*第五页*/
+					/*天空*/
+					.item04{
+						width: 100%;
+						height: 100%;
+						position: absolute;;
+						/*z-index: 999;*/
+						margin: 2.7rem 0.48rem 0.41rem 0.35rem;
+					}
+					.laoren4{
+						width: 6.67rem;
+						height:8.83rem;
+					}
+					/*亩数*/
+					.item_1a4{
+						width:100%;
+						height:100%;
+						position: absolute;;
+						margin: 6.9rem 2.24rem 3.56rem 1.43rem;
+						z-index: 99;
+					}
+					.price_1a4{
+						width:3.83rem;
+						height: 1.34rem;
+					}
+					/*右鸟*/
+					.item_1b4{
+						width:100%;
+						height:100%;
+						position: absolute;
+						margin: 6.7rem 1.31rem 4.04rem 4.8rem;
+						/*z-index: 999;*/
+					}
+					.price_1b4{
+						width:1.39rem;
+						height: 0.87rem;
+					}
+					/*基地*/
+					.item_1c4{
+						width:100%;
+						height:100%;
+						position: absolute;
+						margin: 4.6rem 2.17rem 5.79rem 2.22rem;
+						/*z-index: 666;*/
+					}
+					.price_1c4{
+						width:3.11rem;
+						height: 1.63rem;
+					}
+					/*左鸟*/
+					.item_1d4{
+						width:100%;
+						height:100%;
+						position: absolute;
+						margin: 3rem 4.52rem 7.99rem 1.39rem;
+						z-index: 9;
+					}
+					.price_1d4{
+						width:1.86rem;
+						height: 0.83rem;
+					}
+					/*同行*/
+					.item_2a4{
+						width:100%;
+						height:100%;
+						position: absolute;
+						margin:1rem 1.21rem 8.78rem 1.28rem;
+						z-index: 999;
+					}
+					.price_2a4{
+						width:5.01rem;
+						height: 2.2rem;
+					}
+					/*下一页*/
+					.nextPag{
+						width: 100%;
+						height:100%;
+						position: absolute;
+						text-align: center;
+						top: 5.5rem;
+						right: 44%;
+						z-index: 999999;
+					}
+					.price_down4{
+						width: 0.46rem;
+						height: 0.24rem;
+					}
+					.swiper-button-next{
+						background-image:url("../../../image/cal_img/price/xiangxia@3x.png");
+					}
+		</style>
+</head>
+<body>
+     <header id="header">
+        <div class="headerLeft"  onclick="closeWin()"></div>
+        <div class="headerCenter" >定价多少划算</div>
+				<div class="headerRight"></div>
+     </header>
+
+		 <div class="swiper-container">
+		 		<div class="swiper-wrapper">
+		 		<!---slide1----------------->
+		 				<section class="swiper-slide swiper-slide1">
+		 					<div id="pag1" class="slidPage">
+		 						<div class="item0">
+		 								<img src="../../../image/cal_img/price/1.png" class="ani resize price0 item" swiper-animate-effect="zoomIn" swiper-animate-duration="0.5s" swiper-animate-delay="0s"  >
+		 						</div>
+		 						<!-- 折线 -->
+		 									<div class="item_1a">
+		 											<img class="ani resize price_1a item" src="../../../image/cal_img/price/2a.png"  swiper-animate-effect="bounceInRight" swiper-animate-duration="1s" swiper-animate-delay="1s" >
+		 									</div>
+		 						<!-- 草草卖掉 -->
+		 									<div class="item_1b">
+		 											<img class="ani resize price_1b item" src="../../../image/cal_img/price/2b.png"  swiper-animate-effect="bounceInUp" swiper-animate-duration="1s" swiper-animate-delay="2s" />
+		 									</div>
+		 									<!-- 圆圈一 -->
+		 									<div class="item_2a">
+		 										<img class="ani resize price_2a item" src="../../../image/cal_img/price/3a.png" swiper-animate-effect="bounceInRight" swiper-animate-duration="1s" swiper-animate-delay="2.5s" />
+		 									</div>
+		 									<!-- 圆圈二 -->
+		 									<div class="item_2b">
+		 										<img class="ani resize price_2b item" src="../../../image/cal_img/price/3b.png" swiper-animate-effect="bounceInRight" swiper-animate-duration="1s" swiper-animate-delay="3s" />
+		 									</div>
+		 									<!-- 圆圈三 -->
+		 									<div class="item_2c">
+		 										<img class="ani resize price_2c item" src="../../../image/cal_img/price/3c.png" swiper-animate-effect="bounceInRight" swiper-animate-duration="1s" swiper-animate-delay="3.5s" />
+		 									</div>
+		 									<!-- 怎么定价 -->
+		 									<div class="item_3a">
+		 										<img class="ani resize price_3a item" src="../../../image/cal_img/price/4b.png"  swiper-animate-effect="bounceInLeft" swiper-animate-duration="1s" swiper-animate-delay="4s"/>
+		 									</div>
+		 									<!-- 赚 -->
+		 									<div class="item_3b">
+		 										<img class="ani resize price_3b item" src="../../../image/cal_img/price/4a.png"  swiper-animate-effect="bounceInLeft" swiper-animate-duration="1s" swiper-animate-delay="4.5s"  />
+		 									</div>
+		 					</div>
+
+		 				</section>
+		 		 <!--slide2-------------->
+		 <section class="swiper-slide swiper-slide2">
+			 <div class="slidPage">
+				 <div id="chos">
+			 <!--老头  -->
+					 <div class="item01">
+						 <img class="ani resize laoren1 item" src="../../../image/cal_img/price/pic-laoren@3x.png" swiper-animate-effect="zoomIn" swiper-animate-duration="0.5s" swiper-animate-delay="0s" >
+					 </div>
+			 <!-- 左四图 -->
+					 <div class="item_1a1">
+						 <img class="ani resize price_1a1 item" src="../../../image/cal_img/price/pic01@3x.png" swiper-animate-effect="bounceInRight" swiper-animate-duration="1s" swiper-animate-delay="1s">
+					 </div>
+					 <!-- 左三图 -->
+					 <div class="item_1b1">
+						 <img class="ani resize price_1b1 item" src="../../../image/cal_img/price/pic02@3x.png" swiper-animate-effect="bounceInRight" swiper-animate-duration="1s" swiper-animate-delay="1.5s">
+					 </div>
+					 <!-- 左二图 -->
+					 <div class="item_1c1">
+						 <img class="ani resize price_1c1 item" src="../../../image/cal_img/price/pic03@3x.png" swiper-animate-effect="bounceInLeft" swiper-animate-duration="1s" swiper-animate-delay="2s">
+					 </div>
+					 <!--左一图  -->
+					 <div class="item_1d1">
+						 <img class="ani resize price_1d1 item" src="../../../image/cal_img/price/pic04@3x.png" swiper-animate-effect="bounceInLeft" swiper-animate-duration="1s" swiper-animate-delay="2.5s">
+					 </div>
+					 <!-- 下部文字 -->
+					 <div class="item_2a1">
+						 <img class="ani resize price_2a1 item" src="../../../image/cal_img/price/wenzi@3x.png" swiper-animate-effect="bounceInUp" swiper-animate-duration="1s" swiper-animate-delay="3s">
+					 </div>
+					 <!--右侧文字  -->
+					 <div class="item_2b1">
+						 <img class="ani resize price_2b1 item" src="../../../image/cal_img/price/piczhishi@3x.png" swiper-animate-effect="bounceInRight" swiper-animate-duration="1s" swiper-animate-delay="3.5s">
+					 </div>
+					 <!-- 顶部文字 -->
+					 <div class="item_2c1">
+						 <img class="ani resize price_2c1 item" src="../../../image/cal_img/price/PIC-beijing@3x.png" swiper-animate-effect="bounceInDown" swiper-animate-duration="1s" swiper-animate-delay="4s">
+					 </div>
+
+
+				 </div>
+			 </div>
+		 </section>
+
+	 <!--slide3-------------->
+	<section class="swiper-slide swiper-slide3">
+		<div class="slidPage">
+			<!--图表  -->
+				<div class="item02">
+					<img class="ani resize laoren2 item" src="../../../image/cal_img/price/chengbentouru@3x.png"  swiper-animate-effect="zoomIn" swiper-animate-duration="0.5s" swiper-animate-delay="0s">
+				</div>
+			<!-- 市场 -->
+				<div class="item_1a2">
+					<img class="ani resize price_1a2 item" src="../../../image/cal_img/price/pic-shichang@3x.png" swiper-animate-effect="bounceInLeft" swiper-animate-duration="0.5s" swiper-animate-delay="1s">
+				</div>
+				<!-- 采收 -->
+				<div class="item_1b2">
+					<img class="ani resize price_1b2 item" src="../../../image/cal_img/price/caishou@3x.png" swiper-animate-effect="bounceInRight" swiper-animate-duration="0.5s" swiper-animate-delay="1.5s">
+				</div>
+				<!-- 老头 -->
+				<div class="item_1c2">
+					<img class="ani resize price_1c2 item" src="../../../image/cal_img/price/laoren@3x.png" swiper-animate-effect="zoomIn" swiper-animate-duration="1s" swiper-animate-delay="2s">
+				</div>
+				<!--一切  -->
+				<div class="item_1d2">
+					<img class="ani resize price_1d2 item" src="../../../image/cal_img/price/slogan@3x.png" swiper-animate-effect="bounceInDown" swiper-animate-duration="0.5s" swiper-animate-delay="2.5s">
+				</div>
+				<!-- 简单 -->
+				<div class="item_2a2">
+					<img class="ani resize price_2a2 item" src="../../../image/cal_img/price/easy.png" swiper-animate-effect="bounceInRight" swiper-animate-duration="0.5s" swiper-animate-delay="3s">
+				</div>
+
+
+			</div>
+	</section>
+
+ 				<!--slide4----------------->
+ 	<section class="swiper-slide swiper-slide4">
+		<div class="slidPage">
+		<!--建议  -->
+				<div class="item03">
+					<img class="ani resize laoren3 item" src="../../../image/cal_img/price/jianyi.png" swiper-animate-effect="bounceInDown" swiper-animate-duration="0.5s" swiper-animate-delay="0s">
+				</div>
+		<!-- 定价 -->
+				<div class="item_1a3">
+					<img class="ani resize price_1a3 item" src="../../../image/cal_img/price/dingjia.png" swiper-animate-effect="bounceInUp" swiper-animate-duration="1s" swiper-animate-delay="1s">
+				</div>
+				<!-- 元 -->
+				<div class="item_1b3">
+					<img class="ani resize price_1b3 item" src="../../../image/cal_img/price/yingli@3x.png" swiper-animate-effect="bounceInUp" swiper-animate-duration="1s" swiper-animate-delay="1.5s">
+				</div>
+				<!-- 图表 -->
+				<div class="item_1c3">
+					<img class="ani resize price_1c3 item" src="../../../image/cal_img/price/touruchengben@3x.png" swiper-animate-effect="bounceInRight" swiper-animate-duration="0.5s" swiper-animate-delay="2s">
+				</div>
+				<!--成本  -->
+				<div class="item_1d3">
+					<img class="ani resize price_1d3 item" src="../../../image/cal_img/price/chengben.png" swiper-animate-effect="bounceInRight" swiper-animate-duration="0.5s" swiper-animate-delay="2.5s">
+				</div>
+				<!-- 老人 -->
+				<div class="item_2a3">
+					<img class="ani resize price_2a3 item" src="../../../image/cal_img/price/laotou.png" swiper-animate-effect="zoomIn" swiper-animate-duration="1s" swiper-animate-delay="3s">
+				</div>
+
+
+			</div>
+ 	</section>
+
+	<!--slide5----------------->
+	<section class="swiper-slide swiper-slide5">
+		<div class="slidPage">
+			<!--天空  -->
+				<div class="item04">
+					<img class="ani resize laoren4 item" src="../../../image/cal_img/price/beijingtu@3x.png" swiper-animate-effect="zoomIn" swiper-animate-duration="2s" swiper-animate-delay="0s">
+				</div>
+			<!-- 亩数 -->
+				<div class="item_1a4">
+					<img class="ani resize price_1a4 item" src="../../../image/cal_img/price/232513540@3x.png" swiper-animate-effect="bounceInRight" swiper-animate-duration="1s" swiper-animate-delay="0.5s">
+				</div>
+				<!-- 右鸟 -->
+				<div class="item_1b4">
+					<img class="ani resize price_1b4 item" src="../../../image/cal_img/price/niao@3x.png" swiper-animate-effect="bounceInRight" swiper-animate-duration="0.5s" swiper-animate-delay="1s">
+				</div>
+				<!-- 基地 -->
+				<div class="item_1c4">
+					<img class="ani resize price_1c4 item" src="../../../image/cal_img/price/660@3x.png" swiper-animate-effect="bounceInDown" swiper-animate-duration="0.5s" swiper-animate-delay="1.5s">
+				</div>
+				<!--左鸟  -->
+				<div class="item_1d4">
+					<img class="ani resiz price_1d4 item" src="../../../image/cal_img/price/niao1@3x.png" swiper-animate-effect="bounceInLeft" swiper-animate-duration="0.5s" swiper-animate-delay="2s">
+				</div>
+				<!-- 同行 -->
+				<div class="item_2a4">
+					<img class="ani resiz price_2a4 item" src="../../../image/cal_img/price/slogn@3x.png" swiper-animate-effect="bounceInDown" swiper-animate-duration="0.5s" swiper-animate-delay="2.5s">
+				</div>
+
+
+		</div>
+	</section>
+
+		 		</div>
+				<!-- 分页器 -->
+		 	<div class="swiper-pagination"></div>
+			<!-- 下一页 -->
+			<!-- <div class="nextPag">
+				<div id="array" class="swiper-button-next resize price_down4 item"></div>
+			</div> -->
+		 </div>
+
+</body>
+<script type="text/javascript" src="../../../script/common/api.js"></script>
+<script type="text/javascript" src="../../../script/common/swiper.min.js"></script>
+<script type="text/javascript" src="../../../script/common/swiper.animate.min.js"></script>
+	<script type="text/javascript">
+	apiready = function() {
+		var header = $api.byId('header');
+		$api.fixStatusBar(header);
+scaleW=window.innerWidth/320;
+scaleH=window.innerHeight/480;
+var resizes = document.querySelectorAll('.resize');
+					for (var j=0; j<resizes.length; j++) {
+					 resizes[j].style.width=parseInt(resizes[j].style.width)*scaleW+'px';
+			 resizes[j].style.height=parseInt(resizes[j].style.height)*scaleH+'px';
+			 resizes[j].style.top=parseInt(resizes[j].style.top)*scaleH+'px';
+			 resizes[j].style.left=parseInt(resizes[j].style.left)*scaleW+'px';
+					}
+
+	var mySwiper = new Swiper ('.swiper-container', {
+	 direction : 'vertical',
+	 pagination: '.swiper-pagination',
+    // nextButton: '.swiper-button-next',//如果需要前进后退按钮
+    // prevButton: '.swiper-button-prev',//如果需要前进后退按钮
+	//virtualTranslate : true,
+	 mousewheelControl : true,
+	 onInit: function(swiper){
+	 swiperAnimateCache(swiper);
+	 swiperAnimate(swiper);
+		},
+	 onSlideChangeEnd: function(swiper){
+	swiperAnimate(swiper);
+		},
+	onTransitionEnd: function(swiper){
+	swiperAnimate(swiper);
+		},
+
+
+	watchSlidesProgress: true,
+
+			onProgress: function(swiper){
+				for (var i = 0; i < swiper.slides.length; i++){
+					var slide = swiper.slides[i];
+					var progress = slide.progress;
+					var translate = progress*swiper.height/4;
+			scale = 1 - Math.min(Math.abs(progress * 0.5), 1);
+					var opacity = 1 - Math.min(Math.abs(progress/2),0.5);
+					slide.style.opacity = opacity;
+			es = slide.style;
+			es.webkitTransform = es.MsTransform = es.msTransform = es.MozTransform = es.OTransform = es.transform = 'translate3d(0,'+translate+'px,-'+translate+'px) scaleY(' + scale + ')';
+
+				}
+			},
+
+		 onSetTransition: function(swiper, speed) {
+				for (var i = 0; i < swiper.slides.length; i++){
+					es = swiper.slides[i].style;
+			es.webkitTransitionDuration = es.MsTransitionDuration = es.msTransitionDuration = es.MozTransitionDuration = es.OTransitionDuration = es.transitionDuration = speed + 'ms';
+
+				}
+			},
+
+
+
+		 })
+}
+		function closeWin() {
+					api.closeWin();
+		}
+	</script>
+</html>

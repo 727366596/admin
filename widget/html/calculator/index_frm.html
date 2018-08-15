@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>种植测算</title>
+	<script type="text/javascript" src="../../script/common/rem.js"></script>
+	<link rel="stylesheet" href="../../css/common/public.css" />
+	<style>
+		body,
+		html {
+			background: #dadada;
+		}
+
+		.heart {
+			width: 4.63rem;
+			height: 2.49rem;
+			margin: 0.38rem 1.46rem 0.46rem 1.41rem;
+		}
+
+		.section {
+			margin: 0 1.45rem 0.34rem;
+		}
+
+		.item {
+			width: 4.6rem;
+			height: 1.1rem;
+			margin-bottom: 0.1rem;
+		}
+
+		.shoot {
+			width: 5.64rem;
+			height: 2.24rem;
+			margin: 0 0.93rem;
+		}
+
+		.heart img,
+		.item img,
+		.shoot img {
+			width: 100%;
+			height: 100%;
+		}
+
+		.toolTip {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			margin: 0 auto;
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+			z-index: 999;
+			display: none;
+		}
+
+		.toolTip .word {
+			height: 6.0rem;
+			width: 6.0rem;
+			margin: 2.6em auto 0.2rem;
+		}
+
+		.toolTip .close {
+			width: 1.18rem;
+			height: 1.18rem;
+			margin: 0 auto;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="toolTip" id="toolTip">
+		<img class="word" src="../../image/cal_img/index/words.png" alt="">
+		<img class="close" id="close" src="../../image/cal_img/index/close.png" alt="">
+	</div>
+	<div class="heart"><img src="../../image/cal_img/index/heart.png" alt=""></div>
+	<div class="section">
+		<div class="item" onclick="openSeeding()">
+			<img src="../../image/cal_img/index/seeding.png" alt="">
+		</div>
+		<!-- <div class="item" onclick="openPlanting()">
+			<img src="../../image/cal_img/index/planting.png" alt="">
+		</div> -->
+		<div class="item" onclick="openCost()">
+			<img src="../../image/cal_img/index/cost.png" alt="">
+		</div>
+		<div class="item" onclick="openPricing()">
+			<img src="../../image/cal_img/index/pricing.png" alt="">
+		</div>
+	</div>
+	<div class="shoot"><img src="../../image/cal_img/index/shoot.png" alt=""></div>
+</body>
+<script type="text/javascript" src="../../script/common/api.js"></script>
+<script type="text/javascript" src="../../script/common/jquery.min.js"></script>
+<script type="text/javascript">
+	apiready = function() {
+		api.parseTapmode();
+		api.addEventListener({
+			name: 'showEvent'
+		}, function(ret, err) {
+			if (ret) {
+				$('#toolTip').show()
+			}
+		});
+	};
+
+	/*******************关闭提示**********************************/
+	function close() {
+		$('#toolTip').hide()
+	}
+	$('#close').on('click', close)
+
+		/*******************种苗投入测算********************************/
+	function openSeeding() {
+		api.openWin({
+			name: 'seed_index_win',
+			url: './seedlings/seed_index_win.html',
+			slidBackEnabled:false,
+			animation: {
+				type: "movein", //动画类型（详见动画类型常量）
+				subType: "from_right", //动画子类型（详见动画子类型常量）
+				duration: 300 //动画过渡时间，默认300毫秒
+			}
+		});
+	}
+	/*******************定植安排测算********************************/
+	function openPlanting() {
+		api.openWin({
+			name: 'plant_index_win',
+			url: './plant/plant_index_win.html',
+			slidBackEnabled:false,
+			animation: {
+				type: "movein", //动画类型（详见动画类型常量）
+				subType: "from_right", //动画子类型（详见动画子类型常量）
+				duration: 300 //动画过渡时间，默认300毫秒
+			}
+		});
+	}
+	/*******************成本投入测算********************************/
+	function openCost() {
+		api.openWin({
+			name: 'cost_index_win',
+			url: './cost/cost_index_win.html',
+			slidBackEnabled:false,
+			animation: {
+				type: "movein", //动画类型（详见动画类型常量）
+				subType: "from_right", //动画子类型（详见动画子类型常量）
+				duration: 300 //动画过渡时间，默认300毫秒
+			}
+		});
+	}
+	/*******************定价设置测算********************************/
+	function openPricing() {
+		api.openWin({
+			name: 'pricing_index_win',
+			url: './pricing/pricing_index_win.html',
+			slidBackEnabled:false,
+			animation: {
+				type: "movein", //动画类型（详见动画类型常量）
+				subType: "from_right", //动画子类型（详见动画子类型常量）
+				duration: 300 //动画过渡时间，默认300毫秒
+			}
+		});
+	}
+</script>
+
+</html>

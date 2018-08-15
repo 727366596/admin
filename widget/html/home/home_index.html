@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<link rel="stylesheet" type="text/css" href="../../css/common/public.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common/swiper.min.css" />
+	<script type="text/javascript" src="../../script/common/rem-750.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../css/home/home_index.css" />
+	<!--<link rel="stylesheet" type="text/css" href="../../css/iscroll-style.css"/>-->
+	<link rel="stylesheet" type="text/css" href="../../css/common/swiper.min.css">
+	<style media="screen">
+		/***************DW*****************************************************************************/
+		/*轮播*/
+
+		.swiper-container,
+		.swiper-wrapper,
+		.swiper-slide {
+			width: 100%;
+			height: 100%;
+		}
+
+		#top .swiper-pagination {
+			top: -0.6rem;
+			background: none!important;
+		}
+
+		#top .swiper-pagination span {
+			width: 0.23rem;
+			height: 0.23rem;
+		}
+
+		#top .swiper-slide img {
+			width: 100%;
+			height: 100%;
+			border: none;
+			outline: none;
+			border-radius: 10px;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="screenWrap">
+		<div></div>
+		<div></div>
+	</div>
+
+	<!--**************DW**************************************************************************** -->
+	<div id="top" style="height:4.1rem;padding-top: 0.48rem;padding-bottom: 0;">
+		<div class="fixed-top"></div>
+		<!-- 轮播 -->
+		<div class="swiper-container">
+			<div class="swiper-wrapper">
+				<!-- <div class="swiper-slide" style="padding: 0 0.6rem;  box-sizing: border-box;" ><img src="../../image/home_banner1.png"></div> -->
+			</div>
+			<!-- 如果需要分页器 -->
+			<div class="swiper-pagination"></div>
+
+		</div>
+
+
+		<!--**************DW**************************************************************************** -->
+		<!-- <div class="swiper-pagination" style="padding-bottom: 0;"></div> -->
+		<!-- <div class="noticeBanner">
+				<div  class="bannerWrap2">
+						<div class="bannerWrap2_left"></div>
+						<div class="swiper-container bannerWrap2_center" style="overflow-x:auto;">
+								<div class="swiper-wrapper">
+								</div>
+						</div>
+						<div class="bannerWrap2_right" onclick="openNoticelists()">更多</div>
+				</div>
+		</div> -->
+	</div>
+
+	<div id="weather" style="    margin-top: 0.2rem;">
+		<ul>
+			<li class="home_weather_bc"></li>
+			<li class="home_weather_icon"></li>
+			<li class="home_weather_info">
+				<p id="weather_text"></p>
+				<p><span id="weather_city"></span><span id="weather_area"></span></p>
+			</li>
+			<li class="home_weather_temp">
+				<p><span id="now_temp"></span><span></span></p>
+				<p id="all_temp"></p>
+			</li>
+		</ul>
+	</div>
+
+	<div class="home_nav">
+		<ul style="margin:0.2rem 0;padding:0.3rem 0.75rem;">
+			<li data-id="1" onclick="openMarketPrice()">
+				<div class="333333" style="background-image: url(../../image/home/home_nav_jinrong.png);"></div>
+				<div>价格行情</div>
+			</li>
+			<li data-id="2" onclick="openPlantSum()">
+				<div class="333333" style="background-image: url(../../image/home/plantplan_bc.png);"></div>
+				<div>种植计算器</div>
+			</li>
+			<li data-id="3" onclick="openCall()">
+				<div class="333333" style="background-image: url(../../image/home/home_nav_tel.png);"></div>
+				<div>问问专家</div>
+			</li>
+		</ul>
+	</div>
+
+	<div class="home_nav">
+		<div class="myPlant_title">
+			<span></span><span>种植工单</span><span></span>
+		</div>
+		<ul class="detailBox">
+			<li id="DRAFT" pageId="page_home_admin" eventId ="button_drafts_page_home_admin" onclick="openPlantDetailWin(this)">
+				<div class="draft">0</div>
+				<div>草稿</div>
+			</li>
+			<li id="CONFIRMING" pageId="page_home_admin" eventId="button_unaccepted_cultivate_page_home_admin" onclick="openPlantDetailWin(this)">
+				<div class="confirming">0</div>
+				<div>待接单</div>
+			</li>
+			<li id="CONFIRMED" pageId="page_home_admin" eventId="button_unfinished__cultivate_page_home_admin" onclick="openPlantDetailWin(this)">
+				<div class="plant_unFinished">0</div>
+				<div>未完成</div>
+			</li>
+			<li id="COMPLETED"pageId="page_home_admin" eventId="button_finished__cultivate_page_home_admin" onclick="openPlantDetailWin(this)">
+				<div class="completed">0</div>
+				<div>已完工</div>
+			</li>
+		</ul>
+	</div>
+
+	<div class="home_nav">
+		<div class="myPlant_title">
+			<span></span><span>田间工单</span><span></span>
+		</div>
+		<ul class="detailBox" style="padding:0.3rem 1.2rem;">
+			<li data-id="1" pageId="page_home_admin" eventId="button_unfinished__field_page_home_admin" onclick="openFarmDetailWin(this)">
+				<div class="unFinished">0</div>
+				<div>未完成</div>
+			</li>
+			<li data-id="2" pageId="page_home_admin" eventId="button_pest-insects_and_weeds_page_home_admin" onclick="openFarmDetailWin(this)">
+				<div class="weak">0</div>
+				<div>病虫草害</div>
+			</li>
+			<li data-id="3" pageId="page_home_admin" eventId="button_finished_field_page_home_admin" onclick="openFarmDetailWin(this)">
+				<div class="finished">0</div>
+				<div>已完工</div>
+			</li>
+		</ul>
+	</div>
+
+	<!-- <div id="home_bc_word">
+			<div></div>
+	</div> -->
+
+	<div id="home_totop_btn">
+		<span id="rocket_icon"></span>
+		<p id="totop_title">返回顶部</p>
+	</div>
+	<!-- 网络异常提示 -->
+	<!-- <iframe src="../connect-error.html" width="100%" height="35" frameborder="0" style="position:fixed;left:0;top:0;display:none;z-index:99;"></iframe> -->
+</body>
+
+<script type="text/javascript" src="../../script/common/swiper.min.js"></script>
+<script type="text/javascript" src="../../script/common/api.js"></script>
+<script type="text/javascript" src="../../script/common/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/common/pds.ajax.js"></script>
+<script type="text/javascript" src="../../script/common/swiper.min.js"></script>
+<script type="text/javascript">
+	apiready = function() {
+		//首页埋点
+		var buriedPoint = pds.buriedPoint();
+		buriedPoint.pageId = 'page_home_admin';
+		buriedPoint.eventId = 'button_drafts_page_home_admin';
+		pds.ajaxSubmit({
+				url: "app/buried_point/save",
+				data: {
+					"point": buriedPoint
+				},
+				success: function(v) {}
+			})
+			//监听网络状态
+		onlineStatus();
+		//轮播图****************************
+		// homeBannerSwiper();
+		//实时定位获取位置，并获取天气信息****
+		var map = api.require('bMap');
+		getLocation(map);
+		//$api.clearStorage();
+		//获取种植工单数据
+		plantDetailTotal();
+		//监听按钮触摸样式变化
+		detailBtnChange();
+
+		//**************DW****************************************************************************//
+		//判断终端传设备码
+		var code = ''
+		var systemType = api.systemType;
+		// alert(systemType)
+		if (systemType == 'ios') {
+			code = 'e9e312fce8a741958c817ba5bdbe6b17'
+		} else {
+			code = '5fb756a9831c439d87fc338b4050a990'
+		}
+		//轮播图****************************
+		homeBannerGet(code);
+		// 轮播（图片点击跳转页面）
+		JumpPage()
+	}
+
+	// 轮播 （请求后台数据）
+	function homeBannerGet(code) {
+
+		pds.ajaxSubmit({
+			url: "app/sys/get_adv",
+			data: {
+				"code": code,
+				"place": 'home'
+			},
+			success: function(e) {
+				// alert(JSON.stringify(e))
+				// alert(JSON.stringify(e.data.data))
+				if (e.data !== null && e.data !== '') {
+					var data = e.data.data || '';
+
+					if (data.length > 0) {
+						var img = ''
+						for (var i = 0; i < data.length; i++) {
+							img += '<div class="swiper-slide" data-id="' + data[i].title + '"><img data-id="' + data[i].url + '" src="' + data[i].pictureUrl + '"></div>'
+						}
+						$('.swiper-wrapper').html(img)
+					} else {
+						$('.swiper-wrapper').html('<div class="swiper-slide" ><img src="../../image/home_banner1.png"></div>')
+					}
+					if (data.length > 1) {
+						// img渲染成功后调用轮播功能
+						var mySwiper = new Swiper('.swiper-container', {
+							direction: 'horizontal',
+							autoplay: 3000,
+							speed: 300,
+							loop: true,
+							observer: true,
+							preloadImages: true,
+							updateOnImagesReady: true,
+							speed: 1000,
+							autoplayDisableOnInteraction: false,
+							effect: 'coverflow',
+							slidesPerView: 1.25,
+							centeredSlides: true,
+							spaceBetween: 0,
+							coverflow: {
+								rotate: 0,
+								stretch: -48,
+								depth: 200,
+								modifier: 1,
+								slideShadows: false
+							},
+							pagination: '.swiper-pagination',
+							paginationClickable: true,
+							autoplayDisableOnInteraction: false
+						})
+					} else {
+						var mySwiper = new Swiper('.swiper-container', {
+							direction: 'horizontal',
+							observer: true,
+							preloadImages: true,
+							updateOnImagesReady: true,
+							speed: 1000,
+							autoplayDisableOnInteraction: false,
+							effect: 'coverflow',
+							slidesPerView: 1.25,
+							centeredSlides: true,
+							spaceBetween: 0,
+							coverflow: {
+								rotate: 0,
+								stretch: -48,
+								depth: 200,
+								modifier: 1,
+								slideShadows: false
+							}
+						})
+
+					}
+				} else {
+					$('.swiper-wrapper').html('<div class="swiper-slide" ><img src="../../image/home_banner1.png"></div>')
+				}
+			},
+			error: function(e) {
+				api.alert({
+					msg: "服务器错误，请联系管理员!"
+				});
+			}
+		});
+	}
+
+	// 轮播（图片点击跳转页面）
+	function JumpPage() {
+
+		$('.swiper-wrapper').on('click', '.swiper-slide', function() {
+			if ($(this).find('img').attr('data-id')) {
+				// alert($(this).attr('data-id'))
+				api.openWin({
+					name: 'advertisement_win',
+					url: '../advertisement_win.html',
+					pageParam: {
+						url: $(this).find('img').attr('data-id'),
+						title: $(this).attr('data-id')
+					}
+				})
+			} else {
+				// alert('meiyou ')
+			}
+
+		})
+	}
+	//**************DW****************************************************************************//
+
+
+
+
+
+
+	//工单入口按钮点击样式切换
+	function detailBtnChange() {
+		$(".home_nav .detailBox").on("touchstart", "li", function() {
+			$(this).css({
+				"backgroundColor": "#f1fef6"
+			}).siblings().css({
+				"backgroundColor": "#fff"
+			});
+		}).on("touchend", "li", function() {
+			$(this).css({
+				"backgroundColor": "#fff"
+			}).siblings().css({
+				"backgroundColor": "#fff"
+			});
+		})
+	}
+
+	// //创建轮播图对象*************************************************************
+	// var initBannerFlag = false;//标记是否是第一次打开应用
+	// function homeBannerSwiper(){
+	// 		//获取本地缓存拿数据************************************************************************
+	// 		var bannerAllData = $api.getStorage('banner_lists_urlObj');
+	// 		//alert(JSON.stringify(bannerAllData));
+	// 		if(bannerAllData != undefined && bannerAllData != "" && bannerAllData != null && bannerAllData != []){
+	// 					//alert("本地有緩存数据")
+	// 					console.log("**************************初始轮播图数据不不不不為空***************************");
+	// 					//alert(JSON.stringify(bannerUrlArr));
+	// 					//获取时间戳，与本地缓存记录时间作比较，判断是否重新加载数据
+	// 					//当时间过了当天24点整时开始重新加载数据
+	// 					var storage_history_time = bannerAllData.time;
+	// 					var storage_history_Maxtime = bannerAllData.todayMaxTime;
+	// 					var bannerUpdateFlag = bannerUpdateFlagFn(storage_history_time, storage_history_Maxtime);
+	// 					//alert(bannerUpdateFlag)
+	// 					if(bannerUpdateFlag){
+	// 							//alert("******************************过了当天24点开始更新轮播图数据啦***************************************")
+	// 							console.log("**************************过了当天24点开始更新轮播图数据啦***************************");
+	// 							bannerData();
+	// 							return;
+	// 					};
+	// 					//轮播数据处理
+	// 					var bannerUrlArr = bannerAllData.bannerUrlData;//bannerData.bannerUrlData;//获取轮播图图片地址数据数组
+	// 					//alert(111)
+	// 					//alert(JSON.stringify(bannerUrlArr))
+	// 					initBannerFlag = true;
+	// 					bannerDataYesOrNo(bannerUrlArr);
+	//
+	// 		}else{
+	// 					//应用初始化没有轮播图数据时，执行此代码，加入数据缓存**************************************
+	// 					//alert("欢迎进入慧种地首页")
+	// 					api.toast({
+	// 					    msg: '欢迎进入慧种地首页',
+	// 					    duration: 1000,
+	// 					    location: 'bottom'
+	// 					});
+	// 					console.log("**************************欢迎进入慧种地首页***************************")
+	// 					bannerData();
+	// 		};
+	//
+	// };
+	//
+	// //返回flag标记是否需要更新轮播图数据*********************************
+	// var bannerDataUpdateFlag = null;
+	// function bannerUpdateFlagFn(storage_history_time, storage_history_Maxtime){
+	// 		//var myTime = new Date(new Date().toLocaleDateString()).getTime() + 24*60*60*1000;//获取当天零点时间戳+24*60*60*1000(获取24点时间戳)
+	// 		var nowTime = new Date().getTime();//获取当前时间
+	// 		bannerDataUpdateFlag = false;
+	// 		if(nowTime >= storage_history_Maxtime){//说明过了前一天24点，重新请求数据
+	// 				bannerDataUpdateFlag = true;
+	// 		};
+	// 		return bannerDataUpdateFlag;
+	// };
+	//
+	// //请求获取轮播图数据
+	// function bannerData(){
+	// 		//轮播图数据重新写入****************************************
+	// 		//alert("开始发起轮播数据请求")
+	//     pds.ajaxSubmit({
+	// 				type: "GET",
+	//         url:"/app/adv/homePageAdvList",
+	//         success:function(e){
+	//         		//alert("success");
+	// 						//alert(JSON.stringify(e.data))
+	// 						var bannerUrlArr = e.data;
+	// 						bannerDataYesOrNo(bannerUrlArr);
+	//         },
+	// 				error : function(e){
+	// 						//alert("error")
+	// 						bannerErrorOrEmpty();
+	// 				}
+	//     });
+	// };
+	//
+	// //轮播图数据正确时调用
+	// function bannerDataYesOrNo(bannerDataArr){
+	// 	console.log("*********************轮播图数据正确处理*******************************")
+	// 	var noSlideClass = null, loopAutoFlag = null, bannerUrlNewArr = [], bannerUrlDataObj = null;
+	// 	if(bannerDataArr != null && bannerDataArr != [] && bannerDataArr != ""){
+	// 				//alert("***************************轮播图發起數據請求成功啦，并且有数据啦**************************")
+	// 				//alert(JSON.stringify(bannerDataArr))
+	// 				if(bannerDataArr.length != 1){
+	// 						noSlideClass = "";
+	// 						loopAutoFlag = false;
+	// 				}else{
+	// 						noSlideClass = "swiper-no-swiping";//添加swiper禁止slider手动滑动的class类名
+	// 						loopAutoFlag = true;//flag标记轮播图是否开启轮播，当只有一张图时不轮播（flag = false）
+	// 				};
+	// 				var bannerWrapStr = "";
+	// 				for (var i = 0; i < bannerDataArr.length; i++) {
+	// 						//创建缓存数据数组******************************************
+	// 						if(initBannerFlag){
+	// 								if(bannerDataArr[i].bannerUrl != "" && bannerDataArr[i].bannerUrl != null){
+	// 										bannerUrlNewArr[i] = {
+	// 												bannerUrl : bannerDataArr[i].bannerUrl
+	// 										};
+	// 								};
+	// 								console.log(JSON.stringify(bannerUrlNewArr))
+	// 								console.log(bannerDataArr[i].bannerUrl+"*************"+ i +"************")
+	// 								bannerWrapStr += '<div class="swiper-slide'+ " " + noSlideClass +'">'+
+	// 																		'<a href="#"><img src="'+ bannerDataArr[i].bannerUrl +'"/></a>'+
+	// 																	'</div>';
+	// 						}else{
+	// 								if(bannerDataArr[i].pictureUrl != "" && bannerDataArr[i].pictureUrl != null){
+	// 										bannerUrlNewArr[i] = {
+	// 												bannerUrl : bannerDataArr[i].pictureUrl
+	// 										};
+	// 								};
+	// 								//console.log(bannerUrlNewArr)
+	// 								//console.log(bannerDataArr[i].pictureUrl+"*************"+ i +"************")
+	// 								bannerWrapStr += '<div class="swiper-slide'+ " " + noSlideClass +'">'+
+	// 																		'<a href="#"><img src="'+ bannerDataArr[i].pictureUrl +'"/></a>'+
+	// 																'</div>';
+	// 						}
+	//
+	// 				};
+	// 				//alert(bannerWrapStr)
+	// 				$("#top .bannerWrap1 .swiper-wrapper").html(bannerWrapStr);
+	// 				//创建banner轮播**************************************************
+	// 				setTimeout(function(){
+	// 						bannerMove(loopAutoFlag);
+	// 				});
+	// 				//缓存数据
+	// 				var curTime = new Date().getTime();//当前时间戳
+	// 				var todayMaxTime = new Date(new Date().toLocaleDateString()).getTime() + 24*60*60*1000;//当天24点时间戳
+	// 				bannerUrlDataObj = {
+	// 						bannerUrlData : bannerUrlNewArr,
+	// 						time : curTime,
+	// 						todayMaxTime : todayMaxTime
+	// 				};
+	// 				$api.setStorage('banner_lists_urlObj', bannerUrlDataObj);
+	// 		}else{
+	// 				bannerErrorOrEmpty();
+	// 		}
+	// };
+	//
+	// //轮播数据错误时处理
+	// function bannerErrorOrEmpty(){
+	// 		console.log("********************************轮播图错误处理并展示***********************************")
+	// 		var bannerErrorUrl = "../../image/home/home_banner1.png";//错误处理
+	// 		var bannerWrap1Str = "";
+	// 		var bannerUrlEroArr = [];//轮播图数据初始数组
+	// 		var bannerUrlDataErrorObj = null;//轮播图数据对象
+	// 		//应用初始化没有轮播图数据时，执行此代码，加入数据缓存**************************************
+	// 		bannerWrap1Str = '<div class="swiper-slide swiper-no-swiping">'+
+	// 													'<a href="#"><img src="'+ bannerErrorUrl +'"/></a>'+
+	// 										 '</div>';
+	// 		$("#top .bannerWrap1 .swiper-wrapper").html(bannerWrap1Str);
+	// 		setTimeout(function(){//开启轮播
+	// 				bannerMove(true);
+	// 		});
+	// 		bannerUrlEroArr[0] = {
+	// 										bannerUrl : bannerErrorUrl
+	// 								};
+	// 		var curTime = new Date().getTime();//当前时间戳
+	// 		var todayMaxTime = new Date(new Date().toLocaleDateString()).getTime() + 24*60*60*1000;//当天24点时间戳
+	// 		bannerUrlDataErrorObj = {
+	// 				bannerUrlData : bannerUrlEroArr,
+	// 				time : curTime,//当前时间戳
+	// 				todayMaxTime : todayMaxTime//当天24点时间戳
+	// 		};
+	// 		$api.setStorage('banner_lists_urlObj', bannerUrlDataErrorObj);
+	// };
+	//
+	// //创建banner轮播
+	// var mySwiper1;
+	// function bannerMove(loopAutoFlag){
+	// 		//alert(loopAutoFlag)
+	// 		// setTimeout(function(){
+	// 					//创建轮播对象
+	// 					mySwiper1 = new Swiper('#top .bannerWrap1',{
+	// 							loop : true,
+	// 							autoplay : 3000,
+	// 							noSwiping : true,//控制slide是否可手动滑动
+	// 							// onlyExternal : true,
+	// 							//updateOnImagesReady : true,//回调函数，所有内置图像加载完成后执行，同时“updateOnImagesReady”需设置为“true’。
+	// 							//disableOnInteraction : true,
+	// 							// allowSwipeToNext : false,
+	// 							// allowSwipeToPrev : false,
+	// 							observer:true,
+	// 							preloadImages:true,
+	// 							updateOnImagesReady : true,
+	// 							speed:1000,
+	// 							autoplayDisableOnInteraction : false,
+	// 							effect : 'coverflow',
+	// 							slidesPerView: 1.25,
+	// 							centeredSlides: true,
+	// 							spaceBetween : 0,
+	// 							coverflow: {
+	// 											rotate: 0,
+	// 											stretch: -48,
+	// 											depth: 200,
+	// 											modifier: 1,
+	// 											slideShadows : false
+	// 							},
+	// 							// 分页器
+	// 							pagination : '#top .swiper-pagination',
+	// 							paginationType : 'bullets',
+	// 							uniqueNavElements :false,
+	// 							paginationHide :true,
+	//
+	// 					});
+	// 					//根据flag标签判断是否开启轮播——只有一张图时不轮播
+	// 					if(loopAutoFlag){
+	// 							mySwiper1.stopAutoplay();
+	// 							mySwiper1.lockSwipes();
+	// 					}else{
+	// 							mySwiper1.startAutoplay();
+	// 							mySwiper1.unlockSwipes();
+	// 					};
+	// 		 //},500)
+	// };
+
+	//页面回到顶部
+	function scrollToTop() {
+		window.addEventListener('scroll', function() {
+			var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+			if (scrollTop >= 100) {
+				$("#home_totop_btn").show().off("click").on("click", function() {
+					var scrollTimer = setInterval(function() {
+						if (scrollTop >= 0) {
+							scrollTop -= 50;
+							$("body").scrollTop(scrollTop);
+						} else {
+							$("body").scrollTop(0);
+							clearInterval(scrollTimer);
+						}
+					}, 30)
+
+				})
+			} else {
+				$("#home_totop_btn").hide();
+			}
+		})
+	}
+
+	//获取种植工单数据统计
+	function plantDetailTotal() {
+		pds.ajaxSubmit({
+			url: "app/task/queryStatisticsForIndex",
+			type: "GET",
+			success: function(e) {
+				if (e.status == "ok") {
+					var data = e.data;
+					if (data != "" && data != null && data != {}) {;
+						//种植工单
+						var plantTotal = data.plantOrder;
+						if (plantTotal != "" && plantTotal != null && plantTotal != {} && plantTotal != undefined) {
+							if (plantTotal.completed != "" && plantTotal.completed != null) {
+								$(".completed").text(plantTotal.completed);
+							};
+							if (plantTotal.confirming != "" && plantTotal.confirming != null) {
+								$(".confirming").text(plantTotal.confirming);
+							};
+							if (plantTotal.draft != "" && plantTotal.draft != null) {
+								$(".draft").text(plantTotal.draft);
+							};
+							if (plantTotal.unFinished != "" && plantTotal.unFinished != null) {
+								$(".plant_unFinished").text(plantTotal.unFinished);
+							};
+						};
+						//田间工单
+						var farmOrder = data.farmOrder;
+						if (farmOrder != "" && farmOrder != null && farmOrder != {} && farmOrder != undefined) {
+							if (farmOrder.finished != "" && farmOrder.finished != null) {
+								$(".finished").text(farmOrder.finished);
+							};
+							if (farmOrder.unFinished != "" && farmOrder.unFinished != null) {
+								$(".unFinished").text(farmOrder.unFinished);
+							};
+							if (farmOrder.weak != "" && farmOrder.weak != null) {
+								$(".weak").text(farmOrder.weak);
+							};
+						};
+					}
+				}
+				var bannerUrlArr = e.data;
+			}
+		});
+	}
+
+	//打开种植工单列表
+	function openPlantDetailWin(obj) {
+		//种植工单埋点
+		var pageId = $(obj).attr("pageId");
+		var eventId = $(obj).attr("eventId");
+		var buriedPoint = pds.buriedPoint();
+		buriedPoint.pageId = pageId;
+		buriedPoint.eventId = eventId;
+		pds.ajaxSubmit({
+		url:"app/buried_point/save",
+		data:{"point":buriedPoint},
+		success:function(v){
+		}
+	})
+		var id_ = $(obj).attr("id");
+		api.openWin({
+			name: 'plantDetail_list_win',
+			url: './plantDetail/plantDetail_list_win.html',
+			pageParam: {
+				id: id_
+			},
+			animation: {
+				type: "movein", //动画类型（详见动画类型常量）
+				subType: "from_right", //动画子类型（详见动画子类型常量）
+				duration: 300 //动画过渡时间，默认300毫秒
+			}
+		});
+	}
+
+	//打开田间工单列表
+	function openFarmDetailWin(obj) {
+		//田间埋点
+		var pageId = $(obj).attr("pageId");
+		var eventId = $(obj).attr("eventId");
+		var buriedPoint = pds.buriedPoint();
+		buriedPoint.pageId = pageId;
+		buriedPoint.eventId = eventId;
+		pds.ajaxSubmit({
+		url:"app/buried_point/save",
+		data:{"point":buriedPoint},
+		success:function(v){
+		}
+	})
+		var id_ = $(obj).attr("data-id");
+		api.openWin({
+			name: 'frm_workTab',
+			url: '../fieldManage/win_workList.html',
+			pageParam: {
+				id: id_,
+				tag:'index'
+			},
+			animation: {
+				type: "movein", //动画类型（详见动画类型常量）
+				subType: "from_right", //动画子类型（详见动画子类型常量）
+				duration: 300 //动画过渡时间，默认300毫秒
+			}
+		});
+	}
+
+	//获取位置信息******************************
+	function getLocation(map) {
+		map.getLocation({
+			accuracy: '10m',
+			autoStop: true,
+			filter: 1
+		}, function(ret, err) { //localStorage.clear();
+			if (ret.status) {
+				var lon = ret.lon;
+				var lat = ret.lat;
+				getWeatherMsg(lon, lat);
+			} else {
+				api.alert({
+					msg: "获取定位信息失败"
+				});
+			}
+		});
+
+	}
+
+	// 根据经纬度从阿里获取天气数据*************************************************************
+	var storageKey = "weather";
+	var oldWeatherTimeKey = "oldTime";
+	var addressKey = "address";
+
+	function getWeatherMsg(lon, lat) {
+		var url = "https://ali-weather.showapi.com/gps-to-weather?from=5&lat=" + lat + "&lng=" + lon + "&need3HourForcast=0&needAlarm=0&needHourData=0&needIndex=0&needMoreDay=1";
+		$.ajax({
+			url: url,
+			type: "get",
+			beforeSend: function(req) {
+				req.setRequestHeader("Authorization", "APPCODE acacbfc4fac2472996b28490cd77c8be");
+			},
+			dataType: "json",
+			success: function(data) {
+				showWeatherMsg(data);
+			},
+			error: function(e) {
+				api.alert({
+					msg: "网络异常，请重试!"
+				});
+			}
+		});
+	}
+
+	//展示天气数据*********************************************************************
+	function showWeatherMsg(data) {
+		var weather = data.showapi_res_body;
+		var now = weather.now;
+		var cityInfo = weather.cityInfo;
+		//alert(JSON.stringify(cityInfo))
+		// 得到区市名
+		$("#weather_city").text(cityInfo.c7);
+		//得到市区名
+		$("#weather_area").text(cityInfo.c3);
+		// 天气
+		$("#weather_text").text(now.weather);
+		// 天气小图标
+		$(".home_weather_icon").html("<img style='width:100%;height:100%;' src='" + now.weather_pic + "'/>");
+		// 实时温度
+		$("#now_temp").text(now.temperature + "℃");
+		// 展示一周的数据
+		var dateArray = ["f1", "f2", "f3", "f4", "f5", "f6", "f7"];
+		var html;
+		var w = weather.f1;
+		// 当天的最高和最低气温
+		$("#all_temp").html("<span>" + w.day_air_temperature + "°/" + w.night_air_temperature + "°</span>");
+	};
+
+	//打开遮罩提醒***************************************************
+	function openScreenWrap() {
+		$("#screenWrap").show();
+		$("#screenWrap").on("touchmove", function(ev) {
+			ev.stopPropagation();
+		});
+		setTimeout(function() {
+			$("#screenWrap").hide();
+		}, 1000)
+	};
+
+	//监听网络状态
+	function onlineStatus() {
+		//监听网络状态***************************************************
+		api.addEventListener({
+			name: 'offline'
+		}, function(ret, err) {
+			// 展示网络异常的样式！！！
+			$("iframe").show();
+		});
+		api.addEventListener({
+			name: 'online'
+		}, function(ret, err) {
+			location.reload([true]);
+			$("iframe").hide();
+		});
+	};
+
+	//点击“问问专家”入口
+	function openCall() {
+		api.openWin({
+			name: "questionlist_win",
+			url: "widget://html/che/expert/questionlist_win.html",
+			reload: true,
+			selecteIndex: '3',
+			slidBackEnabled: false,
+			animation: {
+				type: "movein", //动画类型（详见动画类型常量）
+				subType: "from_right", //动画子类型（详见动画子类型常量）
+				duration: 300 //动画过渡时间，默认300毫秒
+			}
+		})
+	}
+
+	//点击打开市场价格分析
+	function openMarketPrice() {
+		//价格行情埋点
+		var buriedPoint = pds.buriedPoint();
+		buriedPoint.pageId = 'page_home_admin';
+		buriedPoint.eventId = 'button_price_quotations_page_home_admin';
+		pds.ajaxSubmit({
+		url:"app/buried_point/save",
+		data:{"point":buriedPoint},
+		success:function(v){
+		}
+	})
+		api.openWin({
+			name: "market-index-win",
+			url: "widget://html/home/marketInfo/market-index-win.html",
+			reload: true,
+			slidBackEnabled: false,
+			animation: {
+				type: "movein", //动画类型（详见动画类型常量）
+				subType: "from_right", //动画子类型（详见动画子类型常量）
+				duration: 300 //动画过渡时间，默认300毫秒
+			}
+		})
+	};
+
+	//打开种植计算器
+	function openPlantSum() {
+		// api.openWin({
+		// 		name : "plantHandle-index-win",
+		// 		url:"widget://html/home/plantHandle/plantHandle-index-win.html",
+		// 		reload : true,
+		// 		slidBackEnabled : false,
+		// 		animation : {
+		// 			type : "movein", //动画类型（详见动画类型常量）
+		// 			subType : "from_right", //动画子类型（详见动画子类型常量）
+		// 			duration : 300 //动画过渡时间，默认300毫秒
+		// 		}
+		// })
+		api.openWin({
+			name: 'index_win',
+			url: '../calculator/index_win.html',
+			slidBackEnabled: false,
+			animation: {
+				type: "movein", //动画类型（详见动画类型常量）
+				subType: "from_right", //动画子类型（详见动画子类型常量）
+				duration: 300 //动画过渡时间，默认300毫秒
+			}
+		})
+	}
+</script>
+
+</html>

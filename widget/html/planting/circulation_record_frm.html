@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <!-- <meta charset="utf-8"> -->
+      <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="../../css/common/public.css"/>
+      <!-- <link rel="stylesheet" type="text/css" href="../../css/common/header.css"/> -->
+      <link rel="stylesheet" type="text/css" href="../../css/planting/circulation_record_win.css"/>
+  </head>
+  <body>
+      <!-- <header id="header">
+        <div class="headerLeft" onclick="back()"></div>
+        <div class="headerCenter">流转记录</div>
+        <div class="headerRight"></div>
+      </header> -->
+      <div id="recordList">
+
+      </div>
+
+  <script type="text/javascript" src="../../script/common/api.js"></script>
+  <script type="text/javascript" src="../../script/common/zepto-1.2.0.min.js"></script>
+  <script type="text/javascript" src="../../script/common/jquery.min.js"></script>
+  <script type="text/javascript" src="../../script/common/jquery.tmpl.js"></script>
+  <script type="text/javascript" src="../../script/common/rem-750.js"></script>
+  <script type="text/javascript" src="../../script/common/pds.ajax.js"></script>
+  <script type="text/template" id='recordDetail'>
+    <div class="title_record">工单名称：${recordList.name}</div>
+    <ul>
+        {{each(i,item) recordList.data}}
+        <li>
+              <div>
+                    {{if item.curStatus=="CONFIRMING" && i == 0}}
+                    <div>
+                      <span class="circle special"></span>
+                      <img src="../../image/planting/send.png" alt="">
+                      <span class="circle"></span>
+                    </div>
+                    <div class="content">
+                        <div class="status">
+                            派发
+                            {{if item.plantArea != null}}
+                                <span>要求：${item.plantArea}亩</span>
+                            {{/if}}
+                        </div>
+                        <div>派发者：${item.creator}</div>
+                        <div>执行者：${item.optUser}</div>
+                        <div class="time">${item.optDate}</div>
+                    </div>
+                    {{/if}}
+                    {{if item.curStatus=='BACK'}}
+                    <div>
+                      <span class="circle"></span>
+                      <img src="../../image/planting/refuse_c.png" alt="">
+                      <span class="circle" ></span>
+                    </div>
+                    <div class="content">
+                      <div>
+                          <div class="status">被拒单</div>
+                          <div>拒单人：${item.optUser}</div>
+                          <!-- <div>拒单理由：${item.refuseReasonId}</div> -->
+                          {{if item.refuseReasonId=='100'}}
+                          <div>拒单理由：不在单位，做不了</div>
+                          {{/if}}
+                          {{if item.refuseReasonId=='101'}}
+                          <div>拒单理由：有其他事情，没时间做</div>
+                          {{/if}}
+                          {{if item.refuseReasonId=='102'}}
+                          <div>拒单理由：派单不合理，退回重新派</div>
+                          {{/if}}
+                          {{if item.refuseReasonId=='103'}}
+                          <div>拒单理由：其他</div>
+                          {{/if}}
+                      </div>
+                      <div class="time">${item.optDate}</div>
+                    </div>
+                    {{/if}}
+                    {{if item.curStatus=="CONFIRMING" && i !="0"}}
+                  <div>
+                    <span class="circle"></span>
+                    <img src="../../image/planting/update.png" alt="">
+                    <span class="circle"></span>
+                  </div>
+                    <div class="content">
+                      <div class="status">改派</div>
+                      <div>执行者：${item.optUser}</div>
+                      <div  class="time">${item.optDate}</div>
+                    </div>
+                    {{/if}}
+                    {{if item.curStatus=='FEEDBACKING'}}
+                    <div>
+                      <span class="circle"></span>
+                      <img src="../../image/planting/agree.png" alt="">
+                      <span class="circle"></span>
+                    </div>
+                    <div class="content">
+                      <div class="status">接单</div>
+                      <div>接单人：${item.optUser}</div>
+                      <div  class="time">${item.optDate}</div>
+                    </div>
+                    {{/if}}
+                    {{if item.curStatus=='FEEDBACKED'}}
+                    <div>
+                      <span class="circle"></span>
+                      <img src="../../image/planting/submit.png" alt="">
+                      <span class="circle"></span>
+                    </div>
+                    <div class="content">
+                        <div class="status">
+                            提交工单
+                            {{if item.realPlantArea != null}}
+                                <span>本次完成：${item.realPlantArea}亩</span>
+                            {{/if}}
+                        </div>
+                        <div>执行者：${item.optUser}</div>
+                        <div  class="time">${item.optDate}</div>
+                    </div>
+                    {{/if}}
+                    {{if item.curStatus=='COMPLETED'}}
+                    <div>
+                      <span class="circle"></span>
+                      <img src="../../image/planting/finish.png" alt="">
+                      <span class="circle special"></span>
+                    </div>
+                    <div class="content">
+                        <div class="status">
+                            完成工单
+                            {{if item.realPlantArea != null}}
+                                <span>本次完成：${item.realPlantArea}亩</span>
+                            {{/if}}
+                        </div>
+                        <div>执行者：${item.optUser}</div>
+                        <div class="time">${item.optDate}</div>
+                    </div>
+                    {{/if}}
+              </div>
+        </li>
+        {{/each}}
+    </ul>
+  </script>
+  <script type="text/javascript">
+      var land_id;//地块id
+      var plan_id;//小计划id
+      var processId;
+      apiready = function(){
+              // var header = $api.byId('header');
+              // $api.fixStatusBar(header);
+              // var headerH = $api.offset(header).h;
+              // $("body").css({"paddingTop":headerH+"px"});
+              // $("#recordList").append($("#recordDetail").tmpl(recordList));
+
+              //alert(api.pageParam.plantDetailId)
+              getRecord();
+      };
+
+      // function back(){
+      //     api.closeWin({
+      //
+      //     });
+      //     api.sendEvent( {
+      //      name: 'openMapEvent'
+      //    } )
+      // }
+      // 发送ajaxt
+     //var recordList;
+      function getRecord(){
+              pds.ajaxSubmit({
+                 url:"app/plant/workOrderRecord",
+                 type : "GET",
+                 data:{
+                   id:api.pageParam.plantDetailId //2028api.pageParam.plantDetailId
+                 },
+                 success:function(e){
+                  //  alert("success")
+                  //alert(JSON.stringify(e));
+                  //alert(api.pageParam.name)
+                    recordList = e;
+                    recordList.name = api.pageParam.name
+                    // alert(JSON.stringify(e.url))
+                    if(e.status=='ok' && e.data != '' && e.data !=null && e.data != [] ){
+                        $("#recordList").append($("#recordDetail").tmpl(recordList));
+                    }else{
+                        $("#recordList").html('<span style="font-size:0.3rem;color:#666666;margin-top:0.3rem;text-align:center;">暂无数据</span>');
+                    }
+                 },
+                 error:function(e){
+                    api.alert({msg:"服务器异常，请联系管理员!"});
+                 }
+              });
+      };
+      // 假数据
+      // 派发1 被拒单2 改派3 接单4 提交工单5 完成工单 6
+      // var recordList = {
+      //   name:'车厘子施肥',
+      //   data:[
+      //     {'id':6,'curStatus':'CONFIRMING','optUser':'马芸','optDate':'2017-11-25 15:10:12','refuseReasonId':''},
+      //     {'id':1,'curStatus':'BACK','optUser':'马芸','optDate':'2017-11-25 15:10:12','refuseReasonId':'公司不在公公司不在公司不公司司不在公司'},
+      //     {'id':1,'curStatus':'CONFIRMING','optUser':'马芸','optDate':'2017-11-25 15:10:12','refuseReasonId':''},
+      //     {'id':1,'curStatus':'FEEDBACKING','optUser':'马芸','optDate':'2017-11-25 15:10:12','refuseReasonId':''},
+      //     {'id':1,'curStatus':'FEEDBACKED','optUser':'马芸','optDate':'2017-11-25 15:10:12','refuseReasonId':''},
+      //     {'id':1,'curStatus':'COMPLETED','optUser':'马芸','optDate':'2017-11-25 15:10:12','refuseReasonId':''}
+      //   ]
+      // };
+
+  </script>
+  </body>
+  </html>

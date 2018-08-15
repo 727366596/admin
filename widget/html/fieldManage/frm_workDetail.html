@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+      <style>
+          body{
+
+          }
+          div{
+            width: 2rem;
+            height: 2rem;
+            background-color: red;
+          }
+      </style>
+  </head>
+  <body>
+    <div onclick="opfrm()">frm_workDetail.html</div>
+  </body>
+  <script type="text/javascript" src="../../script/common/api.js"></script>
+  <script type="text/javascript">
+      apiready = function(){
+
+      };
+      function opfrm(){
+        api.openWin({
+          name : 'sendWork_win',
+          url : '../fieldManage/sendWork_win.html',
+          reload : true,
+        });
+      }
+  </script>
+  </html>

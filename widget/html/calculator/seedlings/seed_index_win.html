@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>种苗测算</title>
+	<script type="text/javascript" src="../../../script/common/rem.js"></script>
+	<link rel="stylesheet" href="../../../css/common/public.css" />
+	<link rel="stylesheet" href="../../../css/common/header.css" />
+	<style>
+		/*#header {
+			background-color: #204e41;
+		}*/
+
+		.headerLeft {
+			background: url("../../../image/cal_img/index/pressedbtn-fanhui@3x.png") no-repeate left;
+		}
+	</style>
+</head>
+
+<body>
+	<header id="header">
+		<div class="headerLeft" onclick="closeWin()"></div>
+		<div class="headerCenter">种苗测算</div>
+		<div class="headerRight"></div>
+	</header>
+</body>
+<script type="text/javascript" src="../../../script/common/api.js"></script>
+<script type="text/javascript">
+	apiready = function() {
+		api.parseTapmode();
+		var header = $api.byId('header');
+		$api.fixStatusBar(header);
+		var headerPos = $api.offset(header);
+		var body_h = $api.offset($api.dom('body')).h;
+		api.openFrame({
+			name: 'seed_index_frm',
+			url: './seed_index_frm.html',
+			bounces: true,
+			reload: true,
+			rect: {
+				x: 0,
+				y: headerPos.h,
+				w: 'auto',
+				h: 'auto'
+			}
+		})
+	};
+
+	function closeWin() {
+		api.closeWin();
+	};
+
+</script>
+
+</html>

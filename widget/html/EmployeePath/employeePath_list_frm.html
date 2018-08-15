@@ -1,0 +1,586 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>运动轨迹列表frm</title>
+    <link rel="stylesheet" type="text/css" href="../../css/common/public.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common/iscroll-style.css" />
+    <script type="text/javascript" src="../../script/common/rem-750.js"></script>
+    <style type="text/css">
+        html,body{
+          width: 100%;
+          height: 100%;
+          position: relative;
+        }
+        .nav{
+          height:0.95rem;
+          line-height: 0.95rem;
+          width: 100%;
+          background-color: #fff;
+          position: fixed;
+          left:0;
+          top:0;
+          z-index: 1;
+        }
+        .nav li{
+          float: left;
+          font-size: 0.3rem;
+          font-family: "PingFangSC Regular";
+          width: 50%;
+          height: 0.95rem;
+          text-align: center;
+        }
+        .nav li>span{
+            display: inline-block;
+            vertical-align: top;
+            height: 0.9rem;
+            width: 45%;
+            line-height: 0.95rem;
+            margin-top: 0.05rem;
+            font-size: 0.30rem;
+            color: #666666;
+        }
+        #body_totop_btn{
+            position: fixed;
+            bottom:0.5rem;
+            right:0.2rem;
+            width:1.2rem;
+            height:1.2rem;
+            z-index: 999;
+            line-height: 2.25rem;
+            font-size: 0.2rem;font-family: PingFangSC-Regular, sans-serif;color: #AEADAD;
+            text-align: center;
+            background: url("../../image/common/rocket_up.png") no-repeat center 3px;
+            background-size: 70% 70%;
+            background-color: rgba(0,0,0,0);
+            border-radius: 6px;
+            font-size: 0.20rem;
+            color: #20c714;
+            display: none;
+        }
+
+        #emptyPage{
+      			position: absolute;
+						left:0;
+						right: 0;
+						bottom: 0;
+						top:2.15rem;
+      			display:none;
+						z-index: 999;
+						background-color: #fff;
+      		}
+      		#emptyPage .emptyBcImg{
+      			width:210px;
+      			height:145px;
+      			margin:0 auto;
+						margin-top: 2.6rem;
+      			background-image: url(../../../image/emptyPageIcon.png);
+      			background-position: center;
+      			background-size: 100% 100%;
+      			background-repeat: no-repeat;
+      		}
+      		#emptyPage p{
+      			width:100%;
+      			height:20px;
+      			line-height:20px;
+      			text-align: center;margin-top: 0.2rem;
+      			font-size: 16px;color: #999999;
+      		}
+
+          #wrapper{
+            /*position: absolute;
+            left: 0;
+            right: 0;
+            top: 1.0rem;
+            bottom: 0;
+            overflow-y: auto;
+            z-index: 1;*/
+            margin-top: 1.0rem;
+            background-color: #fff;
+          }
+          #wrapper .scroller{
+              position: relative;
+              background-color: #f3f4f4;
+              width: 100%;
+          }
+          #wrapper .scroller>ul{
+              width:100%;
+              background-color: #f3f4f4;
+              padding: 0.01rem 0;
+          }
+
+  				#wrapper .scroller>ul>li{
+    					width:100%;
+              background-color: #fff;
+              margin-bottom: 0.3rem;
+    					/*padding: 0.15rem 0.2rem;*/
+  				}
+          #wrapper .scroller>ul>li:first-of-type{
+              margin-top: 0.3rem;
+          }
+          #wrapper .scroller>ul>li>div.scrollerBox-top{
+              position: relative;
+              width: 100%;
+              height: 2.65rem;
+              display: -webkit-box;
+              display: -webkit-flex;
+              display:flex;
+
+              -webkit-box-orient: horizontal;
+              -webkit-flex-flow: row;
+              flex-flow: row;
+
+              -webkit-box-pack: justify;
+              -webkit-justify-content: space-between;
+              justify-content: space-between;
+
+              -webkit-box-align: center;
+              -webkit-align-items: center;
+              align-items: center;
+          }
+  				#wrapper .scroller>ul>li>.scrollerBox-top>div.scrollerBox-left{
+  				    height: 100%;
+              width: 37%;
+              position: relative;
+  				}
+          #wrapper .scroller>ul>li>.scrollerBox-top>div.scrollerBox-left a{
+              position: absolute;
+              left: 50%;
+              top: 50%;
+              margin-left: -0.75rem;
+              margin-top: -0.75rem;
+              display: inline-block;
+              width: 1.5rem;
+              height: 1.5rem;
+              border: solid 0.08rem #f3f4f4;
+              border-radius: 50%;
+              overflow: hidden;
+          }
+          #wrapper .scroller>ul>li>.scrollerBox-top>div.scrollerBox-left a>img{
+              width: 100%;
+              height: 100%;
+              outline: none;
+          }
+          #wrapper .scroller>ul>li>.scrollerBox-top>div.scrollerBox-right{
+  				    height: 100%;
+              width: 63%;
+              padding: 0.22rem 0;
+  				}
+          #wrapper .scroller>ul>li>.scrollerBox-top>div.scrollerBox-right>ul{
+              width: 100%;
+              height: 100%;
+          }
+          #wrapper .scroller>ul>li>.scrollerBox-top>div.scrollerBox-right>ul>li{
+              width: 100%;
+              height: 33.33%;
+              padding-left: 0.5rem;
+              background-position: left center;
+              background-size: 0.3rem 0.42rem;
+              background-repeat: no-repeat;
+              display: -webkit-box;
+              display: -webkit-flex;
+              display:flex;
+
+              -webkit-box-orient: horizontal;
+              -webkit-flex-flow: row;
+              flex-flow: row;
+
+              -webkit-box-pack: start;
+              -webkit-justify-content: flex-start;
+              justify-content: flex-start;
+
+              -webkit-box-align: center;
+              -webkit-align-items: center;
+              align-items: center;
+          }
+          #wrapper .scroller>ul>li>.scrollerBox-top>div.scrollerBox-right>ul>li:first-of-type{
+              background-image: url("../../image/employeePath/employee_name_bc.png");
+          }
+          #wrapper .scroller>ul>li>.scrollerBox-top>div.scrollerBox-right>ul>li:nth-of-type(2){
+              background-image: url("../../image/employeePath/employee_tel_bc.png");
+          }
+          #wrapper .scroller>ul>li>.scrollerBox-top>div.scrollerBox-right>ul>li:last-of-type{
+              background-image: url("../../image/employeePath/employee_path_bc.png");
+          }
+          #wrapper .scroller>ul>li>.scrollerBox-top>div.scrollerBox-right>ul>li>span{
+              float: left;
+              height: 100%;
+              line-height: 0.85rem;
+              font-size: 0.3rem;font-family: PingFangSC-Regular, sans-serif;color: #666666;
+          }
+          #wrapper .scroller>ul>li>.scrollerBox-top>div.scrollerBox-right>ul>li>span.online{
+              font-size: 0.24rem;font-family: PingFangSC-Regular, sans-serif;color: #82e268;
+              margin-left: 0.15rem;line-height:0.80rem;
+          }
+          #wrapper .scroller>ul>li>.scrollerBox-top>div.scrollerBox-right>ul>li>span.outline{
+              font-size: 0.24rem;font-family: PingFangSC-Regular, sans-serif;color: #999999;opacity: 0.5;
+              margin-left: 0.15rem;line-height:0.80rem;
+          }
+          #wrapper .scroller>ul>li>.scrollerBox-bottom{
+              width: 100%;
+              height: 0.8rem;
+              line-height: 0.8rem;
+              padding: 0 0.44rem;
+              border-top: solid 1px #f3f4f4;
+              border-bottom: solid 1px #f3f4f4;
+              text-align: center;
+          }
+          #wrapper .scroller>ul>li>.scrollerBox-bottom>span{
+              display: inline-block;
+              vertical-align: top;
+              width: 50%;
+              height: 100%;
+              line-height: 0.8rem;
+          }
+          #wrapper .scroller>ul>li>.scrollerBox-bottom>span.pathDate{
+              text-align: left;
+              font-size: 0.26rem;font-family: PingFangSC-Regular, sans-serif;color: #999999;
+          }
+          #wrapper .scroller>ul>li>.scrollerBox-bottom>span.pathInfo{
+              text-align: right;
+              font-size: 0.28rem;font-family: PingFangSC-Regular, sans-serif;color: #579fff;
+          }
+          #wrapper .scroller>ul>li>.scrollerBox-bottom>span.center{
+              text-align: center;
+              font-size: 0.28rem;font-family: PingFangSC-Regular, sans-serif;color: #579fff;
+          }
+    </style>
+</head>
+<body>
+        <ul class="nav">
+            <li id="0" pageId="page_track_list_admin" eventId="button_todaytrack_page_track_list_admin"><span>今天走的路</span></li>
+            <li id="1" pageId="page_track_list_admin" eventId="button_historicaltrack_page_track_list_admin"><span>以前走的路</span></li>
+        </ul>
+        <div id="wrapper" style="">
+            <div class="scroller" style="">
+                <ul id="scrollerBox" style="">
+                    <!-- 列表内容 -->
+                </ul>
+    						<div class="more" style="height:1.0rem;background-color:#fff;">
+    	             	<i class="pull_icon"></i>
+    	             	<span style="font-size: 0.28rem;font-family: PingFangSC-Regular, sans-serif;color: #666666;">上拉加载更多...</span>
+                </div>
+            </div>
+        </div>
+
+
+    <div id="body_totop_btn">
+        返回顶部
+    </div>
+    <div id="emptyPage">
+      <div class="emptyBcImg"></div>
+      <p>亲，还没有新的内容哦~</p>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/common/api.js"></script>
+<script type="text/javascript" src="../../script/common/jquery.min.js"></script>
+<!-- <script type="text/javascript" src="../../script/common/zepto-1.2.0.min.js"></script> -->
+<!-- <script type="text/javascript" src="../../script/common/iscroll.js"></script> -->
+<script type="text/javascript" src="../../script/common/common/pds.ajax.js"></script>
+<script type="text/javascript" src="../../script/common/emptyFrm.js"></script>
+<script type="text/javascript">
+    var navH = null;
+    var emptyImgUrl = "../../image/empty.png";
+    apiready = function(){
+        api.parseTapmode();
+        navH = $(".nav").height();
+        //点击tab切换
+        tabCheck();
+        //默认触发今日
+        $("#0").triggerHandler('touchend');
+    };
+
+
+    //导航tab切换
+  	var page = 1, pageSize = 5, navId = null;
+
+  	function tabCheck(){
+      emptyFrm.hide();
+      var pathListDataUrl = "";
+  		$(".nav li").off("touchend").on("touchend",function(){
+        var pageId = $(this).attr("pageId");
+       var eventId = $(this).attr("eventId");
+       var buriedPoint = pds.buriedPoint();
+       buriedPoint.pageId = pageId;
+       buriedPoint.eventId = eventId;
+       pds.ajaxSubmit({
+       url:"app/buried_point/save",
+       data:{"point":buriedPoint},
+       success:function(v){
+       }
+     })
+  				$(".nav li span").css({
+  						"color":"#666666",
+  						"border":"none",
+              "fontSize" :"0.3rem"
+  				});
+  				$(this).find("span").css({
+  						"color":"#00c558",
+  						"border-bottom":"solid 1px #00c558",
+  						"fontSize" :"0.32rem"
+  				});
+          $("#wrapper .scroller").css({"top":"0rem"});
+  				$("#scrollerBox").html("");
+
+          navId = $(this).attr("id");
+          page = 1;
+          // pageScroll(page);
+          $('.more span').text('加载中...');
+          $('.pull_icon').addClass('loading');
+          setTimeout(function(){
+              pathListData(page, pageSize, navId);
+          },300);
+  		});
+
+  };
+
+  var total;
+    //请求数据***************************************
+    function pathListData(page, pageSize, navId){
+    			//page+=1;
+          //alert(page+"*****开始请求数据*****"+navId)
+    			pds.ajaxSubmit({
+    				 url:"app/coor/selectByUser",
+    				 type : "GET",
+    				 data:{
+                  "data":JSON.stringify({
+    							 		"page" : page,
+    									"pageSize" : pageSize
+    						 	}),
+                  "date" : navId,
+                  "flag" : "1"
+    				 },
+    				 success:function(e){
+    					 	//alert("success")
+    						//alert(JSON.stringify(e))
+                total = e.total;
+    						if(e.total > 0){
+                    emptyFrm.hide();
+    								var techListArr = e.data;
+    								var techListStr = "";
+    								var articleTypeName = null;
+    								//console.log("*******************"+techListArr.length+"**********************")
+    								if(techListArr != "" && techListArr != null && techListArr != []){
+    										//$("#emptyPage").hide();
+    										//$('.more').show();
+                        var headerImgSrc = null, pathDate = null, statusHtml = null, statusClass = null, statusText = null;
+                        var telStr = null, pathLength = null;
+    										for (var i = 0; i < techListArr.length; i++) {
+                            //显示电话
+                            telStr = "暂无";
+                            if(techListArr[i].mobile != "" && techListArr[i].mobile != null){
+                                telStr = techListArr[i].mobile
+                            };
+                            //显示公里数
+                            pathLength = "0";
+                            if(techListArr[i].distance != "" && techListArr[i].distance != null){
+                                pathLength = (techListArr[i].distance/1000).toFixed(3);
+                            };
+                            //显示用户头像
+                            headerImgSrc = "../../image/common/header_bc.png";
+                            //headerImgSrc = "widget://image/common/header_bc.png";
+                            if(techListArr[i].photo != "" && techListArr[i].photo != null){
+      													//headerImgSrc = pds.defaultUri+'/'+techListArr[i].photo;
+                                headerImgSrc = pds.defaultUri+"app/attach/view/"+techListArr[i].photo;
+      											};
+                            //alert(JSON.stringify(headerImgSrc))
+                            //显示以前走的路日期
+                            pathDate = '<span pageId="page_todaytrack_list_admin" eventId="button_check_the_details_page_todaytrack_list_admin" class="pathInfo center" onclick="openMapInfo(this)">查看轨迹</span>';
+                            if(navId == "1" && techListArr[i].createDate != "" && techListArr[i].createDate != null){
+                                pathDate = '<span class="pathDate">'+ techListArr[i].createDate.split(" ")[0] +'</span><span pageId="page_historicaltrack_list_admin" eventId="button_check_the_details_page_historicaltrack_list_admin" class="pathInfo" onclick="openMapInfo(this)">查看轨迹</span>';  //今天走的路
+                            };
+                            //是否显示今日在线状态
+                            if(navId == "0"){
+                                //修改在线状态字体样式
+                                if(techListArr[i].status == 109){
+                                  statusClass = "online";
+                                  statusText = "在线";
+                                }else{
+                                  statusClass = "outline";
+                                  statusText = "离线";
+                                };
+                                statusHtml = '<span class="'+ statusClass +'">['+ statusText +']</span>';
+                            }else{
+                                statusHtml = '';
+                            }
+                            //拼接Html结构
+      											techListStr += '<li>'+
+                                                '<div class="scrollerBox-top">'+
+                                                    '<div class="scrollerBox-left" style="">'+
+                                                        '<a href="#"><img src="'+ headerImgSrc +'"/></a>'+
+                                                    '</div>'+
+                                                    '<div class="scrollerBox-right" style="">'+
+                                                        '<ul>'+
+                                                            '<li><span>姓名：</span><span>'+ techListArr[i].name +'</span>'+ statusHtml +'</li>'+
+                                                            '<li><span>电话：</span><span>'+ telStr +'</span></li>'+
+                                                            '<li><span>走了多少公里：</span><span>'+ pathLength +'公里</span></li>'+
+                                                        '</ul>'+
+                                                    '</div>'+
+                                                '</div>'+
+                                                '<div class="scrollerBox-bottom" data-photo="'+ headerImgSrc +'" data-landId="'+ techListArr[i].landIds +'" data-tel="'+ telStr +'" data-date="'+ techListArr[i].createDate +'" data-id="'+ techListArr[i].createBy +'">'+ pathDate +'</div>'+
+                                          '</li>';
+    										};
+                        //拼接页面html
+    										$("#scrollerBox").append(techListStr);
+                        $('.more span').text('上拉加载更多...');
+                        $('.pull_icon').removeClass('loading');
+                        //开启滚动监听，回到顶部
+                        scrollToTop();
+                        var total = e.total;
+
+                        // 判断是否还有数据，如果还有数据监听滚动，滚动加载
+                        if(page*pageSize < total){
+                            api.addEventListener({
+                                name:'scrolltobottom',
+                            }, function(ret, err){
+                                page++;
+                                // alert('已滚动到底部');
+                                $('.more span').text('加载中...');
+                                $('.pull_icon').addClass('loading');
+                                // alert(page);
+                                setTimeout(function(){
+                                    pathListData(page,pageSize,navId);
+                                },300)
+
+                            });
+                        }else{
+                            $('.more span').text('暂无更多轨迹...');
+                            $('.pull_icon').removeClass('loading');
+                            api.removeEventListener({
+                                name: 'scrolltobottom'
+                            });
+                        };
+
+    								}else{
+                        $('.more span').text('暂无更多轨迹...');
+                        $('.pull_icon').removeClass('loading');
+                        api.removeEventListener({
+                            name: 'scrolltobottom'
+                        });
+    								}
+
+    						}else{
+                    $('.more span').text('暂无数据...');
+                    $('.pull_icon').removeClass('loading');
+                    emptyFrm.show("暂无相关轨迹~", navH, emptyImgUrl)
+                };
+
+    				 },
+    				 error:function(e){
+                $('.more span').text('数据加载错误...');
+                $('.pull_icon').removeClass('loading');
+    						api.alert({msg:"服务器异常，请联系管理员!"});
+    				 }
+    			});
+    };
+
+    //点击跳转
+    function openMapInfo(obj){
+      var pageId = $(obj).attr("pageId");
+   		var eventId = $(obj).attr("eventId");
+   		var buriedPoint = pds.buriedPoint();
+   		buriedPoint.pageId = pageId;
+   		buriedPoint.eventId = eventId;
+   		pds.ajaxSubmit({
+   		url:"app/buried_point/save",
+   		data:{"point":buriedPoint},
+   		success:function(v){
+   		}
+   	})
+          var date = $(obj).parents().attr("data-date");
+          var id = $(obj).parents().attr("data-id");
+          var tel = $(obj).parents().attr("data-tel");
+          var landId = $(obj).parents().attr("data-landId");
+          var headerImgSrc = $(obj).parents().attr("data-photo");
+
+          api.sendEvent({
+              name: 'GetTrail',
+              extra: {
+                  id:id,
+                  date:date
+              }
+          });
+
+          //alert(date+"**********"+id+'**********'+1);
+          api.openWin({
+            name : "employeePath_info_win",
+            url : "widget://html/EmployeePath/employeePath_info_win.html",
+            reload : true,
+            slidBackEnabled : false,
+            pageParam : {
+               pathDate : date,
+               pathId : id,
+               pathTel : tel,
+               pathLandId : landId,
+               photo : headerImgSrc
+            },
+            animation : {
+              type : "movein", //动画类型（详见动画类型常量）
+              subType : "from_right", //动画子类型（详见动画子类型常量）
+              duration : 300 //动画过渡时间，默认300毫秒
+            }
+          });
+    };
+
+
+    // //上滑刷新
+  	// var myscroll;
+  	// function pageScroll(page){
+    //     //alert(page+"**********"+total+"*********"+navId)
+  	// 	  setTimeout(function(){
+    //       //var fingerMoveFlag = false;
+    //       myscroll = new iScroll("wrapper",{
+    //           topOffset: 0,
+    //           onScrollMove:function(){
+    //             if (this.y<(this.maxScrollY)) {
+    //               $('.pull_icon').addClass('flip');
+    //               $('.pull_icon').removeClass('loading');
+    //               $('.more span').text('释放加载...');
+    //             }else{
+    //               $('.pull_icon').removeClass('flip loading');
+    //               $('.more span').text('上拉加载更多...')
+    //             }
+    //           },
+    //           onScrollEnd:function(){
+    //             if ($('.pull_icon').hasClass('flip')) {
+    //               $('.pull_icon').addClass('loading');
+    //               $('.more span').text('加载中...');
+    //               setTimeout(function(){
+    // 									page++;
+    // 									pathListData(page, pageSize, navId)
+  	// 							},300)
+    //             }
+    //           },
+    //           onRefresh:function(){
+    //             $('.more').removeClass('flip');
+    //             $('.more span').text('上拉加载更多...');
+    //           }
+    //       });
+    //     },0)
+  	// }
+
+    // // 重新计算滚动的高度
+    // function onCompletion() {
+    //     setTimeout(function () {
+    //         myscroll.refresh();
+    //     }, 0);
+    // };
+
+    //页面回到顶部
+  	function scrollToTop(){
+    		$("#wrapper").on("scroll",function(){
+      			var scrollTop = $("#wrapper").scrollTop();
+      			if(scrollTop >= 300){
+        				$("#body_totop_btn").show().off("click").on("click",function(){
+                    $("#wrapper").animate({'scrollTop': '0px'}, 200);
+                    //myScroll.scrollTo(0, 0, 300)
+        				})
+      			}else{
+      				  $("#body_totop_btn").hide();
+      			}
+    		})
+  	};
+</script>
+</html>

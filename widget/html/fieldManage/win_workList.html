@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="../../css/common/public.css"/>
+      <link rel="stylesheet" type="text/css" href="../../css/common/header.css"/>
+      <style>
+      body{
+        /*background-color: red;*/
+      }
+      </style>
+  </head>
+  <body>
+      <header id="header">
+        <div class="headerLeft" onclick="api.closeWin()"></div>
+        <div class="headerCenter">派出去的活</div>
+        <div class="headerRight"></div>
+      </header>
+
+  </body>
+  <script type="text/javascript" src="../../script/common/api.js"></script>
+  <script type="text/javascript" src="../../script/common/jquery.min.js"></script>
+  <script type="text/javascript" src="../../script/common/pds.ajax.js"></script>
+  <script type="text/javascript" src="../../script/common/rem-750.js"></script>
+  <script type="text/javascript">
+      apiready = function(){
+        	api.parseTapmode();
+          //alert(1)
+       var header = $api.byId('header');
+       $api.fixStatusBar(header);
+       var headerH = $api.offset(header).h;
+       $("body").css({"paddingTop":headerH+"px"});
+        var id_ = api.pageParam.id;
+        var type = api.pageParam.tag
+        api.openFrame({
+            name: 'frm_workTab',
+            url: './frm_workTab.html',
+            bounces: false,
+            pageParam : {
+              id : id_,
+              farmId: api.pageParam.farmId,
+              tag:type
+            },
+            rect: {
+                x: 0,
+                y: headerH,
+                w: 'auto',
+                h: 'auto'
+            }
+        });
+
+      };
+  </script>
+  </html>

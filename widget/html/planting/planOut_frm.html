@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="maximum-scale=1,minimum-scale=1,user-scalable=0,width=device-width,initial-scale=1">
+		<title>
+			我派出去的活
+		</title>
+		<link rel="stylesheet" type="text/css" href="../../css/common/api.css">
+		<link rel="stylesheet" type="text/css" href="../../css/common/public.css">
+		<link rel="stylesheet" type="text/css" href="../../css/common/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../../css/common/mui.picker.min.css">
+		<link rel="stylesheet" type="text/css" href="../../css/planting/planOut.css">
+		<script type="text/javascript" src="../../script/common/rem-750.js"></script>
+	</head>
+	<body>
+		<article>
+			<section class="section2">
+				<h4 class="firstTitle">
+					基本情况
+				</h4>
+				<p>
+					<span>
+						基地名称:
+					</span>
+					<span>
+						<select id="farmId" name="farmId" onchange="land()">
+						</select>
+						<i>
+						</i>
+					</span>
+				</p>
+				<p>
+					<span>
+						地块名称:
+					</span>
+					<span>
+						<select id="landId" name="landId" onchange=mian(this)>
+						</select>
+						<i>
+						</i>
+					</span>
+				</p>
+				<p>
+					<span>
+						作物名称:
+					</span>
+					<span>
+						<input id="cropName" type="text" readonly onchange="process()">
+						<input id="cropId" type="hidden">
+						<i>
+						</i>
+					</span>
+				</p>
+				<p>
+					<span>
+						执行面积:
+					</span>
+					<span>
+						<input id="mu" type="number">
+						<input id="muShu" type="hidden">
+						<i class="mianji">
+							亩
+						</i>
+					</span>
+				</p>
+				<p>
+					<span>
+						工序名称:
+					</span>
+					<span>
+						<select id="proId" name="proName">
+						</select>
+						<i>
+						</i>
+					</span>
+				</p>
+				<p>
+					<span>
+						执行人:
+					</span>
+					<span>
+						<input id="executor" type="text" readonly>
+						<input id="exrId" type="hidden">
+						<i>
+						</i>
+					</span>
+				</p>
+				<p>
+					<span>
+						开始时间:
+					</span>
+					<span id="time1">
+						<input id="date1" type="text" placeholder="点击我选择开始时间" readonly>
+						<i>
+						</i>
+					</span>
+				</p>
+				<p>
+					<span>
+						完成时间:
+					</span>
+					<span id="time2">
+						<input id="date2" type="text" placeholder="点击我选择结束时间" readonly>
+						<i>
+						</i>
+					</span>
+				</p>
+				<p class="lastP">
+					<span class="last">
+						执行标准:
+					</span>
+					<textarea id="standards" name="name" rows="4" placeholder="请输入执行标准" maxlength="200" onfocus="cc()"></textarea>
+				</p>
+			</section>
+			<section class="resource">
+				<h4>
+					计划资源用量
+				</h4>
+				<div>
+					<p class="resource-p">
+						<span id="i1" class="resourceList">
+							资源1
+						</span>
+						<span class="det">
+							删除
+						</span>
+					</p>
+					<p>
+						<span>
+							资源名称：
+						</span>
+						<span>
+							<input name="reName" type="text" placeholder="点我选择" readonly>
+							<input name="reId" type="hidden">
+							<i>
+							</i>
+						</span>
+					</p>
+					<p>
+						<span>
+							计划用量：
+						</span>
+						<span>
+							<input name="reNeed" type="number">
+							<input name="resTotalUnit" type="hidden">
+							<i class="renTian">
+							</i>
+						</span>
+					</p>
+					<p>
+						<span>
+							资源单价：
+						</span>
+						<span>
+							<input name="rePrice" type="number">
+							<input name="reUnit" type="hidden">
+							<i class="mu">
+							</i>
+						</span>
+					</p>
+				</div>
+				<div id="btnfield">
+					<div class="addRe">
+						<b>
+							+
+						</b>
+						<span class="addtxt">
+							添加资源
+						</span>
+					</div>
+				</div>
+			</section>
+		</article>
+		<div class="fixBar" id="fixBar">
+			<div id="save" class="btnSave">
+				保存为草稿
+			</div>
+			<div id="confirm" class="btnConfirm">
+				立即派单
+			</div>
+		</div>
+		<script type="text/javascript" src="../../script/common/api.js"></script>
+		<script type="text/javascript" src="../../script/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../script/common/pds.ajax.js"></script>
+		<script type="text/javascript" src="../../script/common/mui.min.js"></script>
+		<script type="text/javascript" src="../../script/common/mui.picker.min.js"></script>
+		<script type="text/javascript" src="../../script/planting/planOut.js"></script>
+	</body>
+
+</html>

@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>地图展示frm</title>
+		<link rel="stylesheet" type="text/css" href="../../../../css/common/api.css"/>
+		<style>
+			.clearFloat:after {
+				content: "";
+				display: block;
+				clear: both;
+				visibility: hidden;
+				height: 0;
+			}
+			#mapLazyLoad {
+				width: 100%;
+				height: 293px;
+			}
+			#mapLazyLoad h4 {
+				position: fixed;
+				top: 0;
+				left: 0;
+				right: 0;
+				z-index: 99;
+				font-weight:300;
+				font-size: 18px;font-family: PingFangSC-Regular, sans-serif;color: #fff;
+				height:70px;text-align: center;
+				line-height:98px;
+				text-align: center;
+				background: #00c558;
+			}
+			#mapLazyLoad h4 span {
+				position: fixed;
+				z-index: 99;
+				width: 10px;
+				height: 18px;
+				left: 13px;
+				top: 40px;
+				background-image: url("../../../image/harvest/harvest_back.png");
+				background-size: 100% 100%;
+				background-repeat: no-repeat;
+				background-position: center center;
+			}
+			#mapInformation {
+				/*border: solid 1px blue;*/
+				padding: 10px;
+				font-size: 14px;
+			}
+			#mapInformation ul li {
+				/*border:solid 1px red;*/
+				position: relative;
+			}
+			#mapInformation ul li button {
+				font-size: 10px;
+				float: right;
+				margin-left: 5px;
+				background: #5cba5c;
+				padding: 7px 10px 5px 10px;
+				border-radius: 12px;
+				color: #ffffff;
+				outline: none;
+			}
+			#mapInformation ul li button:first-of-type {
+				float: left;
+				margin-left: 0;
+			}
+			/*卫星地图*/
+			/*#mapInformation ul li button:nth-of-type(2){
+			 }*/
+			/*标准地图*/
+			#mapInformation ul li button:last-of-type {
+				position: absolute;
+				right: 0px;
+				top: 0px;
+				display: none;
+			}
+			#mapInformation table {
+				width: 100%;
+				margin-top: 10px;
+			}
+			#mapInformation table th, #mapInformation table td {
+				/*width:25%;*/
+				padding: 5px 0;
+				border: solid 1px #f2f2f2;
+				text-align: center;
+				color: #999;
+			}
+			#mapInformation table thead tr {
+				display: block;
+			}
+			#mapInformation table tbody {
+				display: block;
+				overflow: scroll;
+				/*height:800px;*/
+			}
+			#mapInformation table tbody tr td span {
+				display: inline-block;
+				width: 13px;
+				height: 13px;
+				background-image: url(../../../image/settings/Delete.png);
+				background-repeat: no-repeat;
+				background-position: 0 0;
+				background-size: 100%;
+			}
+			.changeStyle {
+				background: green;
+			}
+		</style>
+	</head>
+	<body>
+			<input type="hidden" id="deletePointId"/>
+	</body>
+	<script type="text/javascript" src="../../../../script/common/api.js"></script>
+	<script type="text/javascript" src="../../../../script/common/jquery.min.js"></script>
+	<script type="text/javascript" src="../../../../script/common/pds.ajax.js"></script>
+	<script type="text/javascript">
+			var map = null;
+			// 加载模块一定要在apiready方法里
+			apiready = function() {
+					api.parseTapmode();
+					// api.showProgress({
+					//     title: '努力加载中...',
+					//     text: '先喝杯茶...',
+					//     modal: true
+					// });
+					var screenHeight = api.frameHeight;
+					//				$("#mapLazyLoad").css("height",screenHeight*0.72+"px");
+					// 加载百度地图模块
+					map = api.require('bMap');
+					// 判断定位功能是否开启
+					map.getLocationServices(function(ret, err) {
+						if (ret.enable) {
+							//alert(JSON.stringify(ret));
+						} else {
+							alert("未开启定位功能！");
+						}
+					});
+					openMap();
+					// 监听到进入后台时停止定位
+					api.addEventListener({
+						name : 'pause'
+					}, function(ret, err) {
+						map.stopLocation();
+					});
+					// 查询已打的坐标（有时间改成只有已打点的才能查）
+					selectCoordinatesByLandId();
+
+		};
+
+		//关闭地图
+		function closeMap(){
+			map.close();
+			//map.hide();
+		}
+		// 打开地图
+		function openMap() {
+				var rectY = 70;// 地图在y轴上的距离
+				var strDM = api.systemType;
+				if (strDM == 'ios') {
+					var strSV = api.systemVersion;
+					var numSV = parseInt(strSV, 10);
+					var fullScreen = api.fullScreen;
+					var iOS7StatusBarAppearance = api.iOS7StatusBarAppearance;
+					// 苹果系统 得向下移20
+					if (numSV >= 7 && !fullScreen && iOS7StatusBarAppearance) {
+						rectY = 70;
+					}
+				};
+
+				map.open({
+					// （可选项）模块的位置及尺寸
+					rect : {
+						x : 0, //（可选项）数字类型；地图左上角的 x 坐标（相对于所属的 Window 或 Frame）；默认：0
+						y : rectY, //（可选项）数字类型；地图左上角的 y 坐标（相对于所属的 Window 或 Frame）；默认：0
+						w : api.frameWidth, //（可选项）数字类型；地图的宽度；默认：所属的 Window 或 Frame 的宽度
+						h : api.frameHeight //（可选项）数字类型；地图的高度；默认：所属的 Window 或 Frame 的高度
+					},
+					zoomLevel : 18, //（可选项）设置百度地图缩放等级，取值范围：3-18级
+					showUserLocation : true, //（可选项）是否在地图上显示用户位置
+					//fixedOn : 'myposition_bmap_frm',//（可选项）模块视图添加到指定 frame 的名字（只指 frame，传 window 无效）
+					fixed : true //（可选项）模块是否随所属 window 或 frame 滚动
+				}, function(ret) {
+					if (ret.status) {
+						//alert('地图打开成功');
+						api.hideProgress();
+	        	//显示信息提示框
+            api.openFrame({
+                name:'myposition_bmap_info_frm',
+                url:'./bmap_info_frm.html',
+								pageParam: {
+									id: api.pageParam.id,
+									landName:api.pageParam.landName
+								},
+                rect:{
+                    x:0,
+                    y:70,
+                    w:'auto',
+                    h:30
+                },
+                bounces:false,
+                vScrollBarEnabled:false,
+                hScrollBarEnabled:false
+            });
+						setTimeout(function(){
+							api.execScript({
+									frameName: 'myposition_bmap_info_frm',
+									script: 'infoSlideUp()'
+							});
+						},4000);
+						//显示删除按钮
+						api.openFrame({
+                name:'myposition_bmap_delBtn_frm',
+                url:'./bmap_delBtn_frm.html',
+                rect:{
+                    x:api.winWidth/2-140,
+                    y:api.winHeight-100,
+                    w:100,
+                    h:100
+                },
+                //data:'<div style="width:50px;height:50px;line-height:50px;text-align:center;color:#fff;border-radius:50%;background:red;" onclick="deleteAnnotation();">删除</div>',
+                bgColor:'rgba(0,0,0,0.0)',
+                bounces:false,
+                vScrollBarEnabled:false,
+                hScrollBarEnabled:false
+            });
+            //显示完成按钮
+            api.openFrame({
+                name:'myposition_bmap_finishBtn_frm',
+                url:'./bmap_finishBtn_frm.html',
+                rect:{
+                    x:api.winWidth/2-35,
+                    y:api.winHeight-100,
+                    w:100,
+                    h:100
+                },
+                //data:'<div style="width:50px;height:50px;line-height:50px;text-align:center;color:#fff;border-radius:50%;background: pink;" onclick="alert(222)">完成</div>',
+                bgColor:'rgba(0,0,0,0.0)',
+                bounces:false,
+                vScrollBarEnabled:false,
+                hScrollBarEnabled:false
+            });
+						//打点按钮
+						api.openFrame({
+                name:'myposition_bmap_operationBtn_frm',
+                url:'./bmap_operationBtn_frm.html',
+                rect:{
+                    x:api.winWidth/2+70,
+                    y:api.winHeight-100,
+                    w:100,
+                    h:100
+                },
+              //  data:'<div style="width:50px;height:50px;line-height:50px;text-align:center;color:#fff;border-radius:50%;background:#00c558;" onclick="getPosition();">打点</div>',
+                bgColor:'rgba(0,0,0,0.0)',
+                bounces:false,
+                vScrollBarEnabled:false,
+                hScrollBarEnabled:false
+            });
+						//我的位置按钮
+						api.openFrame({
+                name:'myposition_bmap_nowPtnBtn_frm',
+                url:'./bmap_nowPtnBtn_frm.html',
+                rect:{
+                    x:20,
+                    y:api.winHeight-190,
+                    w:52,
+                    h:52
+                },
+								//bgColor:'#00f',
+                bounces:false,
+                vScrollBarEnabled:false,
+                hScrollBarEnabled:false
+            });
+
+						// 显示用户的位置
+						map.showUserLocation({
+							isShow : true,
+							trackingMode : 'none'//罗盘compass
+						});
+						// 是否显示比例尺
+						map.setScaleBar({
+							show : true,
+							position : {
+								x : 25, //（可选项）数字类型；比例尺左上角的 x 坐标（相对于地图）；默认：0
+								y : api.winHeight-205 //（可选项）数字类型；比例尺左上角的 y 坐标（相对于地图）；默认：0
+							}
+						});
+
+
+					} else {
+						alert("地图打开失败");
+					}
+			});
+		}
+
+		//设置当前中心位置
+		function nowPosition(){
+			map.getLocation({
+			    accuracy: '10m',
+			    autoStop: true,
+			    filter: 10
+			}, function(ret, err) {
+					if (ret.status) {
+							map.setCenter({
+									coords: {
+											lon: ret.lon,
+											lat: ret.lat
+									},
+									animation: true
+							});
+					} else {
+						api.alert({msg:"获取位置信息失败，请重试!"});
+					}
+			});
+
+		}
+
+		// 运动轨迹坐标数组
+		var coordArray 			= new Array();
+		// 标记点数组
+		var annotationArray = new Array();
+		// 地块面积
+		var area ;
+		// 打点：定位并获取坐标
+		function getPosition() {
+				map.getLocation({
+						accuracy : '10m', // 定位精度，默认100m
+						autoStop : true, 	// 获取到位置信息后是否自动停止定位
+						filter 	 : 10 		// 位置更新所需的最小距离（单位米），autoStop 为 true 时，此参数有效
+				}, function(ret, err) {
+						if (ret.status) {
+							var len = coordArray.length;
+							if(len >0){
+									map.getDistance({
+										start: {
+												lon: ret.lon,
+												lat: ret.lat
+										},
+										end: {
+												lon: coordArray[len-1].lon,
+												lat: coordArray[len-1].lat
+										}
+									}, function(e) {
+										if (e.status) {
+												if(e.distance < minDistance){
+														api.alert({msg:distanceErrMsg});
+														return;
+												}else{
+													pushToCoorArray(ret);
+													addAnnotations(ret);
+												}
+										}
+									});
+							}else{
+								pushToCoorArray(ret);
+								addAnnotations(ret);
+							}
+
+						} else {
+							//alert();
+						}
+				});
+		}
+
+		// 添加经纬度坐标到数组中
+		function pushToCoorArray(coor){
+				coordArray.push(coor);
+				updateLine();
+		}
+
+		// 更新生成折线: 先删除，再生成
+		function updateLine(){
+				if(coordArray.lentth <= 1){
+					return;
+				}
+				var deleteLineArray = [9999];
+				map.removeOverlay({
+						ids: deleteLineArray
+				});
+				map.addLine({
+						id: 9999,
+						styles: {
+								borderColor: '#5caf5c',
+								borderWidth: 4
+						 },
+						 points: coordArray
+				});
+		}
+
+		var minDistance = 5;// 5m
+		var distanceErrMsg =  '距离上一点距离不能小于'+minDistance+'米'
+		// 添加标注
+		function addAnnotations(coor){
+				var index = annotationArray.length;
+				var annotation  = {};
+				annotation.id = index;
+				annotation.lon = coor.lon;
+				annotation.lat = coor.lat;
+				annotationArray.push(annotation);
+				updateAnnotations();
+				// 大于等于3个点时，完成按钮可用
+				if(coordArray.length >= 3){
+						api.execScript({
+								frameName: 'myposition_bmap_finishBtn_frm',
+								script: 'btnUseable()'
+						});
+				}
+
+		}
+
+			// 更新标注地图point——blur
+			function updateAnnotations(){
+					map.addAnnotations({
+							annotations: annotationArray,
+							icon: 'widget://image/map_point_blur1.png',
+							draggable: true
+					}, function(ret) {
+							if(ret.eventType == 'click'){
+									//alert("click删除ID："+ret.id)
+									//deleteAnnotation(ret.id);
+									clickPoint(ret.id);
+							}
+							if(ret.eventType == 'drag'){
+								//	alert("drag"+ret.id)
+							}
+							//alert(JSON.stringify(ret))
+					});
+			}
+
+		// 点击标注点：标注点的颜色变红、展示删除按钮、将当前点的ID给到删除按钮
+		function clickPoint(pointId){
+				// 先删除点击的点
+				var idArray = [pointId];
+				map.removeAnnotations({
+						ids: idArray
+				});
+				// 删除按钮设置为可用
+				$("#deletePointId").val(pointId);
+				api.execScript({
+				    frameName: 'myposition_bmap_delBtn_frm',
+				    script: 'delUseable()'
+				});
+				// 再重新生成一个删除标记的点
+				var clickAnnotations = new Array();
+				var temp = coordArray[pointId];
+				temp.id = pointId;
+				clickAnnotations.push(temp);
+				map.addAnnotations({
+						annotations:clickAnnotations ,
+						icon: 'widget://image/map_point_focus.png',// 变红
+						draggable: false
+					}, function(ret) {
+								if(ret.eventType == 'click'){
+										// 再次点击被标记为要删除的点，则取消删除
+										delButtonUnusealbe();
+										updateAnnotations();
+								}
+					});
+		}
+
+		function addRedAnnotation(pointId){
+
+		}
+
+
+		// 按ID删除标注
+		function deleteAnnotation(){
+				// 删除指定位置的元素（在添加元素时，id就是index,所以id与index等）
+				var id = $("#deletePointId").val();
+
+				if(id == null || id == "" || id <0){
+						return;
+				}
+				coordArray.splice(id,1);
+				var deleteArray = new Array();
+				var tempArray = new Array();
+				for(var i=0;i<annotationArray.length ;i++){
+						deleteArray.push(annotationArray[i].id);
+						if(annotationArray[i].id != id){
+							if(annotationArray[i].id > id){
+								annotationArray[i].id = i-1;
+							}else{
+								annotationArray[i].id = i;
+							}
+							tempArray.push(annotationArray[i]);
+						}
+				}
+				map.removeAnnotations({
+						ids: deleteArray
+				});
+				// 删除按钮禁用
+		  	delButtonUnusealbe();
+
+				var deleteLineArray = [9999];
+				//alert(JSON.stringify(deleteLineArray))
+				map.removeOverlay({
+						ids: deleteLineArray
+				});
+				annotationArray.splice(0,annotationArray.length);
+				annotationArray = tempArray;
+
+				updateAnnotations();
+				if(coordArray.length >0){
+					updateLine();
+				}
+				// 如果点少于3个，则完成铵钮禁用
+				if(coordArray.length < 3){
+						api.execScript({
+						    frameName: 'myposition_bmap_finishBtn_frm',
+						    script: 'btnUnuseable()'
+						});
+
+				}
+		}
+		// 删除按钮不可用
+		function delButtonUnusealbe(){
+				api.execScript({
+						frameName: 'myposition_bmap_delBtn_frm',
+						script: 'forbideDel()'
+				});
+		}
+		// 完成打点: 第一步：闭合几何图形，第二步：计算面积，第三步：后台数据生成
+		function completeMakePoint(){
+				closePolygon();
+				getArea();
+				if(!area){
+						area = 0;
+				}else{
+						if(area <0){
+								area = Math.abs(area);
+						}
+				}
+			//	var lastArea =  Math.round(area*0.15)/100; //换算成亩且保留两位小数
+				// 展示确认弹窗：确认调用：submitCoordinates()，取消时，放开闭合的几合图形
+				api.confirm({
+				    title: '地块划定完成！',
+				    msg: '地块面积约为'+area+'亩',
+				    buttons: ['取消', '确定']
+				}, function(ret, err) {
+						if(ret.buttonIndex == 2){
+								submitCoordinates();
+						}else{
+								updateLine();
+						}
+				});
+		}
+
+		// 闭合几何图形：先删除折线，再生成多边形
+		function closePolygon(){
+				// 终点与超始点相同时就可以闭合几何图形了
+				coordArray.push(coordArray[0]);
+				var deleteLineArray = [9999];
+				map.removeOverlay({
+						ids: deleteLineArray
+				});
+				map.addLine({
+						id: 9999,
+						styles: {
+								borderColor: '#5caf5c',
+								borderWidth: 4
+						 },
+						 points: coordArray
+				});
+				// 计算完面积后弹出数组中最后一个与第一个元素相同的点
+				coordArray.pop();
+		}
+
+		// 计算面积
+		function getArea(){
+				if(coordArray.length <=2){
+						return 0;
+				}
+				var pointArrTemp = new Array();
+				for(var i=0;i<coordArray.length;i++){
+						var point = new Array();
+						point.push(coordArray[i].lon);
+						point.push(coordArray[i].lat);
+						pointArrTemp.push(point);
+				}
+				var tempArea = calculateArea(pointArrTemp);
+				area = Math.round(tempArea*0.15)/100
+				return area;
+		}
+
+		// 向后台添加坐标
+		function submitCoordinates(){
+				if(coordArray == null || coordArray=='' || coordArray == "undefined" || coordArray.length<3){
+						api.alert({msg:"至少需要3个点，不能保存"});
+				}
+				var landId = api.pageParam.id;
+				var coordinates = getCoordinates();
+				pds.ajaxSubmit({
+					 url:"app/customer/insertCoordinate",
+					 data:{"id":landId,"area":area,coordinate:JSON.stringify(coordinates)},
+					 success:function(e){
+							 if(e.status == "error"){
+									alert(e.message);
+							 }else{
+									console.log(JSON.stringify(e));
+									// 成功之后跳转回地块页
+									//alert("保存成功，需要返回上一页");
+									api.closeWin();
+							 }
+					 },
+					 error:function(e){
+						 api.alert({msg:"服务器错误，请联系管理员!"});
+					 }
+			 });
+		}
+
+		// 将坐标数组转换成后台存储要求的格式
+		function getCoordinates(){
+				var coordinates = new Array();
+				for(var i=0;i<coordArray.length;i++){
+						var co = {};
+						co.longitude = coordArray[i].lon;
+						co.latitude = coordArray[i].lat;
+						coordinates.push(co);
+				}
+				return coordinates;
+		}
+
+		function selectCoordinatesByLandId(){
+				pds.ajaxSubmit({
+					 url:"app/customer/selectLandCoordinate",
+					 data:{"id":api.pageParam.id},
+					 success:function(e){
+							 if(e.status == "ok"){
+									console.log(e);
+									var coordinates = e.data;
+									if(coordinates !=null && coordinates.length >1){
+											var points = new Array;
+											for(var i=0;i<coordinates.length;i++){
+													if(coordinates[i] != null){
+															var coor = {};
+															coor.lon = coordinates[i].longitude;
+															coor.lat = coordinates[i].latitude;
+															points.push(coor);
+													}
+											}
+											if(points.length > 2){
+													points.push(points[0]);
+											}
+											addPolygon(points);
+									}
+							 }else{
+								 alert(e.message);
+							 }
+					 }
+				})
+		}
+
+		// 已打点地块形成多边形
+		function addPolygon(points){
+				if(points == null || points.length <= 1){
+						return;
+				}
+			//rrr	console.log(JSON.stringify(points))
+				map.addLine({
+						id: 88889,
+						styles: {
+								borderColor: '#8caf5c',
+								borderWidth:4
+						 },
+						 points: points
+				});
+		}
+
+		// 将地图切换到卫星地图模式
+		function satellite() {
+			map.setMapAttr({
+				type : 'satellite'
+			});
+		}
+
+		// 将地图切换到标准模式
+		function standard() {
+			map.setMapAttr({
+				type : 'standard'
+			});
+		}
+
+		// 显示地图
+		function show() {
+			map.show();
+		}
+
+		// 隐藏地图
+		function hide() {
+			map.hide();
+		}
+
+	// 根据经纬度计算多边形面积（墨卡托投影）
+	var earthRadiusMeters = 6371000.0;
+	var metersPerDegree = 2.0 * Math.PI * earthRadiusMeters / 360.0;
+	var radiansPerDegree = Math.PI / 180.0;
+	var degreesPerRadian = 180.0 / Math.PI;
+	function calculateArea(points) {
+	    if (points.length > 2) {
+	        var areaMeters2 = PlanarPolygonAreaMeters2(points);
+					//alert("球面积："+areaMeters2)
+	        if (areaMeters2 > 1000000.0) {
+	            areaMeters2 = SphericalPolygonAreaMeters2(points);
+	            //alert("面积为" + areaMeters2 + "平方米");
+	        }
+					if(!areaMeters2){
+							return 0;
+					}
+					return areaMeters2;
+	    }else{
+					return 0;
+			}
+	}
+
+	/*球面多边形面积计算*/
+	function SphericalPolygonAreaMeters2(points) {
+	    var totalAngle = 0;
+	    for (var i = 0; i < points.length; i++) {
+	        var j = (i + 1) % points.length;
+	        var k = (i + 2) % points.length;
+	        totalAngle += Angle(points[i], points[j], points[k]);
+	    }
+	    var planarTotalAngle = (points.length - 2) * 180.0;
+	    var sphericalExcess = totalAngle - planarTotalAngle;
+	    if (sphericalExcess > 420.0) {
+	        totalAngle = points.length * 360.0 - totalAngle;
+	        sphericalExcess = totalAngle - planarTotalAngle;
+	    } else if (sphericalExcess > 300.0 && sphericalExcess < 420.0) {
+	        sphericalExcess = Math.abs(360.0 - sphericalExcess);
+	    }
+	    return sphericalExcess * radiansPerDegree * earthRadiusMeters * earthRadiusMeters;
+	}
+
+	/*角度*/
+	function Angle(p1, p2, p3) {
+	    var bearing21 = Bearing(p2, p1);
+	    var bearing23 = Bearing(p2, p3);
+	    var angle = bearing21 - bearing23;
+	    if (angle < 0) {
+	        angle += 360;
+	    }
+	    return angle;
+	}
+
+
+	/*方向*/
+	function Bearing(from, to) {
+	    var lat1 = from[1] * radiansPerDegree;
+	    var lon1 = from[0] * radiansPerDegree;
+	    var lat2 = to[1] * radiansPerDegree;
+	    var lon2 = to[0] * radiansPerDegree;
+	    var angle = -Math.atan2(Math.sin(lon1 - lon2) * Math.cos(lat2), Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(lon1 - lon2));
+	    if (angle < 0) {
+	        angle += Math.PI * 2.0;
+	    }
+	    angle = angle * degreesPerRadian;
+	    return angle;
+	}
+
+	/*平面多边形面积*/
+	function PlanarPolygonAreaMeters2(points) {
+	    var a = 0;
+	    for (var i = 0; i < points.length; ++i) {
+	        var j = (i + 1) % points.length;
+	        var xi = points[i][0] * metersPerDegree * Math.cos(points[i][1] * radiansPerDegree);
+	        var yi = points[i][1] * metersPerDegree;
+	        var xj = points[j][0] * metersPerDegree * Math.cos(points[j][1] * radiansPerDegree);
+	        var yj = points[j][1] * metersPerDegree;
+	        a += xi * yj - xj * yi;
+	    }
+	    return Math.abs(a / 2);
+	}
+
+	function b() {
+	    var s = "112.523197631836,37.868892669677734;112.5170669555664,37.8605842590332;112.52099609375,37.849857330322266;112.54137420654297,37.8512732521875;112.5351180302734,37.858699798583984";
+	    var s1 = new Array()
+	    s1 = s.split(";");
+	    for (var i = 0; i < s1.length; i++) {
+	        var ss = s1[i];
+	        var temp = ss.split(",");
+	        var point = new Array();
+	        point.push(Number(temp[0]), Number(temp[1]));
+	        pointArr.push(point);
+	    }
+			//console.log(JSON.stringify(pointArr))
+	    calculateArea(pointArr);
+	}
+
+	</script>
+</html>

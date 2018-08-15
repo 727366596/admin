@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<title>我的-选定地块</title>
+	  <link rel="stylesheet" type="text/css" href="../../../../css/common/api.css"/>
+    <style>
+        .nav-bg{
+				  padding-top:24px;
+					text-align: center;
+					background: #00c558;
+        }
+				header,article{
+					font-family: PingFangSC-Regular;
+				}
+        .section-title{
+						clear: both;
+						height:38px;
+						line-height: 38px;
+						text-align: left;
+						font-size: 15px;
+						color:#726F6E;
+						border-left: 4px solid #ffd400;
+        }
+        .section-p{
+        	  position: relative;
+        	  float: left;
+						min-width: 97px;
+						margin-left: 11px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+						text-align: center;
+						padding: 0 10px;
+						font-size: 14px;
+						height: 22px;
+						line-height: 22px;
+						color: #82e268;
+            border: 1px solid #82e268;
+        }
+        .designed{
+            background-color: #E4FFDD;
+        }
+				section{
+					padding-top: 10px;
+					border-top: 1px solid #f8f8f8;
+				}
+				#section1 .section-p{
+					border-radius: 20px;
+					padding-right: 11px;
+				}
+				.shadow{
+					clear: both;
+					padding-top: 10px;
+					border-bottom: 10px solid #f8f8f8;
+				}
+				#section2 .section-p{
+					border-radius: 4px;
+					padding-right: 11px;
+				}
+				.title{
+						border-left: 4px solid #82e268;
+				}
+				#mapLazyLoad {
+					width: 100%;
+					position: fixed;
+					z-index: 99999;
+					/*height: 293px;*/
+				}
+				#mapLazyLoad h4 {
+					position: absolute;
+					font-weight:300;
+					font-size: 18px;font-family: PingFangSC-Regular, sans-serif;color: #fff;
+					width: 100%;height:70px;text-align: center;
+					line-height:98px;
+					text-align: center;
+					background: #00c558;
+				}
+				#mapLazyLoad h4 span {
+					position: absolute;
+					width: 10px;
+					height: 18px;
+					left: 13px;
+					top: 40px;
+					background-image: url("../../../../image/harvest/harvest_back.png");
+					background-size: 100% 100%;
+					background-repeat: no-repeat;
+					background-position: center center;
+				}
+				.ok{
+					position: absolute;
+					right: 0;
+					top: 0;
+					width: 0;
+			    height: 0;
+			    border-top: 16px solid #82e268;
+			    border-left: 20px solid transparent;
+				}
+				.ic{
+					position: absolute;
+					right:2px;
+					top: -14px;
+					height: 5px;
+					width: 8px;
+					background: url("../../../../image/settings/delimit_ic.png") no-repeat left center;
+					background-size: 100% 100%;
+					z-index: 99;
+				}
+    </style>
+</head>
+<body>
+<header id="mapLazyLoad">
+    <!-- <nav class="aui-bar aui-bar-nav nav-bg">
+        <a class="aui-pull-left" onclick="api.closeWin()">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title">选择地块</div>
+    </nav> -->
+		<h4><span onclick="api.closeWin()"></span>选择地块</h4>
+</header>
+<article style="padding-top:70px;">
+    <nav class="section-title">
+        &nbsp选择基地（必选）
+    </nav>
+    <section id="section1">
+
+    </section>
+		<p class="shadow"><p>
+    <nav class="section-title title">
+       &nbsp选择地块（必选）
+    </nav>
+    <section id="section2">
+
+    </section>
+</article>
+<script type="text/javascript" src="../../../../script/common/api.js"></script>
+<script type="text/javascript" src="../../../../script/common/jquery.min.js"></script>
+<script type="text/javascript" src="../../../../script/common/pds.ajax.js"></script>
+<script>
+apiready = function(){
+		refreshStatusList();
+		api.addEventListener({
+				name: 'refreshStatusList'
+		}, function(ret, err){
+				if( ret ){
+					 refreshStatusList()
+				}
+		});
+}
+function refreshStatusList(){
+		pds.ajaxSubmit({
+				url:"app/farmingdataresource/list",
+				success:function(e){
+					 var str=""
+					 for(var i=0;i<e.data.length;i++){
+						 str+= "<p id=id"+e.data[i].id+" class=\"section-p\" onclick=\"show(this)\">"+e.data[i].farmName+"</p>"
+					 }
+					document.getElementById("section1").innerHTML=str;
+					str=null;
+					var ChickId=$api.getStorage('ChickId')
+					if(ChickId){
+						document.getElementById(ChickId).click()
+					}else{
+						document.getElementById("section1").getElementsByTagName("p")[0].click()
+					}
+				},
+				error:function(e){
+					 api.alert({msg:"服务器错误，请联系管理员!"});
+				}
+		});
+}
+function show(row){
+	var id=row.id.substring(2)
+	$api.setStorage('ChickId',row.id)
+	var p=document.getElementById("section1").getElementsByTagName("p");
+	for(var j=0;j<p.length;j++){
+		p[j].style.backgroundColor="#fff"
+		//p[j].style.border="1px solid #00c558"
+	}
+	row.style.backgroundColor="#E4FFDD"
+	//row.style.border="1px solid #00c558"
+	pds.ajaxSubmit({
+			url:"app/land/listDesign",
+			data:{landfarmId:id},
+			success:function(e){
+				var str=""
+				for(var i=0;i<e.data.length;i++){
+					if(e.data[i].design==1){
+						str+= "<p class=\"section-p section-span designed\" onclick=go('"+e.data[i].id+"','"+e.data[i].landName+"')>"+e.data[i].landName+"<span class='ok'><span><span class='ic'></span></p>"
+					}else{
+						str+= "<p class=\"section-p section-span\" onclick=go('"+e.data[i].id+"','"+e.data[i].landName+"')>"+e.data[i].landName+"</p>"
+					}
+				}
+			 document.getElementById("section2").innerHTML=str;
+			 str=null;
+			},
+			error:function(e){
+				 api.alert({msg:"服务器错误，请联系管理员!"});
+			}
+	});
+}
+function go(id,landName){
+	api.openWin({
+					name: 'mypostion',
+					url: 'widget://html/mysetting/mysettings/mypostion.html',
+					pageParam: {
+        			id: id,
+							landName:landName
+    			}
+	});
+}
+</script>
+</body>
+</html>

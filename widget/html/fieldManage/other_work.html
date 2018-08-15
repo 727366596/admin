@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>给我派的活回显页</title>
+    <link rel="stylesheet" type="text/css" href="../../css/common/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/common/public.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/common/header.css"/>
+		<script type="text/javascript" src="../../script/common/rem-750.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../css/fieldManage/other_work.css"/>
+	 	<style>
+
+    </style>
+</head>
+<body>
+  <header id="header">
+    <div class="headerLeft" onclick="back()"></div>
+    <div class="headerCenter">给员工派活</div>
+    <div class="headerRight"></div>
+  </header>
+		<div class="content" style="">
+				<div class="my">
+					<div class="title">
+						<!-- <img src="../../../image/farmLand/dowork.png" alt=""> -->
+						<span>派出去的活</span>
+					</div>
+					<div class="con">
+						<span>派出去的活:</span>
+						<!-- 派活的语音 -->
+						<div class="vicoe">
+								<div id="playerAudioData1" class="contxt">	<span id="playerRecord1" style="padding-right: 0.4rem;box-sizing: border-box;text-align: right;  line-height: 1.3rem;"></span></div>
+						</div>
+						<!-- 派活的文本 -->
+						<div id="playerText" class="text"></div>
+					</div>
+				</div>
+				<div class="reply">
+					<div class="title">
+						<!-- <img src="../../../image/farmLand/reply.png" alt=""> -->
+						<span>活干的咋样</span>
+					</div>
+					<div class="show">
+						<!-- 语音 -->
+						<div class="vicoe">
+								<div id="playerAudioData2" class="contxt">	<span id="playerRecord2" style="padding-right: 0.4rem;box-sizing: border-box;text-align: right;  line-height: 1.3rem;"></span></div>
+						</div>
+						<!-- 文本的 -->
+						<div id="playerText2" class="text"></div>
+
+					</div>
+					<!-- 图片 -->
+					<div class="photos" id="getPic">
+					</div>
+				</div>
+		</div>
+    <script type="text/javascript" src="../../script/common/api.js"></script>
+    <script type="text/javascript" src="../../script/common/jquery.min.js"></script>
+    <script type="text/javascript" src="../../script/common/jquery.tmpl.js"></script>
+    <script type="text/javascript" src="../../script/common/zepto-1.2.0.min.js"></script>
+    <script type="text/javascript" src="../../script/common/pds.ajax.js"></script>
+
+    <script type="text/javascript">
+       var audioPlayer;
+       var fileUrl_boss;
+       var fileUrl_staff;
+
+        apiready = function(){
+					var header = $api.byId('header');
+	        $api.fixStatusBar(header);
+          audioPlayer = api.require('audioPlayer')
+          //获取录音地址
+           getRecord();
+          //  点击播放
+           $('#playerAudioData1').on('click', function() {
+           	stop()
+						$('#playerAudioData2').css("background","url(../../image/fieldManage/blue.png) 0.35rem no-repeat");
+						$('#playerAudioData2').css("background","url(../../image/fieldManage/blue.png) 0.35rem no-repeat");
+						$('#playerAudioData2').css('background-size','0.4rem 0.4rem');
+						$('#playerAudioData2').css('background-color','#cce4ff');
+						$('#playerAudioData2').css('width','100%');
+						$('#playerAudioData2').css('height','1.3rem');
+						$('#playerAudioData2').css('border-radius','40px');
+           	$('#playerAudioData1').css("background","url(../../image/fieldManage/greenplayer.gif) 0.35rem no-repeat")
+           	$('#playerAudioData1').css('background-size','0.4rem 0.4rem')
+              	$('#playerAudioData1').css('background-color','#effaec')
+              	$('#playerAudioData1').css('width','100%')
+              	$('#playerAudioData1').css('height','1.3rem')
+              	$('#playerAudioData1').css('border-radius','40px')
+           	initAudioPlayer(fileUrl_boss,1);
+           })
+
+           $('#playerAudioData2').on('click', function() {
+           	stop()
+						$('#playerAudioData1').css("background","url(../../image/fieldManage/play.png) 0.35rem no-repeat");
+						$('#playerAudioData1').css("background","url(../../image/fieldManage/play.png) 0.35rem no-repeat");
+						$('#playerAudioData1').css('background-size','0.4rem 0.4rem');
+						$('#playerAudioData1').css('background-color','#effaec');
+						$('#playerAudioData1').css('width','100%');
+						$('#playerAudioData1').css('height','1.3rem');
+						$('#playerAudioData1').css('border-radius','40px');
+
+           	$('#playerAudioData2').css("background","url(../../image/fieldManage/blueplayer.gif) 0.35rem no-repeat")
+           	$('#playerAudioData2').css('background-size','0.4rem 0.4rem')
+              	$('#playerAudioData2').css('background-color','#cce4ff')
+              	$('#playerAudioData2').css('width','100%')
+              	$('#playerAudioData2').css('height','1.3rem')
+              	$('#playerAudioData2').css('border-radius','40px')
+           	initAudioPlayer(fileUrl_staff,2);
+           })
+
+        }
+
+        // 初始化录音
+        function initAudioPlayer(fileUrl,flag) {
+          audioPlayer.initPlayer({
+            path: fileUrl,//
+            cache: true
+          }, function(ret) {
+            if(ret){
+              playerStateListner(flag)
+            }
+          })
+        }
+
+        function back(){
+            api.closeWin({
+
+            });
+            api.sendEvent( {
+             name: 'openMapEvent'
+           } )
+
+        }
+        // ajax{taskId:api.pageParam.detailID}
+        function getRecord(){
+              //alert(api.pageParam.detailID)
+              pds.ajaxSubmit({
+                 url:'app/task/taskDetail',
+                 type : "GET",
+                 data:{
+                      taskId:api.pageParam.detailID
+                 },
+                 success:function(e){
+                    //alert("success");
+                    // alert(page);
+                     //alert(JSON.stringify(e));
+                     var data = e.data;
+                     if(data != null && data!="" && data!={}){
+											//  派活的内容
+											   if(data.orderContent=="" && data.orderVoiceUrl==""){
+													   $("#playerText").html('暂无数据');
+												 }else{
+													   $("#playerText").html(data.orderContent);
+												 }
+												//  干的咋样
+											   if(data.backContent=="" && data.backPictureUrl ==""){
+													   //alert(1)
+													   $("#playerText2").html('别着急，活还没干完呢~');
+												 }else{
+													   $("#playerText2").html(data.backContent);
+												 }
+                          if(data.orderVoiceUrl == ""){
+                               $('#playerAudioData1').css('display','none');
+                          }else{
+														  fileUrl_boss = e.data.orderVoiceUrl;//派活语音地址
+
+													}
+													if(data.orderVoiceTime!=''&&data.orderVoiceTime!=null){
+														$('#playerRecord1').html(data.orderVoiceTime)
+													}else{
+														$('#playerRecord1').html('')
+													};
+													if(data.backVoiceTime!=''&&data.backVoiceTime!=null){
+														$('#playerRecord2').html(data.backVoiceTime)
+													}else{
+														$('#playerRecord2').html('')
+													};
+
+                          if(data.backVoiceUrl == ""){
+                               $('#playerAudioData2').css('display','none');
+                          }else{
+														  fileUrl_staff = e.data.backVoiceUrl;//返馈语音地址
+													}
+                          //alert(JSON.stringify(e));
+													 var imgString = data.backPictureUrl;
+													 var imgData = [];
+													 if(imgString !=null && imgString !="" && imgString != undefined){
+														  imgData = data.backPictureUrl.split(',');
+													 }
+                           var picLen = imgData.length;
+													 if(imgData.length >0){
+														 var picEl = $api.byId('getPic');
+	                    			 for(var j=0;j<imgData.length;j++){
+			                    			var picHtml = '<img class="picShow" onclick="preview(this)" data-picId="" src="'+ imgData[j] +'">'
+			                    			$api.append(picEl, picHtml);
+	                			     }
+													 }
+                    }else{
+                       $('#playerAudioData1').css('display','none');
+                       $('#playerAudioData2').css('display','none');
+											 $("#playerText").html('暂无数据');
+											 $("#playerText2").html('暂无数据');
+                    }
+
+                 },
+                 error:function(e){
+                    api.alert({msg:"服务器异常，请联系管理员!"});
+                 }
+              });
+        };
+				//图片预览
+				//
+				window.preview = function (dom) {
+					var imgUrl = $(dom).attr('src') ;
+					// alert(JSON.stringify(imgUrl))
+					var imageBrowser = api.require('imageBrowser');
+					imageBrowser.openImages({
+					    imageUrls: [
+					        imgUrl
+					    ]
+					});
+				};
+
+        function playerStateListner(flag){
+        	audioPlayer.addEventListener({
+        	    name:"state"
+        	}, function(ret) {
+        	   if(ret.state==='finished'){
+        		   	if(flag===2){
+        				  $('#playerAudioData2').css("background","url(../../image/fieldManage/blue.png) 0.35rem no-repeat");
+        			   	$('#playerAudioData2').css('background-size','0.4rem 0.4rem');
+        			   	$('#playerAudioData2').css('background-color','#cce4ff');
+        			   	$('#playerAudioData2').css('width','100%');
+        			   	$('#playerAudioData2').css('height','1.3rem');
+        			   	$('#playerAudioData2').css('border-radius','40px');
+        		   	}else{
+        		   		$('#playerAudioData1').css("background","url(../../image/fieldManage/play.png) 0.35rem no-repeat");
+        			   	$('#playerAudioData1').css('background-size','0.4rem 0.4rem');
+        			   	$('#playerAudioData1').css('background-color','#effaec');
+        			   	$('#playerAudioData1').css('width','100%');
+        			   	$('#playerAudioData1').css('height','1.3rem');
+        			   	$('#playerAudioData1').css('border-radius','40px');
+        		   	}
+        	   }
+        	});
+        }
+    </script>
+  </body>
+    </html>

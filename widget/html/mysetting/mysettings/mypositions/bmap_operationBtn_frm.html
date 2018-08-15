@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>打点按钮frm</title>
+		<!-- <link rel="stylesheet" type="text/css" href="../../../../css/api.css"/> -->
+
+</head>
+<style type="text/css">
+.btn{
+  display: inline-block;
+  width: 65px;
+  height:65px;
+  border: none;
+  border-radius: 50%;
+  outline: none;
+  background-color: rgba(0,0,0,0.0);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-image: url("../../../../image/settings/operationBtn_bc_frm.png");
+  background-size: 110% 110%;
+}
+.btn_active{
+  display: inline-block;
+  width: 65px;
+  height:65px;
+  border: none;
+  border-radius: 50%;
+  outline: none;
+  background-color: rgba(0,0,0,0.0);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-image: url("../../../../image/settings/operationBtn_bc_frm.png");
+  background-size: 100% 100%;
+}
+</style>
+<body>
+    <button id="operationBtn" class="btn" onclick="getPosition();"></button>
+</body>
+<script type="text/javascript" src="../../../../script/common/zepto-1.2.0.min.js"></script>
+<script type="text/javascript" src="../../../../script/common/api.js"></script>
+<script type="text/javascript">
+    apiready = function(){
+        api.parseTapmode();
+        // api.byId('operationBtn').ontouchstart(function(){
+        //   alert("333")
+        // });
+        // api.byId('operationBtn').ontouchend(function(){
+        //   alert("222")
+        // });
+
+    }
+
+    function getPosition(){
+        api.execScript({
+            frameName: 'myposition_bmap_hand_show_frm',
+            script: 'getPosition()'
+        });
+    }
+</script>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>广告页面advertisement</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="../css/common/api.css">
+		<script type="text/javascript" src="../script/common/rem.js"></script>
+		<link rel="stylesheet" href="../css/common/public.css" />
+		<link rel="stylesheet" href="../css/common/header.css" />
+		<style media="screen">
+			#title{
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				display: block;
+			}
+		</style>
+	</head>
+	<body>
+	     <header id="header">
+	        <div class="headerLeft"  onclick="closeWin()"></div>
+	        <div class="headerCenter" id="title" ></div>
+					<div class="headerRight"></div>
+	     </header>
+	</body>
+	<script type="text/javascript" src="../script/common/api.js"></script>
+		<script type="text/javascript">
+			apiready = function() {
+				$api.html($api.byId('title'),api.pageParam.title)
+				// alert(api.pageParam.url)
+				api.parseTapmode();
+				var header = $api.byId('header');
+				$api.fixStatusBar(header);
+				var headerPos = $api.offset(header);
+				var body_h = $api.offset($api.dom('body')).h;
+				api.openFrame({
+					name : 'advertisement_win',
+					url : api.pageParam.url,
+					rect : {
+						x : 0,
+						y : headerPos.h,
+						w : 'auto',
+						h : 'auto'
+					}
+				})
+
+			}
+			function closeWin() {
+					api.closeWin({
+					});
+			}
+		</script>
+	</html>

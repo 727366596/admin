@@ -1,0 +1,477 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>我派出去的种植工单frm</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/common/public.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/common/iscroll-style.css" />
+    <script type="text/javascript" src="../../../script/common/rem-750.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../../css/home/plantDetail/plantDetail_list_frm.css"/>
+    <style type="text/css">
+
+    </style>
+</head>
+<body>
+        <ul class="nav">
+            <li id="DRAFT" pageId="page_my_task_cultivate_list_admin" eventId="button_drafts_page_my_task_cultivate_list_admin"><span>草稿</span></li>
+            <li id="CONFIRMING" pageId="page_my_task_cultivate_list_admin" eventId="button_unaccepted_cultivate_page_my_task_cultivate_list_admin"><span>待接单</span></li>
+            <li id="CONFIRMED" pageId="page_my_task_cultivate_list_admin" eventId="button_unfinished__cultivate_page_my_task_cultivate_list_admin"><span>未完成</span></li>
+            <li id="COMPLETED" pageId="page_my_task_cultivate_list_admin" eventId="button_finished__cultivate_page_my_task_cultivate_list_admin"><span>已完工</span></li>
+        </ul>
+        <div id="wrapper">
+            <div class="scroller">
+                <ul id="scrollerBox" style="">
+                    <!-- 列表内容 -->
+                </ul>
+    						<div class="more" style="height:1.0rem;background-color:#fff;border-top:solid 1px #f3f3f3;">
+    	             	<i class="pull_icon"></i>
+    	             	<span style="font-size: 0.28rem;font-family: PingFangSC-Regular, sans-serif;color: #666666;">上拉加载更多...</span>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="body_totop_btn">
+            返回顶部
+        </div>
+</body>
+<script type="text/javascript" src="../../../script/common/api.js"></script>
+<script type="text/javascript" src="../../../script/common/jquery.min.js"></script>
+<!-- <script type="text/javascript" src="../../../script/common/zepto-1.2.0.min.js"></script> -->
+<!-- <script type="text/javascript" src="../../script/common/iscroll.js"></script> -->
+<script type="text/javascript" src="../../../script/common/pds.ajax.js"></script>
+<script type="text/javascript" src="../../../script/common/emptyFrm.js"></script>
+<script type="text/javascript">
+    var navH = null;
+    var emptyImgUrl = "../../../image/empty.png";
+    apiready = function(){
+        api.parseTapmode();
+        navH = $(".nav").height();
+        //点击tab切换
+        tabCheck();
+        //默认触发今日
+        var id = api.pageParam.id;
+        $("#"+id).triggerHandler('touchend');
+    };
+
+    //导航tab切换
+  	var page = 1, pageSize = 5, navId = null;
+  	function tabCheck(){
+      emptyFrm.hide();
+  		$(".nav li").off("touchend").on("touchend",function(){
+        var pageId = $(this).attr("pageId")
+        var eventId = $(this).attr("eventId")
+        var buriedPoint = pds.buriedPoint();
+        buriedPoint.pageId = pageId;
+        buriedPoint.eventId = eventId;
+        pds.ajaxSubmit({
+        url:"app/buried_point/save",
+        data:{"point":buriedPoint},
+        success:function(v){
+        }
+      })
+  				$(".nav li span").css({
+  						"color":"#666666",
+  						"border":"none",
+              "fontSize" :"0.3rem"
+  				});
+  				$(this).find("span").css({
+  						"color":"#00c558",
+  						"border-bottom":"solid 1px #00c558",
+  						"fontSize" :"0.32rem"
+  				});
+  				$("#scrollerBox").html("").css({"border" : "none"});
+
+          navId = $(this).attr("id");
+          page = 1;
+          // // pageScroll(page);
+          $('.more span').text('加载中...');
+          $('.pull_icon').addClass('loading');
+          setTimeout(function(){
+               pathListData(page, pageSize, navId);
+          },300);
+  		});
+
+  };
+
+    var total;
+    //请求数据***************************************
+    function pathListData(page, pageSize, navId){
+    			//page+=1;
+          //alert(page+"*****开始请求数据*****"+navId)
+    			pds.ajaxSubmit({
+    				 url:"app/plant/queryOrders",
+    				 type : "GET",
+    				 data:{
+                	workOrderStatus : navId,
+                  page : page,
+                  length : pageSize
+    				 },
+    				 success:function(e){
+                //alert("success")
+                //alert(JSON.stringify(e.data))
+    					 	if(e.status == "ok"){
+                    total = e.data.total;
+                    if(total > 0){
+                        emptyFrm.hide();
+                        var plantListArr = e.data.list;
+                        var plantListStr = "";
+                        var btnClass = "";
+                        var timeTitleStr = null, timeStr = "";
+                        //console.log("*******************"+plantListArr.length+"**********************")
+                        if(plantListArr != "" && plantListArr != null && plantListArr != []){
+                            switch (navId) {
+                              case "DRAFT":
+                                  btnClass = "show";
+                                  timeTitleStr = "保存时间";
+                                break;
+                              case "CONFIRMING":
+                                  btnClass = "hide";
+                                  timeTitleStr = "派发时间";
+                                break;
+                              case "CONFIRMED":
+                                  btnClass = "hide";
+                                  timeTitleStr = "派发时间";
+                                break;
+                              case "COMPLETED":
+                                  btnClass = "hide";
+                                  timeTitleStr = "完成时间";
+                                break;
+                              //default:
+                            };
+                            for (var i = 0; i < plantListArr.length; i++) {
+                                //拒绝理由字段
+                                var backStr = "";
+                                var backBc = "";
+                                var workOrderStatus = "";
+                                if (plantListArr[i].workOrderStatus == "BACK" && navId == "CONFIRMING") {
+                                    var remarks = "暂无";
+                                    if (plantListArr[i].refuseReasonId != null && plantListArr[i].refuseReasonId != "") {
+                                        var refuseId = plantListArr[i].refuseReasonId;
+                                        switch (refuseId) {
+                                          case 100:
+                                            remarks = "不在单位，做不了";
+                                            break;
+                                          case 101:
+                                            remarks = "已有其他事情，没时间做";
+                                            break;
+                                          case 102:
+                                            remarks = "派单不合理，退回重新派";
+                                            break;
+                                          case 103:
+                                            remarks = "其他";
+                                            break;
+                                          default:
+                                            remarks = "暂无";
+                                        }
+                                    };
+                                    backStr = '<li><span style="color:#ff9900">拒绝理由：</span><span style="color:#ff9900">'+ remarks +'</span></li>'
+                                    backBc = '<div class="backBc"></div>';
+                                    workOrderStatus = "BACK"
+                                };
+                                //执行人字段
+                                var executorName = "暂无";
+                                if (plantListArr[i].executorName != "" && plantListArr[i].executorName != null) {
+                                    executorName = plantListArr[i].executorName;
+                                };
+                                //工单执行进度字段
+                                var finishDetailHtml = "";
+                                if(navId == "CONFIRMED" &&  plantListArr[i].finishedArea !== "" && plantListArr[i].finishedArea !== null && plantListArr[i].plantArea !== "" && plantListArr[i].plantArea !== null){
+                                    finishDetailHtml = '<span class="finishedArea">'+ plantListArr[i].finishedArea + '/' + plantListArr[i].plantArea +'亩</span>'
+                                };
+                                //工单名称显示
+                                var name = "暂无";
+                                if (plantListArr[i].name != null) {
+                                    name = plantListArr[i].name;
+                                };
+                                //工单时间展示
+                                if(navId == "DRAFT"){
+                                    if (plantListArr[i].updateDate != null && plantListArr[i].updateDate != "") {
+                                        timeStr = plantListArr[i].updateDate;
+                                    }
+                                }else if(navId == "COMPLETED"){
+                                    if (plantListArr[i].endDate != null && plantListArr[i].endDate != "") {
+                                        timeStr = (plantListArr[i].endDate).substring(0,10);
+                                    }
+                                }else{
+                                    if (plantListArr[i].assignDate != null && plantListArr[i].assignDate != "") {
+                                        timeStr = plantListArr[i].assignDate;
+                                    }
+                                };
+                                //计划内外显示
+                                //alert("********************"+JSON.stringify(plantListArr[i])+"********************")
+                                var planStatus = null;
+                                if (plantListArr[i].plantPlanId != null && plantListArr[i].plantPlanId != "" && plantListArr[i].plantPlanId != undefined) {
+                                    planStatus = "in";
+                                }else{
+                                    planStatus = "out";
+                                };
+                                //拼接Html结构
+                                plantListStr += '<li data-planStatus="'+ planStatus +'" data-status="'+ workOrderStatus +'" data-name="'+ name +'" data-navId="'+ navId +'" data-id="'+ plantListArr[i].id +'" onclick="plantDetailInfo(this)">'+
+                                                    '<div class="list_ul">'+
+                                                        '<ul class="list_ul_left">'+
+                                                            '<li class="list_ul_title">'+ name +'</li>'+
+                                                            '<li style="margin-top:0.2rem;"><span>地块名称：</span><span>'+ plantListArr[i].landName +'</span></li>'+
+                                                            '<li><span>执&nbsp&nbsp行&nbsp&nbsp人：</span><span>'+ executorName +'</span></li>'+
+                                                            '<li><span>'+ timeTitleStr +'：</span><span>'+ timeStr +'</span></li>'+
+                                                            backStr+//拒绝理由字段
+                                                        '</ul>'+
+                                                    '</div>'+
+                                                    '<div class="next_infoBtn"></div>'+//点击详情按钮
+                                                    '<div class="list_delBtn '+ btnClass +'">删除</div>'+//删除按钮
+                                                    backBc+//被拒绝icon
+                                                    finishDetailHtml+//已完成任务展示字段
+                                                '</li>';
+                            };
+                            //拼接页面html
+                            if (page == 1) {
+                                $("#scrollerBox").html("")
+                            }
+                            $("#scrollerBox").append(plantListStr);
+                            //绑定点击跳转详情
+                            // setTimeout(function(){
+                            //     plantDetailInfo();
+                            // },0)
+                            //开启滚动监听，回到顶部
+                            scrollToTop();
+                            //是否显示删除按钮，删除该行
+                            delBtnShow(navId);
+                            // 判断是否还有数据，如果还有数据监听滚动，滚动加载
+                            var total = e.data.total;
+                            if(page*pageSize < total){
+                                $('.more span').text('上拉加载更多...');
+                                $('.pull_icon').removeClass('loading');
+                                api.addEventListener({
+                                    name:'scrolltobottom',
+                                }, function(ret, err){
+                                    page++;
+                                    //alert('已滚动到底部');
+                                    $('.more span').text('加载中...');
+                                    $('.pull_icon').addClass('loading');
+                                    // alert(page);
+                                    pathListData(page,pageSize,navId);
+                                    setTimeout(function(){
+                                    },300)
+
+                                });
+                            }else{
+                                $('.more span').text('暂无更多工单...');
+                                $('.pull_icon').removeClass('loading');
+                                api.removeEventListener({
+                                    name: 'scrolltobottom'
+                                });
+                            };
+
+                        }else{
+                            $('.more span').text('暂无更多工单...');
+                            $('.pull_icon').removeClass('loading');
+                        }
+
+                    }else{
+                        $('.more span').text('暂无相关工单...');
+                        $('.pull_icon').removeClass('loading');
+                        emptyFrm.show("暂无相关工单~", navH, emptyImgUrl)
+
+                    };
+                }
+
+    				 },
+    				 error:function(e){
+                $('.more span').text('数据加载错误...');
+                $('.pull_icon').removeClass('loading');
+    						api.alert({msg:"服务器异常，请联系管理员!"});
+    				 }
+    			});
+    };
+
+
+    //点击跳转工单详情
+    function plantDetailInfo(obj){
+
+        var id = $(obj).attr("data-id");
+        var navId = $(obj).attr("data-navId");
+        var workOrderStatus = $(obj).attr("data-status");
+        var planStatus = $(obj).attr("data-planStatus");
+        var name = $(obj).attr("data-name");
+        var plantDetailInfoUrl = "./plantDetailInfo_complete_win.html",
+            frmName = "plantDetailInfo_complete_win";
+            if(workOrderStatus == "" && navId == "CONFIRMED"){ // 未完成
+              var buriedPoint = pds.buriedPoint();
+              buriedPoint.pageId = 'page_unfinished_ cultivate_list_admin';
+              buriedPoint.eventId = 'button_check_the_details_page_unfinished_ cultivate_list_admin';
+              pds.ajaxSubmit({
+              url:"app/buried_point/save",
+              data:{"point":buriedPoint},
+              success:function(v){
+              }
+            })
+                  plantDetailInfoUrl = "./plantDetailInfo_complete_win.html",
+                  frmName = "plantDetailInfo_complete_win";
+            }
+            if(workOrderStatus == "" && navId == "COMPLETED"){ //完工
+              var buriedPoint = pds.buriedPoint();
+              buriedPoint.pageId = 'page_finished_ cultivate_list_admin';
+              buriedPoint.eventId = 'button_check_the_details_page_finished_ cultivate_list_admin';
+              pds.ajaxSubmit({
+              url:"app/buried_point/save",
+              data:{"point":buriedPoint},
+              success:function(v){
+              }
+            })
+                  plantDetailInfoUrl = "./plantDetailInfo_complete_win.html",
+                  frmName = "plantDetailInfo_complete_win";
+            }
+        if (workOrderStatus == "BACK" && navId == "CONFIRMING") {//待接单被拒绝
+          var buriedPoint = pds.buriedPoint();
+          buriedPoint.pageId = 'page_unaccepted(refusersed)_cultivate_list_admin';
+          buriedPoint.eventId = 'button_check_the_details_page_unaccepted(refusersed)_cultivate_list_admin';
+          pds.ajaxSubmit({
+          url:"app/buried_point/save",
+          data:{"point":buriedPoint},
+          success:function(v){
+          }
+        })
+            plantDetailInfoUrl = "../../planting/plantEditor_win.html",
+            frmName = "plantEditor_win";
+        }else if (workOrderStatus == "" && navId == "CONFIRMING") {//待接单
+          var buriedPoint = pds.buriedPoint();
+          buriedPoint.pageId = 'page_unaccepted(unaccepted)_cultivate_list_admin';
+          buriedPoint.eventId = 'button_check_the_details_page_unaccepted(unaccepted)_cultivate_list_admin';
+          pds.ajaxSubmit({
+          url:"app/buried_point/save",
+          data:{"point":buriedPoint},
+          success:function(v){
+          }
+        })
+            plantDetailInfoUrl = "../../planting/plantEditor_win.html",
+            frmName = "plantEditor_win";
+        }
+        //alert(JSON.stringify(planStatus))
+        if (navId == "DRAFT" && planStatus == "in") { //草稿
+          var buriedPoint = pds.buriedPoint();
+          buriedPoint.pageId = 'page_draft_list_admin';
+          buriedPoint.eventId = 'button_check_the_draft_details_page_draft_list_admin';
+          pds.ajaxSubmit({
+          url:"app/buried_point/save",
+          data:{"point":buriedPoint},
+          success:function(v){
+          }
+        })
+            plantDetailInfoUrl = "../../planting/PlantPlanEditor_win.html",
+            frmName = "PlantPlanEditor_win";
+        }else if(navId == "DRAFT" && planStatus == "out"){
+          var buriedPoint = pds.buriedPoint();
+          buriedPoint.pageId = 'page_draft_list_admin';
+          buriedPoint.eventId = 'button_check_the_draft_details_page_draft_list_admin';
+          pds.ajaxSubmit({
+          url:"app/buried_point/save",
+          data:{"point":buriedPoint},
+          success:function(v){
+          }
+        })
+            plantDetailInfoUrl = "../../planting/planOutEditor_win.html",
+            frmName = "planOutEditor_win";
+        };
+        if (frmName != "" && plantDetailInfoUrl != "") {
+            api.openWin({
+                name : frmName,
+                url : plantDetailInfoUrl,
+                reload : true,
+                slidBackEnabled : false,
+                pageParam : {
+                   plantDetailId : id,
+                   navId:navId,
+                   name : name,
+                   plantPlanId : planStatus
+                },
+                animation : {
+                   type : "movein", //动画类型（详见动画类型常量）
+                   subType : "from_right", //动画子类型（详见动画子类型常量）
+                   duration : 300 //动画过渡时间，默认300毫秒
+                }
+            });
+        }
+    };
+
+    function delBtnShow(navId){
+        if(navId == "DRAFT"){
+            $(".list_delBtn").show().off("click").on("click",function(e){
+          //删除埋点
+          var buriedPoint = pds.buriedPoint();
+          buriedPoint.pageId = 'page_draft_list_admin';
+          buriedPoint.eventId = 'button_want_to_delete_draft_page_draft_list_admin';
+          pds.ajaxSubmit({
+          url:"app/buried_point/save",
+          data:{"point":buriedPoint},
+          success:function(v){
+          }
+        })
+                e.stopPropagation();
+                var this_ = $(this).parents();
+                var id = this_.attr("data-id");
+                if (id == "" || id == null || id == undefined) {
+                    api.toast({
+                        msg: '暂无详情数据',
+                        duration: 1000,
+                        location: 'bottom'
+                    });
+                    return;
+                };
+                api.confirm({
+                    msg: '删除后不可恢复，是否确定删除？',
+                    buttons: ['删除', '取消']
+                }, function(ret, err){
+                    var index = ret.buttonIndex;
+                    if(index == 1){
+                      var buriedPoint = pds.buriedPoint();
+                      buriedPoint.pageId = 'page_draft_list_admin';
+                      buriedPoint.eventId = 'button_delete_draft_page_draft_list_admin';
+                      pds.ajaxSubmit({
+                      url:"app/buried_point/save",
+                      data:{"point":buriedPoint},
+                      success:function(v){
+                      }
+                    })
+                        pds.ajaxSubmit({
+                  				 url:"app/plant/deletePlantOrder/" + id,
+                  				 type : "DELETE",
+                  				 success:function(e){
+                               ///alert(JSON.stringify(e))
+                               if (e.data) {
+                                   //this_.remove();
+                                   api.alert({
+                                       msg: '删除成功！',
+                                   });
+                                   $("#"+navId).triggerHandler('touchend');
+                               }else{
+                                   api.alert({
+                                       msg: '删除失败，请重试！',
+                                   });
+                               }
+                           }
+                        })
+                    }
+                });
+
+            });
+        }
+    };
+
+    //页面回到顶部
+  	function scrollToTop(){
+    		$("#wrapper").on("scroll",function(){
+      			var scrollTop = $("#wrapper").scrollTop();
+      			if(scrollTop >= 300){
+        				$("#body_totop_btn").show().off("click").on("click",function(){
+                    $("#wrapper").animate({'scrollTop': '0px'}, 200);
+                    //myScroll.scrollTo(0, 0, 300)
+        				})
+      			}else{
+      				  $("#body_totop_btn").hide();
+      			}
+    		})
+  	};
+</script>
+</html>

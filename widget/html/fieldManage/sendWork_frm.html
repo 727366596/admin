@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="../../css/common/public.css"/>
+      <!-- <link rel="stylesheet" type="text/css" href="../../css/common/header.css"/> -->
+      <link rel="stylesheet" type="text/css" href="../../css/common/mui.min.css"/>
+      <link rel="stylesheet" type="text/css" href="../../css/common/mui.picker.min.css"/>
+      <link rel="stylesheet" type="text/css" href="../../css/fieldManage/doWork_frm.css"/>
+      <script language=javascript>window.onerror=function(){return true;} </script>
+      <script type="text/javascript" src="../../script/common/rem-750.js"></script>
+  </head>
+  <body>
+      <!-- <header id="header">
+        <div class="headerLeft" onclick="back()"></div>
+        <div class="headerCenter">给员工派活</div>
+        <div class="headerRight"></div>
+      </header> -->
+      <div class="wrapper" style="margin-top:0">
+          <div class='page_title'>
+             <span>我来派活</span>
+          </div>
+          <div id='tab_work' class="clearfix">
+             <ul class="tab_inner">
+                 <li class="crop"  data-type="1">去地里看作物</li>
+                 <li class="other" data-type="2">干点其他活</li>
+             </ul>
+          </div>
+          <div id="pub_contain">
+               <div>
+                   <div class="pub_person clearfix">
+                       <div>派谁去干活：</div><div id="staff">点我选择派谁去干活</div>
+                   </div>
+                   <div class="pub_date clearfix">
+                       <div>啥时候干完：</div><div id="date">点我选择时间</div>
+                       <div class="btn">点我选择去哪干活</div>
+                   </div>
+                   <div class="pub_other clearfix">
+                     <div>干什么活：</div>
+                     <br>
+                     <textarea class='work_content' style="width:100%;height:4.5rem;margin-top:0.45rem" placeholder="干什么活，去哪干活请您填写，或者也可以用语音哦"></textarea>
+                     <div id="record_n">
+                          <!-- <i id="triangle-up"></i> -->
+                          <i class="paly_icon"></i>
+                          <i id="timeRecord"></i>
+                     </div>
+
+                     <i class="paly_delete"></i>
+                     <div class="mike" style="top:4.4rem"></div>
+                   </div>
+               </div>
+          </div>
+          <div class="bottom">
+               <div class="btn_other">去干活吧</div>
+          </div>
+          <img id="viocegifId" style="display:none;" src="../../image/fieldManage/vioce.gif" alt="">
+      </div>
+  </body>
+  <script type="text/javascript" src="../../script/common/api.js"></script>
+  <script type="text/javascript" src="../../script/common/jquery.min.js"></script>
+  <script type="text/javascript" src="../../script/common/zepto-1.2.0.min.js"></script>
+  <script type="text/javascript" src="../../script/common/pds.ajax.js"></script>
+  <script type="text/javascript" src="../../script/common/mui.min.js"></script>
+  <script type="text/javascript" src="../../script/common/mui.picker.min.js"></script>
+  <script type="text/javascript">
+
+      var recordTime;
+      var audioRecorder;
+      var audioPlayer;
+      var fs;
+      var createAudioDir = 'fs://audio';//录音文件存放目录
+      var baseAudioDir = createAudioDir + '/';//url+/
+      var orderId = 6;
+      var playerOrderAudioUrl;
+      var originalFileName; //录音文件的原始名称
+      var mp3FileName; //转换为MP3文件的名称
+      var startSecondNum; //开始毫秒数
+      var Videoflag = 1 ;//判断是否为音频文件
+      var dateTime;
+      apiready = function(){
+        api.parseTapmode();
+        // var header = $api.byId('header');
+        // $api.fixStatusBar(header);
+        // var headerH = $api.offset(header).h;
+
+         //监听返回键
+         api.addEventListener({
+             name: 'keyback'
+         }, function(ret, err){
+             if( ret ){
+                 back()
+             }else{
+
+             }
+         });
+
+        //  api.addEventListener({
+        //    name: 'clWin'
+        //  },function(ret,err){
+        //    alert(JSON.stringify(ret))
+        //        back()
+        //  })
+        // 将div置空
+        // $('#date').empty();
+        // 录音部分
+        audioRecorder = api.require('audioRecorder')
+      	audioPlayer = api.require('audioPlayer')
+      	fs = api.require('fs')
+      	fs.exist({
+      		path: createAudioDir
+      	}, function(ret, err) {
+      		if(!ret.exist) { //如果不存在目录创建目录
+      			fs.createDir({
+      				path: createAudioDir
+      			}, function(ret, err) {})
+      		}
+      	})
+
+        // $("body").css({"paddingTop":headerH+"px"});
+        // openFrm();
+        // 跳转到员工列表页面
+        $('#staff').click(function(){
+          api.openWin({
+            name : 'staffList_win',
+            url : './staffList_win.html',
+          });
+        });
+        // tab切换
+        $(".pub_other").css("display","none");
+        $(".bottom").css("display","none");
+        $('.tab_inner .crop').css({"color":"#fff","backgroundColor":"#98c721"});
+        $('.tab_inner').on('click','li',function(){
+            console.log($(this).attr("data-type"));
+            var work_type = $(this).attr("data-type");
+            if(work_type=="1"){
+              var buriedPoint = pds.buriedPoint();
+              buriedPoint.pageId = 'page_send_field_task_admin';
+              buriedPoint.eventId = 'button_the_growth_work_page_send_field_task_admin';
+              pds.ajaxSubmit({
+              url:"app/buried_point/save",
+              data:{"point":buriedPoint},
+              success:function(v){
+              }
+            })
+              $(".pub_date").css("display","block");
+              $(".pub_other").css("display","none");
+              $(".bottom").css("display","none");
+            }else{
+              var buriedPoint = pds.buriedPoint();
+              buriedPoint.pageId = 'page_send_field_task_admin';
+              buriedPoint.eventId = 'button_other_task_page_send_field_task_admin';
+              pds.ajaxSubmit({
+              url:"app/buried_point/save",
+              data:{"point":buriedPoint},
+              success:function(v){
+              }
+            })
+              $(".pub_date").css("display","none");
+              $(".pub_other").css("display","block");
+              $(".bottom").css("display","block");
+            }
+            $(this).css({"color":"#fff","backgroundColor":"#98c721"}).siblings().css({"color":"#999999","backgroundColor":"#fff"});
+        });
+        //点击打开地图
+        $('.btn').click(function(){
+          var staff = $('#staff').html()
+          var finishTime = $('#date').html()
+          if(staff=="点我选择派谁去干活"){
+            api.toast({
+                msg: '请先选择员工',
+                duration: 2000,
+                location: 'middle'
+            });
+            return;
+          }
+          if(finishTime=='点我选择时间'){
+            api.toast({
+                msg: '请先选择完成时间',
+                duration: 2000,
+                location: 'middle'
+            });
+            return;
+          }
+          if(staff!="点我选择派谁去干活" && finishTime!="点我选择时间"){
+            var buriedPoint = pds.buriedPoint();
+            buriedPoint.pageId = 'page_send_field_task_admin';
+            buriedPoint.eventId = 'button_plot_selection_page_send_field_task_admin';
+            pds.ajaxSubmit({
+            url:"app/buried_point/save",
+            data:{"point":buriedPoint},
+            success:function(v){
+            }
+          })
+              api.openWin({
+                name : 'workMap_win',
+                url : './workMap_win.html',
+                reload : true,
+                pageParam: {
+                    dateTime: dateTime,
+                    farmId: api.pageParam.farmId
+                }
+              });
+          }
+
+        });
+      //  点击派活
+      $('.btn_other').click(function(){
+          if(Videoflag ==1){
+            sendLanguage();
+          }else{
+            sendWork();
+          }
+      });
+
+      $('#record_n').on('click', function() {
+        // alert(2);
+         stop();
+        //  $('.paly_icon').css("background","url(../../image/fieldManage/greenplayer.gif) 0.35rem no-repeat")
+        //  $('.paly_icon').css('background-size','0.4rem 0.4rem')
+        //   	$('.paly_icon').css('background-color','#effaec')
+        //   	$('.paly_icon').css('width','100%')
+        //   	$('.paly_icon').css('height','1.3rem')
+        //   	$('.paly_icon').css('border-radius','40px')
+         initAudioPlayer(playerOrderAudioUrl,1);
+      });
+
+      //  点击录音
+
+      $('.mike').on('touchstart', function(ev) {
+        var buriedPoint = pds.buriedPoint();
+        buriedPoint.pageId = 'page_send_other_admin';
+        buriedPoint.eventId = 'button_voice_send_page_send_other_admin';
+        pds.ajaxSubmit({
+        url:"app/buried_point/save",
+        data:{"point":buriedPoint},
+        success:function(v){
+        }
+      })
+        event. stopPropagation();
+        	$("#viocegifId").css("display","none");
+        //触摸录音按钮
+      	ev.preventDefault() //阻止出现滚动条
+      	//定义文件名称
+
+      	var timestamp = new Date().getTime()
+      	startSecondNum = timestamp
+      	originalFileName = timestamp + ".pcm"
+      	mp3FileName = timestamp + ".mp3"
+      	startRecord(originalFileName)
+      	$("#viocegifId").css("display", "block")
+      }).on('touchend', function() { //触摸结束
+      	//判断录音时间小于1秒，录音数据无效
+      	var endSecondNum = new Date().getTime()
+      	if(endSecondNum - startSecondNum < 1000) {
+      		stopRecord(originalFileName, mp3FileName, startSecondNum, endSecondNum, 0)
+
+      	} else {
+          Videoflag = 2 ;
+      		stopRecord(originalFileName, mp3FileName, startSecondNum, endSecondNum, 0)
+          // $('#record_n').html(recordTime);
+          $('#record_n').css('display','block');
+          $('.paly_delete').css('display','block');
+          $(this).css('display','none');
+          // $('textarea').css('display','none');
+      	}
+      	$("#viocegifId").css("display", "none")
+
+      })
+
+
+      // 删除录音文件
+      $('.paly_delete').on('click', function() {
+        Videoflag = 1 ;
+        // 删除的同时立即停止播放音频
+        stop();
+      	fs.exist({
+      		path: baseAudioDir + mp3FileName
+      	}, function(ret, err) {
+      		if(ret.exist) {
+      			$('#record_n').css("display", "none");
+      			$(".paly_delete").css("display", "none");
+      			$('textarea').css("display", "block");
+      			$('.mike').css("display", "block");
+      			fs.remove({
+      				path: baseAudioDir + mp3FileName
+      			}, function(ret, err) {
+
+      			})
+
+      		}
+      	})
+
+      })
+
+      $('#date').on('touchstart',function(){
+                $("#date").unbind("touchstart");
+                mui.init()
+                var texts = $( '#date' )
+                texts.on( 'tap', function () {
+                    api.setFrameAttr( {
+                     name: 'sendWork_win',//固定日历控件
+                     bounces: false
+                    })
+                    var dtpicker = new mui.DtPicker({
+                     type: 'date', //设置日历初始视图模式
+                     beginDate: new Date(2015, 04, 25),//设置开始日期
+                     labels: [ '年', '月', '日' ], //设置默认标签区域提示语
+                    })
+                    dtpicker.show( function( rs ){
+                     var dateValue = JSON.parse(JSON.stringify( rs ));
+                     dateTime = dateValue.value;
+
+
+                     var timeRet = rs.y.text + '-' + rs.m.text + '-' + rs.d.text;//选择的时间
+
+                     var d = new Date(), y = d.getFullYear(), m = d.getMonth() + 1, r = d.getDate(),s=2016;
+                     m < 10 ? m = "0" + m : m;
+                     r < 10 ? r = "0" + r : r;
+                     var endDate = y+"-"+m+"-"+r//当前时间
+                     var d1 = new Date(timeRet.replace(/\-/g, "\/"));
+                     var d2 = new Date(endDate.replace(/\-/g, "\/"));
+                    // alert(d2)
+                    if(timeRet!=""&&endDate!=""&&d1 <d2)
+                     {
+                      alert("请选择大于等于今天的日期");
+                      return;
+                    }
+                      texts.html(dateValue.value);
+
+                      $('#date').addClass("div-active");
+                       dtpicker.dispose()
+                       api.setFrameAttr({
+                         name: 'sendWork_win',
+                         bounces: true
+                       })
+                    })
+            } )
+      })
+
+};
+
+        function closeSelf(){
+          api.closeWin({});
+        }
+
+        function back(){
+          // alert('11111')
+          api.closeWin();
+          api.sendEvent({
+             name: 'openMapEvent'
+          })
+        }
+//(1111111111111111111111111111111111111111111111111111111111111111111)
+        // 初始化录音
+        function initAudioPlayer(fileUrl,flag) {
+          audioPlayer.initPlayer({
+            path: baseAudioDir+mp3FileName,//
+            cache: true
+          }, function(ret) {
+            if(ret){
+              playerStateListner(flag)
+            }
+          })
+        }
+        // 监听播放状态，从而更改样式
+        function playerStateListner(flag){
+
+          audioPlayer.addEventListener({
+              name:"state"
+          }, function(ret) {
+             if(ret.state==='finished'){
+                if(flag===2){
+                  // $('.paly_icon').css("background","url(../../../image/farmLand/blue.png) 0.35rem no-repeat")
+                  // $('.paly_icon').css	('background-size','0.4rem 0.4rem')
+                  // $('.paly_icon').css	('background-color','#cce4ff')
+                  // $('.paly_icon').css	('width','100%')
+                  // $('.paly_icon').css	('height','1.3rem')
+                  // $('.paly_icon').css	('border-radius','40px')
+                }else{
+                  // $('#playerAudioDataImg').css("background","url(../../../image/farmLand/adio.png) 0.35rem no-repeat")
+                  // $('#playerAudioDataImg').css('background-size','0.4rem 0.4rem')
+                  // $('#playerAudioDataImg').css('background-color','#effaec')
+                  // $('#playerAudioDataImg').css('width','100%')
+                  // $('#playerAudioDataImg').css('height','1.3rem')
+                  // $('#playerAudioDataImg').css('border-radius','40px')
+                }
+             }
+          });
+        }
+        //  开始录音方法
+        function startRecord(fileName) {
+          audioRecorder.startRecord({
+            savePath: baseAudioDir + fileName,
+            format: 'pcm'
+          }, function(ret, err) {
+
+          })
+        }
+        // 停止录音
+        function stopRecord(originalFileName, mp3FileName, startSecondNum, endSecondNum, timerFlag) {
+        	audioRecorder.stopRecord(function(ret) {
+        		if(ret.status) {
+        			audioRecorder.covertToMp3({
+        				channel: 2,
+        				sampleRates: 16000,
+        				originalFilePath: baseAudioDir + originalFileName,
+        				mp3FilePath: baseAudioDir + mp3FileName,
+        			}, function(ret) {
+        				//转换成功删除源文件
+        				if(ret.status) {
+        					fs.remove({
+        						path: baseAudioDir + originalFileName
+        					}, function(ret, err) {
+        						if(ret.status) {
+
+        							if(endSecondNum - startSecondNum < 1000) {
+        								fs.remove({
+        									path: baseAudioDir + mp3FileName
+        								}, function(ret, err) {
+
+        								})
+
+        							} else {
+        								fs.exist({
+        									path: baseAudioDir + mp3FileName
+        								}, function(ret, err) {
+        									if(ret.exist) {
+        										audioRecorder.getAttr({
+        											path: baseAudioDir + mp3FileName
+        										}, function(ret) {
+        											$('#playerRecoderData').css('display', 'block');
+        											$('#del').css('display', 'block');
+        											$("#timeRecord").text((parseInt(ret.duration) / 1000).toFixed(0) + '"')
+        											$('#recoderBtn').css('display', 'none');
+
+        											//清除定时器
+        											//if(timerFlag==1){
+        											//flag=true
+        											//clearInterval(intervalTime)
+        											//}
+
+        										})
+        									}
+        								})
+        							}
+        						}
+
+        					})
+        				} else {
+        					fs.remove({
+        						path: baseAudioDir + originalFileName
+        					}, function(ret, err) {
+
+        					})
+        				}
+        			})
+        		}
+        	})
+        }
+        //停止播放,此方法会让播放器处于闲置状态，无法对之前的音频文件再进行播放
+        function stop() {
+        	audioPlayer.stop();
+        }
+      // 刷新页面的方法
+
+      var employInfo;
+      function openFrm(){
+        employInfo = $api.getStorage('employInfo')
+        $("#staff").html(employInfo.employName);
+        $('#date').html(dateTime);
+        $("#staff").addClass("div-active");
+        //
+        // $('#date').html($api.getStorage('dateTime'));
+      };
+
+      //  派音频活
+      function sendWork(workType,workerId,orderContent,orderVoiceUrl){
+                //textarea的
+                var orderContent = $('.work_content').val();
+                var employInfo = $api.getStorage('employInfo');
+                var staff = $('#staff').html()
+                var orderVoiceTime = $("#timeRecord").text();
+                workerId = employInfo.employId;
+                // alert(orderVoiceTime)
+                // alert(staff)
+                if(!employInfo || staff=="点我选择派谁去干活"){
+                  api.toast({
+                    msg: '请先选择员工',
+                    duration: 2000,
+                    location: 'middle'
+                  });
+                  return
+                }
+
+                var paramObj ={}
+                paramObj.workType = 102;//工作类型（101：去地里看作物，102：干点儿其它活）
+                paramObj.workerId = workerId;//干活人ID
+                paramObj.orderContent = orderContent;//干什么活
+                paramObj.orderVoiceTime = orderVoiceTime;//音频时间
+                paramObj.farmId = api.pageParam.farmId;//干什么活
+                // paramObj.orderVoiceUrl = "";//	派活语音地址
+                //alert("哈哈哈***********" + JSON.stringify(paramObj));
+                pds.ajaxSubmit({
+                   url:"app/uploads/audio",
+                   type : "POST",
+                   contentType: 'audio/mp3',
+                   dataType: 'json',
+                   fileData: {
+               			  file: baseAudioDir + mp3FileName
+               		 },
+                   timeout: 20,
+                   success:function(e){
+                      // alert("success");
+                      // alert(JSON.stringify(e));
+
+                      // 提交成功之后删除本地的录音文件
+                       if(mp3FileName!=''){
+          							fs.remove({
+          								path: baseAudioDir + mp3FileName
+          							}, function(ret, err) {
+
+          							})
+                      }
+                      paramObj.orderVoiceUrl = e.data;
+                      //alert(JSON.stringify(paramObj));
+                      //  派活接口调用
+                      pds.ajaxSubmit({
+                         url:"app/task/addTask",
+                         type : "POST",
+                         data:{
+                              "data":JSON.stringify({data:paramObj})
+                         },
+                         success:function(e){
+
+                            // alert("1")
+                            // alert("success")
+                            // alert(JSON.stringify(e));
+                            //$("#contain").append($("#StaffTmpl").tmpl(staffList));
+                              // 真正的逻辑处理
+                              if(e.status=="ok"){
+
+                                    alert("派单成功！");
+                                    //alert(1);
+                                    // back();
+
+
+                                    api.execScript({
+                                        name: 'sendWork_win',
+                                        script: 'back()'
+                                    });
+
+                                    // api.closeWin({});
+                                    // 页面广播事件
+
+                              };
+                         },
+                         error:function(e){
+                            api.alert({msg:"服务器异常，请联系管理员!"});
+                         }
+                      });
+                   },
+                   error:function(e){
+                      api.alert({msg:"服务器异常，请联系管理员!"});
+                   }
+                });
+
+      };
+      // function clWin(){
+      //   api.closeWin({})
+      // }
+      //  派活文字活
+      function sendLanguage(workType,workerId,orderContent,orderVoiceUrl){
+                //textarea的值
+
+                var employInfo = $api.getStorage('employInfo');
+                var staff = $('#staff').html()
+                // alert(staff)
+                if(!employInfo || staff=="点我选择派谁去干活"){
+                  api.toast({
+                    msg: '请先选择员工',
+                    duration: 2000,
+                    location: 'middle'
+                  });
+                  return
+                }
+                workerId = employInfo.employId;
+                var orderContent = $('.work_content').val();
+                if(orderContent == ""){
+                  api.toast({
+                    msg: '请先添加派活内容',
+                    duration: 2000,
+                    location: 'middle'
+                  });
+                  return
+                }
+                var paramObj ={}
+                paramObj.workType = 102;//工作类型（101：去地里看作物，102：干点儿其它活）
+                paramObj.workerId = workerId;//干活人ID
+                paramObj.orderContent = orderContent;//干什么活
+                paramObj.farmId = api.pageParam.farmId;//干什么活
+
+                // paramObj.orderVoiceUrl = "";//	派活语音地址
+
+                //alert(JSON.stringify(paramObj));
+                pds.ajaxSubmit({
+                   url:"app/task/addTask",
+                   type : "POST",
+                   data:{
+                        "data":JSON.stringify({data:paramObj})
+                   },
+                   success:function(e){
+                      // alert("success")
+                      // alert(JSON.stringify(e));
+                      //$("#contain").append($("#StaffTmpl").tmpl(staffList));
+                        // 真正的逻辑处理
+                        if(e.status=="ok"){
+                          var buriedPoint = pds.buriedPoint();
+                         buriedPoint.pageId = 'page_send_other_admin';
+                         buriedPoint.eventId = 'button_send_page_send_other_admin';
+                        pds.ajaxSubmit({
+                          url:"app/buried_point/save",
+                          data:{"point":buriedPoint},
+                          success:function(v){
+
+                          }
+                        })
+                              alert("派单成功！");
+                              back();
+                        };
+                   },
+                   error:function(e){
+                      api.alert({msg:"服务器异常，请联系管理员!"});
+                   }
+                });
+      };
+
+
+
+      // 调用日期插件
+      // function dateSelect() {
+      //       mui.init()
+      //       var texts = $( '#date' )
+      //       texts.on( 'tap', function () {
+      //           api.setFrameAttr( {
+      //            name: 'record_frm',//固定日历控件
+      //            bounces: false
+      //           } )
+      //
+      //           var dtpicker = new mui.DtPicker( {
+      //            type: 'date', //设置日历初始视图模式
+      //            labels: [ '年', '月', '日' ], //设置默认标签区域提示语
+      //           } )
+      //           dtpicker.show(function( rs ){
+      //            console.log( JSON.stringify( rs ) );
+      //            var dateValue = JSON.parse(JSON.stringify( rs ));
+      //            dateTime = dateValue.value;
+      //            alert(dateTime)
+      //            $(this).html(dateValue.value);//
+      //           //  $api.setStorage('dateTime', dateTime);
+      //            var timeRet = rs.y.text + '年' + rs.m.text + '月' + rs.d.text + '日'
+      //            dtpicker.dispose()
+      //            api.setFrameAttr( {
+      //              name: 'record_frm',
+      //              bounces: true
+      //            } )
+      //           } )
+      //     } )
+      // }
+  </script>
+  </html>

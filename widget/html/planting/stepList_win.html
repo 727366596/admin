@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="../../css/common/public.css"/>
+      <link rel="stylesheet" type="text/css" href="../../css/common/header.css"/>
+  </head>
+  <body>
+      <header id="header">
+        <div class="headerLeft" onclick="back()"></div>
+        <div class="headerCenter">种植</div>
+        <div class="headerRight"></div>
+      </header>
+
+  <script type="text/javascript" src="../../script/common/api.js"></script>
+  <script type="text/javascript" src="../../script/common/jquery.min.js"></script>
+  <script type="text/javascript" src="../../script/common/rem-750.js"></script>
+  <script type="text/javascript" src="../../script/common/pds.ajax.js"></script>
+
+  <script type="text/javascript">
+      var land_id;//地块id
+      var plan_id;//小计划id
+      var processId;
+      apiready = function(){
+              var header = $api.byId('header');
+              $api.fixStatusBar(header);
+              var headerH = $api.offset(header).h;
+              //$("body").css({"paddingTop":headerH+"px"});
+              //alert(api.pageParam.largeId)
+              //接收传过来的地块id和小计划id
+              land_id = api.pageParam.landId;
+              plan_id = api.pageParam.planId;
+              landName = api.pageParam.landName;
+              $('.headerCenter').html(landName)
+              api.openFrame({
+                  name: 'stepList_frm',
+                  url: './stepList_frm.html',
+                  rect: {
+                      x: 0,
+                      y: headerH,
+                      w: 'auto',
+                      h: 'auto'
+                  },
+                  pageParam: {
+                      landId: api.pageParam.landId,
+                      planId: api.pageParam.planId,
+                      landName: api.pageParam.landName,
+                      largeId:api.pageParam.largeId,//大计划id
+                      year:api.pageParam.year,
+                      farmId:api.pageParam.farmId
+                  }
+              });
+
+      };
+
+      function back(){
+          api.closeWin({
+
+          });
+        //   api.sendEvent( {
+        //    name: 'openMapEvent'
+        //  } )
+      }
+
+  </script>
+  </body>
+  </html>

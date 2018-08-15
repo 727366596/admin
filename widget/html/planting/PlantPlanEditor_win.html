@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="maximum-scale=1,minimum-scale=1,user-scalable=0,width=device-width,initial-scale=1">
+		<title>
+			我派出去的活
+		</title>
+		<link rel="stylesheet" type="text/css" href="../../css/common/api.css">
+		<link rel="stylesheet" type="text/css" href="../../css/common/public.css">
+		<link rel="stylesheet" type="text/css" href="../../css/common/header.css">
+		<style>
+			.fixBar {
+				position:fixed;
+				left: 0;
+				right: 0;
+				bottom:0;
+				padding: 0;
+				height: .82rem;
+				width:100%;
+				background-color:#ff7a00;
+				border-top:1px solid #ff7a00;
+			}
+			.btnSave {
+				float: left;
+				bottom:0;
+				width:50%;
+				height:.82rem;
+				line-height:.82rem;
+				color:#ff7a00;
+				font-size:.30rem;
+				text-align:center;
+				background-color:#fffefe
+			}
+			.btnConfirm {
+				float: left;
+				bottom:0;
+				width:50%;
+				height:.82rem;
+				line-height:.82rem;
+				color:#fffefe;
+				font-size:.30rem;
+				text-align:center;
+				background-color:#ff7a00
+			}
+		</style>
+		<script type="text/javascript" src="../../script/common/rem-750.js"></script>
+	</head>
+	<body>
+		<header id="header">
+			<div class="headerLeft" onclick="api.closeWin()">
+			</div>
+			<div class="headerCenter">
+				工单详情
+			</div>
+			<div class="headerRight">
+			</div>
+		</header>
+		<div class="fixBar" id="fixBar">
+				<div id="save" class="btnSave">
+						保存为草稿
+				</div>
+				<div id="confirm" class="btnConfirm">
+						立即派单
+				</div>
+		</div>
+		<script type="text/javascript" src="../../script/common/api.js"></script>
+		<script type="text/javascript" src="../../script/common/jquery.min.js"></script>
+    <script>
+      apiready = function(){
+          //适配iOS7+，Android4.4+状态栏沉浸式效果，详见config文档statusBarAppearance字段
+          var header = $api.byId('header');
+					$api.fixStatusBar(header);
+          var headerH = $api.offset(header).h;
+					var fixBar = $api.byId('fixBar');
+					var fixBarH = $api.offset(fixBar).h;
+          api.openFrame({
+              name: 'PlantPlanEditor_frm',
+              url: './PlantPlanEditor_frm.html',
+              bounces: false,
+              pageParam : {
+                plantDetailId:api.pageParam.plantDetailId
+              },
+              rect: {
+                  x: 0,
+                  y: headerH,
+                  w: 'auto',
+                  h: api.winHeight-fixBarH-headerH
+              }
+          });
+					$("#save").on("click",function(){
+							api.execScript({
+									frameName: 'PlantPlanEditor_frm',
+									script: 'save()'
+							});
+					})
+					$("#confirm").on("click",function(){
+							api.execScript({
+									frameName: 'PlantPlanEditor_frm',
+									script: 'conf()'
+							});
+					})
+      };
+    </script>
+	</body>
+</html>

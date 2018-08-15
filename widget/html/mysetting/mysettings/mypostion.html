@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>title</title>
+	<link rel="stylesheet" type="text/css" href="../../../css/common/api.css" />
+	<style>
+		.clearFloat:after {
+			content: "";
+			display: block;
+			clear: both;
+			visibility: hidden;
+			height: 0;
+		}
+
+		#mapLazyLoad {
+			width: 100%;
+			position: relative;
+		}
+
+		#mapLazyLoad h4 {
+			position: absolute;
+			z-index: 9999;
+			font-weight: 300;
+			font-size: 18px;
+			font-family: PingFangSC-Regular, sans-serif;
+			color: #fff;
+			width: 100%;
+			height: 70px;
+			text-align: center;
+			line-height: 98px;
+			text-align: center;
+			background: #00c558;
+		}
+
+		#mapLazyLoad h4 span {
+			position: absolute;
+			z-index: 9999;
+			width: 10px;
+			height: 18px;
+			left: 13px;
+			top: 40px;
+			background-image: url("../../../image/harvest/harvest_back.png");
+			background-size: 100% 100%;
+			background-repeat: no-repeat;
+			background-position: center center;
+		}
+
+		#infoTitle {
+			position: fixed;
+			left: 0;
+			top: 80px;
+			z-index: 2147483647;
+			height: 35px;
+			width: 100%;
+			line-height: 35px;
+			text-align: center;
+			background: url("../../../image/harvest/harvest_back.png") norepeat 5px center;
+		}
+
+		#infoTitle button {
+			display: inline-block;
+			padding: 0 4px;
+			color: red;
+			margin-top: 10px;
+			border: solid 1px red;
+			border-radius: 50%;
+			float: right;
+			margin-right: 15px;
+			outline: none;
+		}
+
+		#mapInformation {
+			/*border: solid 1px blue;*/
+			padding: 10px;
+			font-size: 14px;
+		}
+
+		#mapInformation ul li {
+			/*border:solid 1px red;*/
+			position: relative;
+		}
+
+		#mapInformation ul li button {
+			font-size: 10px;
+			float: right;
+			margin-left: 5px;
+			background: #5cba5c;
+			padding: 7px 10px 5px 10px;
+			border-radius: 12px;
+			color: #ffffff;
+			outline: none;
+		}
+
+		#mapInformation ul li button:first-of-type {
+			float: left;
+			margin-left: 0;
+		}
+		#mapInformation ul li button:last-of-type {
+			position: absolute;
+			right: 0px;
+			top: 0px;
+			display: none;
+		}
+
+		#mapInformation table {
+			width: 100%;
+			margin-top: 10px;
+		}
+
+		#mapInformation table th,
+		#mapInformation table td {
+			padding: 5px 0;
+			border: solid 1px #f2f2f2;
+			text-align: center;
+			color: #999;
+		}
+
+		#mapInformation table thead tr {
+			display: block;
+		}
+
+		#mapInformation table tbody {
+			display: block;
+			overflow: scroll;
+		}
+		#mapInformation table tbody tr td span {
+			display: inline-block;
+			width: 13px;
+			height: 13px;
+			background-image: url(../../../image/settings/Delete.png);
+			background-repeat: no-repeat;
+			background-position: 0 0;
+			background-size: 100%;
+		}
+
+		.changeStyle {
+			background: green;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="mapLazyLoad">
+		<h4><span onclick="back();"></span>地块打点</h4>
+	</div>
+	<script type="text/javascript" src="../../../script/common/api.js"></script>
+	<script type="text/javascript">
+		apiready = function() {
+			exitApp();
+			// api.showProgress({
+			// 		title: ' 努力加载中...',
+			// 		text: '先喝杯茶...',
+			// 		modal: true
+			// });
+			setTimeout(function(){
+					api.openFrame({
+							name: 'myposition_bmap_hand_show_frm',
+							url: './mypositions/bmap_hand_show_frm.html',
+							//bgColor:'#f00',
+							pageParam: {
+								id: api.pageParam.id,
+								landName:api.pageParam.landName
+							},
+							rect: {
+								x: 0,
+								y: 70,
+								w: 'auto',
+								h: 'auto'
+							}
+					});
+			},300)
+		}
+		// 关闭地图
+		function back() {
+			api.confirm({
+				title: '提示',
+				msg: '您正在划定地块，如果退出则需要重新划定！',
+				buttons: ['执意离开', '继续划定']
+			}, function(ret, err) {
+				var index = ret.buttonIndex;
+				if (index == 1) {
+					api.sendEvent( {
+							name: 'refreshStatusList'
+						} )
+					api.closeWin();
+				};
+			});
+
+		};
+
+		function exitApp() {
+			api.addEventListener({
+				name: 'keyback'
+			}, function(ret, err) {
+				back();
+			});
+		}
+
+
+	</script>
+</body>
+
+</html>

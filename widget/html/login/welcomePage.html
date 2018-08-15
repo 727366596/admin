@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>启动页</title>
+	<style media="screen">
+		html,
+		body {
+			width: 100%;
+			height: 100%;
+			background: #fdfdfd;
+			overflow: hidden;
+			margin: 0;
+			padding: 0;
+		}
+
+		.box {
+			position: absolute;
+			top: 30px;
+			right: 10px;
+			background: #848484;
+			width: 66px;
+			line-height: 24px;
+			font-size: 15px;
+			text-align: center;
+			border-radius: 85px;
+			color: #fff;
+		}
+
+		span {
+			display: inline-block;
+		}
+
+		img {
+			width: 100%;
+			height: 100%;
+		}
+	</style>
+	<script type="text/javascript" src="../../script/common/rem.js"></script>
+	<script type="text/javascript" src="../../script/common/api.js"></script>
+	<script type="text/javascript" src="../../script/common/jquery.min.js"></script>
+	<!-- <script type="text/javascript" src="../../script/common/pds.ajax.js"></script> -->
+</head>
+
+<body>
+	<img src="" alt="">
+	<div class="box">
+			<span style="margin-right:5px;">跳过</span><span class="jump">3</span>
+	</div>
+</body>
+
+<script type="text/javascript">
+	apiready = function() {
+
+				api.parseTapmode();
+				api.setFullScreen({
+					fullScreen: true
+				});
+				var pictureUrl = api.pageParam.pictureUrl;
+				var title = api.pageParam.title;
+				var url = api.pageParam.url;
+
+				advImg(pictureUrl,title,url);
+
+				api.addEventListener({
+						name: 'keyback'
+				}, function(ret, err) {
+						if (ret) {
+							return;
+						}
+				});
+
+	};
+	var time
+	function advImg(pictureUrl,title,url) {
+			$('img').attr('src', pictureUrl)
+			if(url!==''){
+					$('img').on('click', function() {
+							jumpPage(title, url)
+					})
+			};
+			var systemType = api.systemType;  // 比如： ios
+			var timeLong = 0;
+			if (systemType != "ios") {
+					timeLong = 2000
+			};
+			setTimeout(function() {
+				var number = 3;
+				time = setInterval(function() {
+						number--;
+						if (number > 0) {
+							$('.jump').text(number)
+						} else {
+							jumpLogin()
+						}
+				}, 1000)
+				$('.box').on('click', jumpLogin)
+		}, timeLong);
+	}
+
+
+	function jumpLogin() {
+		  clearInterval(time);
+			// if ($api.getStorage('userId')) {
+			// 		api.openWin({
+			// 				name: 'win_home',
+			// 				url: '../win_home/win_home.html',
+			// 				slidBackEnabled: false,
+			// 				animation:{
+			//             type:"movein",                //动画类型（详见动画类型常量）
+			//             subType:"from_right",       //动画子类型（详见动画子类型常量）
+			//             duration:300                //动画过渡时间，默认300毫秒
+			//         }
+			// 		});
+			// }else{
+					api.openWin({
+							name: 'login_new',
+							url: './login_new.html',
+							slidBackEnabled: false,
+							animation:{
+			            type:"movein",                //动画类型（详见动画类型常量）
+			            subType:"from_right",       //动画子类型（详见动画子类型常量）
+			            duration:300                //动画过渡时间，默认300毫秒
+			        }
+					});
+			// }
+	}
+
+
+	function jumpPage(title, url) {
+			clearInterval(time);
+			api.openWin({
+					name: 'startPage_win',
+					url: './startPage.html',
+					pageParam: {
+						title: title,
+						url: url
+					},
+					animation: {
+						type: "movein", //动画类型（详见动画类型常量）
+						subType: "from_right", //动画子类型（详见动画子类型常量）
+						duration: 400 //动画过渡时间，默认300毫秒
+					}
+			});
+	}
+</script>
+
+</html>

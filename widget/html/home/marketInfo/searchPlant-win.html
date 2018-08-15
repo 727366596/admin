@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>作物搜索</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/common/public.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/common/header.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/common/iscroll-style.css" />
+    <script type="text/javascript" src="../../../script/common/rem.js"></script>
+    <style>
+				body{
+					text-align: center;
+					position: relative;
+					background-color: #f3f4f4;
+				}
+        .header_search_input_clearMsg{
+          position: absolute;
+          top: 4px;
+          right: 4px;
+          z-index: 999;
+          height: 25px;
+          width: 25px;
+          background-image: url("../../../image/common/resend_password_emptyIcon.png");
+					background-position: center center;
+					background-repeat: no-repeat;
+          background-size: 15px 15px;
+          display: none;
+        }
+        .headerSearchBox{
+          position: relative;
+          width:100%;
+          height:0.7rem;
+          border-radius: 0.7rem;
+          /*background-color: rgba(0,0,0,0.2);*/
+					background-color: #fff;
+					display: -webkit-box;
+					display: -webkit-flex;
+					display:flex;
+
+					-webkit-box-orient: horizontal;
+					-webkit-flex-flow: row;
+					flex-flow: row;
+
+					-webkit-box-pack: center;
+					-webkit-justify-content: center;
+					justify-content: center;
+
+					-webkit-box-align: center;
+					-webkit-align-items: center;
+					align-items: center;
+        }
+				.headerSearchBox .name{
+						color: #00c558;
+						font-size: 0.32rem;
+						max-width: 70%;
+						height: 100%;line-height: 0.7rem;
+						overflow-x: auto;
+						overflow-y: hidden;
+						white-space: nowrap;
+				}
+				.headerSearchBox .name-icon{
+						width:15px;height: 15px;margin-right: 5px;margin-top: -2px;
+						background-position: center center;
+						background-size: 100% 100%;
+						background-repeat: no-repeat;
+						background-image: url('../../../image/market/search_icon.png');
+				}
+        input::-webkit-input-placeholder{
+            color: #999999;opacity:1;font-size: 0.28rem;
+        }
+        input::placeholder{
+            color: #999999;opacity:1;font-size: 0.28rem;
+        }
+
+				#body_totop_btn{
+						position: fixed;
+						bottom:0.5rem;
+						right:0.2rem;
+						width:1.2rem;
+						height:1.2rem;
+						z-index: 999;
+						line-height: 2.25rem;
+						font-size: 0.2rem;font-family: PingFangSC-Regular, sans-serif;color: #AEADAD;
+						text-align: center;
+						background: url("../../../image/common/rocket_up.png") no-repeat center 3px;
+						background-size: 70% 70%;
+						background-color: rgba(0,0,0,0);
+						border-radius: 6px;
+						font-size: 0.20rem;
+						color: #20c714;
+						display: none;
+				}
+				.nav{
+						height:0.95rem;
+						line-height: 0.95rem;
+						width: 100%;
+						background-color: #fff;
+						display: -webkit-box;
+						display: -webkit-flex;
+						display:flex;
+
+						-webkit-box-orient: horizontal;
+						-webkit-flex-flow: row;
+						flex-flow: row;
+
+						-webkit-box-pack: justify;
+						-webkit-justify-content: space-between;
+						justify-content: space-between;
+
+						-webkit-box-align: center;
+						-webkit-align-items: center;
+						align-items: center;
+				}
+				.nav li{
+				  font-size: 0.3rem;
+				  font-family: "PingFangSC-Regular";
+				  width: 50%;
+				  height: 0.95rem;
+				  text-align: center;
+				}
+				.nav li>span{
+				    display: inline-block;
+				    vertical-align: top;
+						box-sizing: border-box;
+				    height: 0.94rem;
+				    /*width: 55%;*/
+				    line-height: 0.94rem;
+				    font-size: 0.30rem;
+				    color: #666666;
+				}
+    </style>
+</head>
+<body>
+    <div id="header">
+        <div class="headerLeft" onclick="back();"></div>
+        <div class="headerCenter" style="">
+            <div class="headerSearchBox" onclick="openSearchWin()">
+                <span class="name-icon"></span>
+          			<span class="name">品种搜索</span>
+            </div>
+        </div>
+        <div class="headerRight"></div>
+    </div>
+		<ul class="nav">
+				<li id="myPlant"><span>我的作物</span></li>
+				<li id="allPlant"><span>全部作物</span></li>
+		</ul>
+		<div id="body_totop_btn">
+				返回顶部
+		</div>
+</body>
+<script type="text/javascript" src="../../../script/common/api.js"></script>
+<script type="text/javascript" src="../../../script/common/jquery.min.js"></script>
+<!-- <script type="text/javascript" src="../../script/common/zepto-1.2.0.min.js"></script> -->
+<script type="text/javascript" src="../../../script/common/iscroll.js"></script>
+<script type="text/javascript" src="../../../script/common/common/pds.ajax.js"></script>
+<script type="text/javascript">
+	apiready = function(){
+      //适配iOS7+，Android4.4+状态栏沉浸式效果，详见config文档statusBarAppearance字段
+      var header = $api.byId('header');
+      $api.fixStatusBar(header);
+      var headerH = $api.offset(header).h;
+      $("body").css({"paddingTop":headerH+"px"});
+  		var topHeight = $(".nav").height()+headerH;
+			//打开frm组
+			openFrmGroup(topHeight);
+  		//导航切换
+  		tabCheck();
+  		//默认触发今日
+  		$("#myPlant").trigger('touchend');
+	};
+
+	//打开frm组
+	function openFrmGroup(height){
+			api.openFrameGroup({
+			    name: 'searchPlantFrmGroup',
+			    rect: {
+			        x: 0,
+			        y: height,
+			        w: 'auto',
+			        h: 'auto'
+			    },
+			    frames: [{
+			        name: 'searchPlant-my-frm',
+			        url: './searchPlant-my-frm.html',
+							pageParam : {
+									plantName : api.pageParam.plantName,
+									frmName : api.pageParam.frmName
+							},
+			    }, {
+			        name: 'searchPlant-all-frm',
+			        url: './searchPlant-all-frm.html',
+							pageParam : {
+									plantName : api.pageParam.plantName,
+									frmName : api.pageParam.frmName
+							},
+			    }]
+			}, function(ret, err) {
+			    var index = ret.index;
+					$(".nav li span").css({
+							"color":"#666666",
+							"border":"none",
+							"fontSize" :"0.3rem"
+					}).eq(index).css({
+							"color":"#00c558",
+							"border-bottom":"solid 1px #00c558",
+							"fontSize" :"0.32rem"
+					});
+					//寻找frm页面中相同作物，并设置选中
+					var frmName = ret.name;
+					api.execScript({
+					    frameName: frmName,
+					    script: 'readAllPlant("'+ api.pageParam.plantName +'");'
+					});
+
+			});
+	}
+
+	//导航tab切换
+	function tabCheck(){
+			$(".nav li").off("touchend").on("touchend",function(){
+					$(".nav li span").css({
+							"color":"#666666",
+							"border":"none",
+							"fontSize" :"0.3rem"
+					});
+					$(this).find("span").css({
+							"color":"#00c558",
+							"border-bottom":"solid 1px #00c558",
+							"fontSize" :"0.32rem"
+					});
+					var index = $(this).index();
+					api.setFrameGroupIndex({
+					    name: 'searchPlantFrmGroup',
+					    index: index
+					});
+			});
+
+	};
+
+	//打开技术详情页面***************************************************
+	function openSearchWin(){
+  		api.openWin({
+    			name : "frm_home_tech_transfer_info",
+    			url : "widget://html/home/marketInfo/searchPlant-search-win_.html",
+    			reload : true,
+    			selecteIndex : '3',
+    			slidBackEnabled : false,
+					pageParam : {
+							//plantName : api.pageParam.plantName,
+							frmName : api.pageParam.frmName
+					},
+    			animation : {
+    				type : "movein", //动画类型（详见动画类型常量）
+    				subType : "from_right", //动画子类型（详见动画子类型常量）
+    				duration : 300 //动画过渡时间，默认300毫秒
+    			}
+  		});
+	};
+
+	//获取当前时间，格式YYYY-MM-DD
+    function getNowFormatDate() {
+        var date = new Date();
+        var seperator1 = "-";
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = year + seperator1 + month + seperator1 + strDate;
+        return currentdate;
+    }
+
+	//返回上一级********************************************************************
+	function back(){
+			api.closeWin();
+	}
+</script>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="../../css/common/api.css"/>
+      <link rel="stylesheet" type="text/css" href="../../css/common/public.css"/>
+      <link rel="stylesheet" type="text/css" href="../../css/common/header.css"/>
+      <link rel="stylesheet" type="text/css" href="../../css/common/mui.min.css"/>
+      <link rel="stylesheet" type="text/css" href="../../css/common/mui.picker.min.css"/>
+      <link rel="stylesheet" type="text/css" href="../../css/fieldManage/doWork_frm.css"/>
+      <script type="text/javascript" src="../../script/common/rem-750.js"></script>
+      <style>
+          body{
+          }
+      </style>
+  </head>
+  <body>
+       <div class="wrapper">
+           <div class='page_title'>
+              <span>我来派活</span>
+           </div>
+           <div id='tab_work' class="clearfix">
+              <ul class="tab_inner">
+                  <li class="crop"  data-type="1">去地里看作物</li>
+                  <li class="other" data-type="2">干点其他活</li>
+              </ul>
+           </div>
+           <div id="pub_contain">
+                <div>
+                    <div class="pub_person clearfix">
+                        <div>派谁去干活：</div><div id="staff">点我选择派谁去干活</div>
+                    </div>
+                    <div class="pub_date clearfix">
+                        <div>啥时候干完：</div><div id="date" onclick="dateSelect()">点我选择时间</div>
+                        <div class="btn">点我选择去哪干活</div>
+                    </div>
+                    <div class="pub_other clearfix">
+                      <div>干什么活：</div>
+                      <textarea name="name" placeholder="干什么活，去哪干活请您填写，或者也可以用语音哦"></textarea>
+                      <div class="mike"></div>
+                    </div>
+                </div>
+           </div>
+           <div class="bottom">
+             <div class="btn_other">去干活吧</div>
+           </div>
+       </div>
+  </body>
+  <script type="text/javascript" src="../../script/common/api.js"></script>
+  <script type="text/javascript" src="../../script/common/jquery.min.js"></script>
+  <script type="text/javascript" src="../../script/common/mui.min.js"></script>
+  <script type="text/javascript" src="../../script/common/mui.picker.min.js"></script>
+
+  <script>
+
+	</script>
+  <script type="text/javascript">
+      apiready = function(){
+        api.parseTapmode();
+        // 跳转到员工列表页面
+        $('#staff').click(function(){
+          api.openWin({
+            name : 'staffList_win',
+            url : './staffList_win.html',
+          });
+        });
+        // tab切换
+        $(".pub_other").css("display","none");
+        $(".bottom").css("display","none");
+        $('.tab_inner .crop').css({"color":"#fff","backgroundColor":"#98c721"});
+        $('.tab_inner').on('click','li',function(){
+            console.log($(this).attr("data-type"));
+            var work_type = $(this).attr("data-type");
+            if(work_type=="1"){
+              $(".pub_date").css("display","block");
+              $(".pub_other").css("display","none");
+              $(".bottom").css("display","none");
+            }else{
+              $(".pub_date").css("display","none");
+              $(".pub_other").css("display","block");
+              $(".bottom").css("display","block");
+            }
+            $(this).css({"color":"#fff","backgroundColor":"#98c721"}).siblings().css({"color":"#999999","backgroundColor":"#fff"});
+        });
+
+        //点击打开地图
+        $('.btn').click(function(){
+          api.openWin({
+            name : 'workMap_win',
+            url : './workMap_win.html',
+            reload : true,
+            pageParam: {
+              dataTime: dataTime
+            }
+          });
+        })
+       addEmploy();
+      };
+
+      //  $api.setStorage('dateTime',dataTime);
+      var loadNum = $api.setStorage("loadNum","1")
+      //取值显示干活人名字
+       function addEmploy(){
+          if($api.getStorage('employInfo')){
+            var employInfo = $api.getStorage('employInfo');
+            $("#staff").html(employInfo.employName);
+            // reloadMe();
+          }
+       }
+
+      function reloadMe(loadNum){
+             location.reload();
+      }
+      // 调用日期插件
+
+      function dateSelect() {
+        mui.init()
+        var texts = $( '#date' )
+        texts.on( 'tap', function () {
+            api.setFrameAttr( {
+             name: 'record_frm',//固定日历控件
+             bounces: false
+            } )
+
+            var dtpicker = new mui.DtPicker( {
+             type: 'date', //设置日历初始视图模式
+             labels: [ '年', '月', '日' ], //设置默认标签区域提示语
+            } )
+            dtpicker.show( ( rs ) => {
+             console.log( JSON.stringify( rs ) );
+             console.log(1);
+             var dateValue = JSON.parse(JSON.stringify( rs ));
+             date_time = dateValue.value;
+
+             $(this).html(dateValue.value);
+             var timeRet = rs.y.text + '年' + rs.m.text + '月' + rs.d.text + '日'
+             dtpicker.dispose()
+             api.setFrameAttr( {
+               name: 'record_frm',
+               bounces: true
+             } )
+            } )
+      } )
+      }
+  </script>
+  </html>

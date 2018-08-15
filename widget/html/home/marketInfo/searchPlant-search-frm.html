@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>作物列表搜索</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/common/public.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/common/header.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/common/iscroll-style.css" />
+    <script type="text/javascript" src="../../../script/common/rem.js"></script>
+    <style>
+				body{
+					text-align: center;
+					position: relative;
+				}
+				#wrapper{
+            width:100%;
+						padding-bottom:1.0rem;
+						background-color: #fff;
+						text-align: center;
+						display: none;
+        }
+        #wrapper .scroller,#wrapper .scroller>ul,#wrapper .scroller>ul>li{
+            width:100%;
+						text-align:left;
+        }
+
+				.search_history_box{
+						width: 100%;
+				}
+        .search_history_list{
+            width: 100%;
+						display: inline-block;
+						vertical-align: top;
+						margin:0px auto;
+						padding: 0.2rem 0.44rem;
+        }
+        .search_history_title{
+	          width: 100%;
+	          height: 0.8rem;
+						line-height: 0.85rem;
+						padding-left: 23px;
+						background: url("../../../image/common/time_bc.png") no-repeat 0px center;
+						background-size: 18px 18px;
+						text-align: left;
+	          font-size: 0.30rem;font-family: PingFangSC-Regular, sans-serif;color: #666666;
+        }
+        .search_history_list_content{
+	          /*padding: 15px 15px 30px 15px;*/
+						text-align: center;
+						font-size: 0.30rem;font-family: PingFangSC-Regular, sans-serif;color: #999999;
+        }
+        .searchSpan{
+	        	/*position: relative;*/
+	          /*float: left;*/
+						display: inline-block;
+						vertical-align: top;
+	          min-width: 1.5rem;
+						height: 0.6rem;
+	          padding:0 10px;
+	          border: solid 1px #abd677;
+						color: #abd677;
+						background-color: #f2f2f2;
+						margin:0 0.3rem 0.3rem 0;
+	          border-radius: 5px;
+	          font-size: 0.28rem;font-family: PingFangSC-Regular, sans-serif;
+        }
+				.searchSpan_active{
+						/*position: relative;*/
+	          float: left;
+	          min-width: 1.0rem;
+						height: 0.55rem;
+						line-height: 0.55rem;
+	          padding: 0 10px;
+	          text-align: center;
+	          border: solid 1px #82e268;
+						color: #82e268;
+						background-color: #fff;
+						margin:5px 10px 5px 0;
+	          border-radius: 5px;
+	          font-size: 0.28rem;font-family: PingFangSC-Regular, sans-serif;
+				}
+        .clear_search_history_btn{
+	          display: none;
+	          border: solid 1px #b1bbb0;
+	          padding: 5px 10px;
+	          border-radius: 5px;
+	          margin: 0.2rem auto;
+	          outline: none;
+	          font-size: 0.26rem;font-family: PingFangSC-Regular, sans-serif;color: #999999;
+        }
+				#body_totop_btn{
+						position: fixed;
+						bottom:0.5rem;
+						right:0.2rem;
+						width:1.2rem;
+						height:1.2rem;
+						z-index: 999;
+						line-height: 2.25rem;
+						font-size: 0.2rem;font-family: PingFangSC-Regular, sans-serif;color: #AEADAD;
+						text-align: center;
+						background: url("../../../image/common/rocket_up.png") no-repeat center 3px;
+						background-size: 70% 70%;
+						background-color: rgba(0,0,0,0);
+						border-radius: 6px;
+						font-size: 0.20rem;
+						color: #20c714;
+						display: none;
+				}
+        li{
+            width: 100%;
+            height:1.0rem;
+            line-height: 1.0rem;
+            border-bottom: solid 1px #f3f4f4;
+            font-size: 0.3rem;
+            color: #666666;
+            background-color: #fff;
+            padding: 0 0.3rem;
+        }
+				li.select{
+						background-color: #f9f9f9;
+						color: #00c558;
+				}
+    </style>
+</head>
+<body>
+		<div class="search_history_box">
+			<div class="search_history_list">
+					<p class="search_history_title">最近搜索</p>
+					<div class="search_history_list_content clearFloat">
+							<!-- <span>马铃薯</span> -->
+					</div>
+			</div>
+			<button type="button" name="button" class="clear_search_history_btn" onclick="empty_search_history()">清空历史记录</button>
+		</div>
+    <div id="wrapper">
+        <div class="scroller">
+            <ul id="scrollerBox">
+
+            </ul>
+        </div>
+    </div>
+
+		<div id="body_totop_btn">
+				返回顶部
+		</div>
+</body>
+<script type="text/javascript" src="../../../script/common/api.js"></script>
+<script type="text/javascript" src="../../../script/common/jquery.min.js"></script>
+<script type="text/javascript" src="../../../script/common/pds.ajax.js"></script>
+<script type="text/javascript">
+	apiready = function(){
+
+		//获取搜索历史信息
+		getHistoryData();
+
+    //修改选中作物样式
+    $("#scrollerBox li").on("touchstart",function(){
+        $(this).addClass("select").siblings().removeClass("select");
+    }).on("touchend",function(){
+        $(this).removeClass("select");
+    });
+    //默认打开键盘
+    $("#header_search_input").focus().trigger("touchend");
+
+	};
+
+  function wrapperShow(){
+			$("#wrapper").show();
+	};
+	function wrapperHide(){
+			$("#wrapper").hide();
+			$("#scrollerBox").html("");
+	};
+	function historyBoxShow(){
+			$(".search_history_box").show();
+	};
+	function historyBoxHide(){
+			$(".search_history_box").hide();
+	};
+
+  //搜索请求数据
+	var search_history_arr;
+  function getData(searchStr){
+			//pageScroll(page, nameSearchStr);
+      //alert("搜索条件改变，开始获取搜索数据啦")
+			//保存搜索历史加入本地缓存
+			var search_obj = {
+					'searchStr' : searchStr
+			};
+			search_history_arr = $api.getStorage($api.getStorage('userId')+'search_history_list');
+			var search_history_flag = false;//记录是否追加本地缓存
+			//alert(JSON.stringify(search_history_arr));
+			if(search_history_arr != [] && search_history_arr != null && search_history_arr != "" && search_history_arr != undefined){
+					var search_history_flag_ = (function(){
+							for (var j = 0; j < search_history_arr.length; j++) {
+									if(search_history_arr[j].searchStr == searchStr){
+											search_history_flag = true;//遍历本地缓存，有等值则不追加；否则追加
+											search_history_arr.splice(j,1);//很重要，需注意
+											return search_history_flag
+									};
+							};
+					})();
+					//通过flag判断是否追加本地缓存
+					if(!search_history_flag_){
+							search_history_arr.unshift(search_obj);
+					}else{
+							search_history_arr.unshift(search_obj);
+					};
+
+			}else{
+					search_history_arr.unshift(search_obj);
+			};
+			//需延时处理
+			setTimeout(function(){
+					$api.setStorage($api.getStorage('userId')+'search_history_list', search_history_arr);
+					//重新获取历史搜索数据
+					//alert(JSON.stringify(search_history_arr))
+					if(!search_history_flag_){//有新增时才会重新请求搜索记录
+							getHistoryData();
+					};
+			},300);
+
+			//获取数据
+			pathListData(searchStr)
+
+  }
+
+
+	//请求数据***************************************
+	function pathListData(searchStr){
+				pds.ajaxSubmit({
+					 url:"app/price/searchCrops",
+					 type : "GET",
+					 data:{
+							categoryName : searchStr
+					 },
+					 success:function(e){
+							//alert("success")
+							//alert(JSON.stringify(e))
+              $(".search_history_box").hide();
+							$("#wrapper").show();
+							if (e.status == "ok") {
+									var data = e.data;
+									if (data != "" && data != null && data != []) {
+											var plantsStr = "";
+											for (var i = 0; i < data.length; i++) {
+												 if (data[i].categoryName != "" && data[i].categoryName != null && data[i].id != "" && data[i].id != null) {
+														plantsStr += '<li data-id="'+ data[i].id +'">'+ data[i].categoryName +'</li>';
+												 }
+											};
+											$("#scrollerBox").html(plantsStr);
+											//修改选中作物样式
+											$("#scrollerBox li").on("click",function(){
+													$(this).addClass("select").siblings().removeClass("select");
+													var plantName = $(this).text();
+													var plantId = $(this).attr("data-id");
+													api.execScript({
+															name: 'market-index-win',
+															script: 'plantDo("'+ plantName +'","'+ plantId +'")'
+													});
+													api.execScript({
+                              name: 'market-index-win',
+                              frameName: 'morePrice-frm',
+                              script: 'plantDo("'+ plantId +'","'+ plantName +'")'
+                          });
+                          api.execScript({
+                              name: 'market-index-win',
+                              frameName: 'marketPrice-frm',
+                              script: 'plantDo("'+ plantId +'","'+ plantName +'")'
+                          });
+													//调用win页面获取数据方法
+													// api.execScript({
+													// 		name: 'market-index-win',
+													// 		frameName: api.pageParam.frmName,
+													// 		script: 'dataInit()'
+													// });
+													setTimeout(function(){
+															api.execScript({
+																name: 'market-index-win',
+																frameName: 'morePrice-frm',
+																script: 'dataInit()'
+															});
+															api.execScript({
+																name: 'market-index-win',
+																frameName: 'marketPrice-frm',
+																script: 'dataInit()'
+															});
+															api.closeToWin({
+															    name: 'market-index-win'
+															});
+													},300)
+
+											});
+									}else{
+											$("#scrollerBox").html('<li style="text-align:center!important;">暂无相关作物，请重新搜索</li>');
+									}
+							}else{
+									api.alert({msg:"获取数据失败，请重试!"});
+							}
+					 },
+					 error:function(e){
+							api.alert({msg:"服务器异常，请联系管理员!"});
+					 }
+				});
+	};
+
+
+	//点击跳转
+	function openMapInfo(obj){
+				var date = $(obj).parents().attr("data-date");
+				var id = $(obj).parents().attr("data-id");
+				var tel = $(obj).parents().attr("data-tel");
+				var landsId = $(obj).parents().attr("data-landId");
+				var headerImgSrc = $(obj).parents().attr("data-photo");
+				//alert(date+"**********"+id+'**********'+1);
+				api.openWin({
+					name : "employeePath_info_win",
+					url : "widget://html/EmployeePath/employeePath_info_win.html",
+					reload : true,
+					slidBackEnabled : false,
+					pageParam : {
+						 pathDate : date,
+						 pathId : id,
+						 pathTel : tel,
+						 pathLandId : landsId,
+						 photo : headerImgSrc
+					},
+					animation : {
+						type : "movein", //动画类型（详见动画类型常量）
+						subType : "from_right", //动画子类型（详见动画子类型常量）
+						duration : 300 //动画过渡时间，默认300毫秒
+					}
+				});
+	};
+
+	//页面回到顶部
+	function scrollToTop(){
+			$("#wrapper").on("scroll",function(){
+					var scrollTop = $("#wrapper").scrollTop();
+					if(scrollTop >= 300){
+							$("#body_totop_btn").show().off("click").on("click",function(){
+									$("#wrapper").animate({'scrollTop': '0px'}, 200);
+							})
+					}else{
+							$("#body_totop_btn").hide();
+					}
+			})
+	};
+
+
+  //搜索历史数据
+  function getHistoryData(){
+      var search_history_list_arr = $api.getStorage($api.getStorage('userId')+'search_history_list');
+			//alert(JSON.stringify(search_history_list_arr[2]));
+			if(search_history_list_arr != '' && search_history_list_arr != null && search_history_list_arr != []  && search_history_list_arr != undefined){
+					$(".clear_search_history_btn").show();
+					var search_history_list_str = "";
+					for (var i = 0; i < 10; i++) {
+							if (search_history_list_arr[i] != null && search_history_list_arr[i] != "" && search_history_list_arr[i] != undefined && search_history_list_arr[i].searchStr != "" && search_history_list_arr[i].searchStr != null && search_history_list_arr[i].searchStr != undefined) {
+									search_history_list_str += '<span class="spans searchSpan_active" onclick="getData($(this).text())">'+ search_history_list_arr[i].searchStr +'<i class="span_ok"><i><i class="span_ic"></i></span>';
+							}
+					};
+					//alert(JSON.stringify(search_history_list_str));
+					setTimeout(function(){
+						$(".search_history_list_content").html(search_history_list_str);
+						checkActive();
+					},300)
+			}else{
+					empty_search_history();
+			}
+  }
+  //清空input框
+  function emptyInput(){
+	    $("#header_search_input").val("");
+	    $("#clearMsg_btn").hide();
+  }
+  //清空搜索历史
+  function empty_search_history(){
+      $(".search_history_list_content").html("暂无搜索历史记录");
+			$("#wrapper .scroller ul").html("");
+			$api.setStorage($api.getStorage('userId')+'search_history_list', []);
+			//$api.clearStorage('search_history_list');
+			$(".clear_search_history_btn").hide();
+			emptyInput();
+  };
+
+	//搜索历史字段按钮点击样式
+	function checkActive(){
+			$(".search_history_list_content span").off("click").on("click",function(){
+					$(".spans").css({"backgroundColor" : "#fff"})
+					$(this).css({
+							"backgroundColor" : "#E4FFDD"
+					});
+					// $(".span_ok").removeClass("ok");
+					// $(".span_ic").removeClass("ic");
+					//$(this).removeClass("searchSpan").addClass("searchSpan_active");
+					// $(this).next(".span_ok").addClass("ok");
+					// $(this).next(".span_ic").addClass("ic");
+			})
+	}
+
+	//打开技术详情页面***************************************************
+	function openTechTransferInfo(id){
+		api.openWin({
+			name : "frm_home_tech_transfer_info",
+			url : "widget://html/home/techTransfer/win_home_tech_transfer_info.html",
+			reload : true,
+			selecteIndex : '3',
+			slidBackEnabled : false,
+			pageParam : {
+					contentId : id
+			},
+			animation : {
+				type : "movein", //动画类型（详见动画类型常量）
+				subType : "from_right", //动画子类型（详见动画子类型常量）
+				duration : 300 //动画过渡时间，默认300毫秒
+			}
+		});
+	};
+
+	//获取当前时间，格式YYYY-MM-DD
+    function getNowFormatDate() {
+        var date = new Date();
+        var seperator1 = "-";
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = year + seperator1 + month + seperator1 + strDate;
+        return currentdate;
+    }
+
+	//返回上一级********************************************************************
+	function back() {
+			api.closeWin();
+	}
+</script>
+</html>

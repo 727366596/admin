@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	  <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>员工轨迹列表搜索</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/common/public.css" />
+    <script type="text/javascript" src="../../../script/common/rem.js"></script>
+    <style>
+         html,body{
+             width: 100%;
+             height: 100%;
+             overflow-x: hidden;
+             overflow-y: auto;
+             background-color: #f3f4f4;
+         }
+         .content{
+             width: 100%;
+             height: 100%;
+             overflow-x: hidden;
+             overflow-y: auto;
+             -webkit-overflow-scrolling:touch;
+             background-color: #fff;
+             position: relative;
+         }
+         .content::-webkit-scrollbar {
+ 				    display: none;
+ 				 }
+         .content-list{
+             width: 100%;
+         }
+         li{
+             width: 100%;
+             height:1.0rem;
+             line-height: 1.0rem;
+             border-bottom: solid 1px #f3f4f4;
+             font-size: 0.3rem;
+             color: #666666;
+             background-color: #fff;
+             padding: 0 0.3rem;
+         }
+         li.letter{
+             height: 0.5rem;
+             line-height: 0.5rem;
+             background-color: #f3f4f4;
+             color: #999999;
+         }
+         li.select{
+             background-color: #f9f9f9;
+             color: #00c558;
+         }
+         .nav{
+             width: 1.0rem;
+             height: 100%;
+             position: absolute;
+             top: 0.05rem;
+             right: 0;
+             overflow-y: auto;
+             display: -webkit-box;
+       			 display: -webkit-flex;
+       		 	 display:flex;
+
+       		   -webkit-box-orient: vertical;
+       			 -webkit-flex-flow: column;
+       			 flex-flow: column;
+
+
+       			 -webkit-box-pack: start;
+       			 -webkit-justify-content: flex-start;
+       			 justify-content: flex-start;
+
+       			 -webkit-box-align: center;
+       			 -webkit-align-items: center;
+       			 align-items: center;
+         }
+         .nav>span{
+             width: 20px;
+             height: 20px;
+             text-align: center;
+             line-height: 20px;
+             font-size: 0.3rem;
+             color: #666666;
+             background-color: #fff;
+             border-radius: 50%;
+             margin-bottom: 0.1rem;
+         }
+         .nav>span.active{
+             color: #fff;
+             font-size: 0.36rem;
+             background-color: #00c558;
+         }
+    </style>
+  </head>
+  <body>
+      <div class="content">
+          <ul class="content-list">
+              <!-- <li id="A" class="letter">A</li>
+              <li>菠菜</li> -->
+          </ul>
+      </div>
+      <div class="nav">
+          <!-- <span class="active">A</span>
+          <span>B</span> -->
+      </div>
+  </body>
+<script type="text/javascript" src="../../../script/common/api.js"></script>
+<script type="text/javascript" src="../../../script/common/jquery.min.js"></script>
+<script type="text/javascript" src="../../../script/common/pds.ajax.js"></script>
+<script type="text/javascript">
+	apiready = function(){
+      //获取作物
+      getPlantData();
+      //alert(api.pageParam.frmName)
+	};
+
+  //字母导航监听
+  function tabCheck(){
+      $(".content").animate({"scrollTop" : "0"},0);
+      //点击字母
+      var top = 0;
+      $(".nav span").off("click").on("click", function (event) {
+          $(this).addClass("active").siblings().removeClass("active");
+          var letterStr = $(this).text();
+          var letterPositonY = $("#"+letterStr).offset().top;
+          if (letterPositonY >= 0) {
+              top += letterPositonY;
+          }else{
+              top -= letterPositonY*-1;
+          };
+          $(".content").animate({"scrollTop" : top+"px"},0);
+      });
+      //监听页面滚动
+      $(".content").scroll(function(){
+          var letters = $(this).find(".letter");
+          letters.each(function(index,el){
+              var letterY = $(this).offset().top;
+              if (letterY <= 0) {
+                  $($(".nav span")[index]).addClass("active").siblings().removeClass("active");
+              }
+          });
+      });
+  }
+
+  //获取我的作物数据
+  function getPlantData(){
+      pds.ajaxSubmit({
+          type: "GET",
+          url:"app/price/allCrops",
+          success:function(e){
+              //alert("success");
+              //alert(JSON.stringify(e));
+              if (e.status == "ok") {
+                  var data = e.data;
+                  if (data != "" && data != null && data != {}) {
+                      var letterKeys = Object.keys(data).sort();//获取字母键名组成的数组,并排序
+                      var plantsStr = "", navStr = "";
+                      for (var i = 0; i < letterKeys.length; i++) {
+                          var letKey = letterKeys[i];//获取字母键名
+                          var navClassName = "";
+                          if (i == 0) {
+                              navClassName = "active";
+                          };
+                          navStr += '<span class="'+ navClassName +'">'+ letKey +'</span>';
+                          var letData = data[letKey];//获取字母对应作物数组
+                          var letStr = "", letDataStr = "";
+                          if (letData != "" && letData != null && letData != []) {
+                              letStr = '<li data-id="" id="'+ letKey +'" class="letter">'+ letKey +'</li>';
+                              for (var j = 0; j < letData.length; j++) {
+                                  letDataStr += '<li data-id="'+ letData[j].id +'">'+ letData[j].categoryName +'</li>';
+                              };
+                              plantsStr += letStr + letDataStr;
+                          }
+                      };
+                      $(".content-list").html(plantsStr);
+                      //修改选中作物样式
+                      $(".content-list .letter").siblings("li").on("click",function(){
+                          $(this).addClass("select").siblings().removeClass("select");
+                          var plantName = $(this).text();
+                          var plantId = $(this).attr("data-id");
+                          //win页面将作物名字写入头部
+                          api.execScript({
+                              name: 'market-index-win',
+                              script: 'plantDo("'+ plantName +'","'+ plantId +'")'
+                          });
+                          api.execScript({
+                              name: 'market-index-win',
+                              frameName: 'morePrice-frm',
+                              script: 'plantDo("'+ plantId +'","'+ plantName +'")'
+                          });
+                          api.execScript({
+                              name: 'market-index-win',
+                              frameName: 'marketPrice-frm',
+                              script: 'plantDo("'+ plantId +'","'+ plantName +'")'
+                          });
+                          //调用win页面获取数据方法
+                          console.log("allPlant*****************"+api.pageParam.frmName)
+                          // api.execScript({
+                          //     name: 'market-index-win',
+                          //     frameName: api.pageParam.frmName,
+                          //     script: 'dataInit()'
+                          // });
+                          setTimeout(function(){
+                              api.execScript({
+                                name: 'market-index-win',
+                                frameName: 'morePrice-frm',
+                                script: 'dataInit()'
+                              });
+                              api.execScript({
+                                name: 'market-index-win',
+                                frameName: 'marketPrice-frm',
+                                script: 'dataInit()'
+                              });
+                              api.closeWin();
+                          },300)
+                      });
+                      //启动字母导航
+                      $(".nav").html(navStr);
+                      tabCheck();
+
+                  }
+              }
+
+          },
+          error : function(e){
+              api.alert({msg: '获取数据失败，请重试！'});
+          }
+      });
+  };
+
+  //选中默认作物
+  function readAllPlant(name){
+      $(".content-list li").each(function(index,el){
+          var plantName_ = $(this).text();
+          if (plantName_ == name) {
+              $(this).addClass("select").siblings().removeClass("select");
+              //默认项置顶
+              // var thisLetterPositonY = $(this).offset().top;
+              // $(".content").animate({"scrollTop" : thisLetterPositonY+"px"},0);
+              return false;
+          }
+      })
+  }
+
+</script>
+</html>

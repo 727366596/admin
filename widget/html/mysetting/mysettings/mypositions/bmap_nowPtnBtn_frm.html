@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>打点按钮frm</title>
+		<!-- <link rel="stylesheet" type="text/css" href="../../../../css/api.css"/> -->
+    <!-- <link rel="stylesheet" type="text/css" href="../../../../css/aui.css" /> -->
+		<script src="../../../../script/common/zepto-1.2.0.min.js"></script>
+		<script type="text/javascript" src="../../../../script/common/api.js"></script>
+
+</head>
+<style type="text/css">
+.btn{
+    position: absolute;
+    top:-8px;
+    left:-8px;
+    width: 50px;
+    height:50px;
+    text-align: center;
+    line-height: 85px;
+    color: #000;
+    font-size: 10px;
+    background-image: url("../../../../image/settings/nowPtBtn_bc.png");
+    background-size: 30px 30px;
+    background-position: center 3px;
+    background-repeat: no-repeat;
+    background-color: #fff;
+    border-radius: 6px;
+}
+</style>
+<body style="position:relative;">
+  <div class="btn" onclick="ownPosition()">
+    我的位置
+  </div>
+</body>
+
+<script type="text/javascript">
+    apiready = function(){
+        api.parseTapmode();
+    }
+    function ownPosition(){
+      api.execScript({
+          frameName: 'myposition_bmap_hand_show_frm',
+          script: 'nowPosition()'
+      });
+    }
+</script>
+</html>

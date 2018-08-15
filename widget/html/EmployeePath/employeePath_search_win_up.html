@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>员工轨迹列表搜索</title>
+    <link rel="stylesheet" type="text/css" href="../../css/common/public.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common/header.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common/iscroll-style.css" />
+    <script type="text/javascript" src="../../script/common/rem-750.js"></script>
+    <style>
+				body{
+					text-align: center;
+					position: relative;
+				}
+        .header_search_input_clearMsg{
+          position: absolute;
+          top: 4px;
+          right: 4px;
+          z-index: 999;
+          height: 25px;
+          width: 25px;
+          background-image: url("../../image/common/resend_password_emptyIcon.png");
+					background-position: center center;
+					background-repeat: no-repeat;
+          background-size: 15px 15px;
+          display: none;
+        }
+        .headerSearchBox{
+          position: relative;
+          width:100%;
+          height:0.7rem;
+          border-radius: 0.7rem;
+          /*background-color: rgba(0,0,0,0.2);*/
+					background-color: #fff;
+        }
+        .headerSearchBox>input{
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 0.7rem;
+          border-radius: 0.7rem;
+          padding: 0 0.6rem;
+          line-height: 0.7rem;
+          text-align: center;
+          outline: none;
+          font-size: 0.28rem;font-family: PingFangSC-Regular, sans-serif;color: #999999;
+        }
+				.headerSearchBox>input.inputBc{
+					background-image: url("../../image/common/search_bc.png");
+					background-repeat: no-repeat;
+					background-position: 1.2rem 0.18rem;
+					background-size: 0.32rem 0.32rem;
+				}
+
+        input::-webkit-input-placeholder{
+            color: #999999;opacity:1;font-size: 0.28rem;
+        }
+        input::placeholder{
+            color: #999999;opacity:1;font-size: 0.28rem;
+        }
+				#wrapper{
+						/*position: absolute;
+						left: 0;
+						right: 0;
+						top: 1.3rem;
+						bottom: 0;
+						overflow-y: auto;
+						-webkit-overflow-scrolling: touch;*/
+						z-index: 1;
+						background-color: #fff;
+						display: none;
+				}
+				#wrapper .scroller{
+					position: relative;
+						background-color: #f3f4f4;
+						width: 100%;
+				}
+				#wrapper .scroller>ul{
+						width:100%;
+						background-color: #f3f4f4;
+						padding: 0.01rem 0;
+				}
+
+				#wrapper .scroller>ul>li{
+						width:100%;
+						background-color: #fff;
+						margin-top: 0.3rem;
+						/*padding: 0.15rem 0.2rem;*/
+				}
+				#wrapper .scroller>ul>li:last-of-type{
+						margin-bottom: 0.3rem;
+				}
+				#wrapper .scroller>ul>li>div.scrollerBox-top{
+						position: relative;
+						width: 100%;
+						height: 2.65rem;
+						display: -webkit-box;
+						display: -webkit-flex;
+						display:flex;
+
+						-webkit-box-orient: horizontal;
+						-webkit-flex-flow: row;
+						flex-flow: row;
+
+						-webkit-box-pack: justify;
+						-webkit-justify-content: space-between;
+						justify-content: space-between;
+
+						-webkit-box-align: center;
+						-webkit-align-items: center;
+						align-items: center;
+				}
+				#wrapper .scroller>ul>li>.scrollerBox-top>div.scrollerBox-left{
+						height: 100%;
+						width: 37%;
+						position: relative;
+				}
+				#wrapper .scroller>ul>li>.scrollerBox-top>div.scrollerBox-left a{
+						position: absolute;
+						left: 50%;
+						top: 50%;
+						margin-left: -0.75rem;
+						margin-top: -0.75rem;
+						display: inline-block;
+						width: 1.5rem;
+						height: 1.5rem;
+						border: solid 0.08rem #f3f4f4;
+						border-radius: 50%;
+						overflow: hidden;
+				}
+				#wrapper .scroller>ul>li>.scrollerBox-top>div.scrollerBox-left a>img{
+						width: 100%;
+						height: 100%;
+						outline: none;
+				}
+				#wrapper .scroller>ul>li>.scrollerBox-top>div.scrollerBox-right{
+						height: 100%;
+						width: 63%;
+						padding: 0.22rem 0;
+				}
+				#wrapper .scroller>ul>li>.scrollerBox-top>div.scrollerBox-right>ul{
+						width: 100%;
+						height: 100%;
+				}
+				#wrapper .scroller>ul>li>.scrollerBox-top>div.scrollerBox-right>ul>li{
+						width: 100%;
+						height: 33.33%;
+						padding-left: 0.5rem;
+						background-position: left center;
+						background-size: 0.3rem 0.42rem;
+						background-repeat: no-repeat;
+						display: -webkit-box;
+						display: -webkit-flex;
+						display:flex;
+
+						-webkit-box-orient: horizontal;
+						-webkit-flex-flow: row;
+						flex-flow: row;
+
+						-webkit-box-pack: start;
+						-webkit-justify-content: flex-start;
+						justify-content: flex-start;
+
+						-webkit-box-align: center;
+						-webkit-align-items: center;
+						align-items: center;
+				}
+				#wrapper .scroller>ul>li>.scrollerBox-top>div.scrollerBox-right>ul>li:first-of-type{
+						background-image: url("../../image/employeePath/employee_name_bc.png");
+				}
+				#wrapper .scroller>ul>li>.scrollerBox-top>div.scrollerBox-right>ul>li:nth-of-type(2){
+						background-image: url("../../image/employeePath/employee_tel_bc.png");
+				}
+				#wrapper .scroller>ul>li>.scrollerBox-top>div.scrollerBox-right>ul>li:last-of-type{
+						background-image: url("../../image/employeePath/employee_path_bc.png");
+				}
+				#wrapper .scroller>ul>li>.scrollerBox-top>div.scrollerBox-right>ul>li>span{
+						float: left;
+						height: 100%;
+						line-height: 0.85rem;
+						font-size: 0.3rem;font-family: PingFangSC-Regular, sans-serif;color: #666666;
+				}
+				#wrapper .scroller>ul>li>.scrollerBox-top>div.scrollerBox-right>ul>li>span.online{
+						font-size: 0.24rem;font-family: PingFangSC-Regular, sans-serif;color: #82e268;
+						margin-left: 0.15rem;line-height:0.795rem;
+				}
+				#wrapper .scroller>ul>li>.scrollerBox-top>div.scrollerBox-right>ul>li>span.outline{
+						font-size: 0.24rem;font-family: PingFangSC-Regular, sans-serif;color: #999999;opacity: 0.5;
+						margin-left: 0.15rem;line-height:0.795rem;
+				}
+				#wrapper .scroller>ul>li>.scrollerBox-bottom{
+						width: 100%;
+						height: 0.8rem;
+						line-height: 0.8rem;
+						padding: 0 0.44rem;
+						border-top: solid 1px #f3f4f4;
+						border-bottom: solid 1px #f3f4f4;
+						text-align: center;
+				}
+				#wrapper .scroller>ul>li>.scrollerBox-bottom>span{
+						display: inline-block;
+						vertical-align: top;
+						width: 50%;
+						height: 100%;
+						line-height: 0.8rem;
+				}
+				#wrapper .scroller>ul>li>.scrollerBox-bottom>span.pathDate{
+						text-align: left;
+						font-size: 0.26rem;font-family: PingFangSC-Regular, sans-serif;color: #999999;
+				}
+				#wrapper .scroller>ul>li>.scrollerBox-bottom>span.pathInfo{
+						text-align: right;
+						font-size: 0.28rem;font-family: PingFangSC-Regular, sans-serif;color: #579fff;
+				}
+				#wrapper .scroller>ul>li>.scrollerBox-bottom>span.center{
+						text-align: center;
+						font-size: 0.28rem;font-family: PingFangSC-Regular, sans-serif;color: #579fff;
+				}
+
+
+				.search_history_box{
+						width: 100%;
+				}
+        .search_history_list{
+            width: 100%;
+						display: inline-block;
+						vertical-align: top;
+						margin:0px auto;
+						padding: 0.2rem 0.44rem;
+        }
+        .search_history_title{
+	          width: 100%;
+	          height: 0.8rem;
+						line-height: 0.85rem;
+						padding-left: 23px;
+						background: url("../../image/common/time_bc.png") no-repeat 0px center;
+						background-size: 18px 18px;
+						text-align: left;
+	          font-size: 0.30rem;font-family: PingFangSC-Regular, sans-serif;color: #666666;
+        }
+        .search_history_list_content{
+	          /*padding: 15px 15px 30px 15px;*/
+						text-align: center;
+						font-size: 0.30rem;font-family: PingFangSC-Regular, sans-serif;color: #999999;
+        }
+        .searchSpan{
+	        	/*position: relative;*/
+	          /*float: left;*/
+						display: inline-block;
+						vertical-align: top;
+	          min-width: 1.5rem;
+						height: 0.6rem;
+	          padding:0 10px;
+	          border: solid 1px #abd677;
+						color: #abd677;
+						background-color: #f2f2f2;
+						margin:0 0.3rem 0.3rem 0;
+	          border-radius: 5px;
+	          font-size: 0.28rem;font-family: PingFangSC-Regular, sans-serif;
+        }
+				.searchSpan_active{
+						/*position: relative;*/
+	          float: left;
+	          min-width: 1.0rem;
+						height: 0.55rem;
+						line-height: 0.55rem;
+	          padding: 0 10px;
+	          text-align: center;
+	          border: solid 1px #82e268;
+						color: #82e268;
+						background-color: #fff;
+						margin:5px 10px 5px 0;
+	          border-radius: 5px;
+	          font-size: 0.28rem;font-family: PingFangSC-Regular, sans-serif;
+				}
+        .clear_search_history_btn{
+	          display: none;
+	          border: solid 1px #b1bbb0;
+	          padding: 5px 10px;
+	          border-radius: 5px;
+	          margin: 0.2rem auto;
+	          outline: none;
+	          font-size: 0.26rem;font-family: PingFangSC-Regular, sans-serif;color: #999999;
+        }
+
+				.ok{
+						position: absolute;
+						right: 0;
+						top: 0;
+						width: 0;
+				    height: 0;
+				    border-top: 16px solid #82e268;
+				    border-left: 20px solid transparent;
+				}
+				.ic{
+						position: absolute;
+						right:2px;
+						top: -14px;
+						height: 5px;
+						width: 8px;
+						background: url("../../image/common/delimit_ic.png") no-repeat left center;
+						background-size: 100% 100%;
+						z-index: 99;
+				}
+				#body_totop_btn{
+						position: fixed;
+						bottom:0.5rem;
+						right:0.2rem;
+						width:1.2rem;
+						height:1.2rem;
+						z-index: 999;
+						line-height: 2.25rem;
+						font-size: 0.2rem;font-family: PingFangSC-Regular, sans-serif;color: #AEADAD;
+						text-align: center;
+						background: url("../../image/common/rocket_up.png") no-repeat center 3px;
+						background-size: 70% 70%;
+						background-color: rgba(0,0,0,0);
+						border-radius: 6px;
+						font-size: 0.20rem;
+						color: #20c714;
+						display: none;
+				}
+    </style>
+</head>
+<body>
+    <div id="header">
+        <div class="headerLeft" style="background-image:none;"></div><!-- width:0; -->
+        <div class="headerCenter" style=""><!-- width:80%;margin-left:0.3rem; -->
+            <span class="headerSearchBox"><input type="text" class="inputBc" name="header_search_input" id="header_search_input" placeholder="请输入搜索内容"/><i id="clearMsg_btn" class="header_search_input_clearMsg"></i></span>
+        </div>
+        <div class="headerRight" onclick="back()">取消</div>
+    </div>
+		<div class="search_history_box">
+			<div class="search_history_list">
+					<p class="search_history_title">最近搜索</p>
+					<div class="search_history_list_content clearFloat">
+							<!-- <span>马铃薯</span>
+							<span>西蓝花</span>
+							<span>马铃薯</span>
+							<span>河北省丰安天下第一种植基地</span>
+							<span>马铃薯</span>
+							<span>西蓝花</span>
+							<span>马铃薯</span>
+							<span>河北省丰安天下第一种植基地</span> -->
+					</div>
+			</div>
+			<button type="button" name="button" class="clear_search_history_btn" onclick="empty_search_history()">清空历史记录</button>
+		</div>
+    <div id="wrapper">
+        <div class="scroller">
+            <ul id="scrollerBox">
+                <!-- <li onclick="openTechTransferInfo(1)">
+                   <div class="transferContent">
+                       <p>晚熟大王柑橘秋季管理要点：做好三点，带来丰产！</p>
+                       <p>2017-08-09</p>
+                   </div>
+                   <div class="transferImg">
+                       <img src="../../../image/home_technology_transfer_03.png">
+                   </div>
+                </li> -->
+
+            </ul>
+						<div class="more" style="height:1.0rem;background-color:#fff;">
+								<i class="pull_icon"></i>
+								<span style="font-size: 0.28rem;font-family: PingFangSC-Regular, sans-serif;color: #666666;">上拉加载更多...</span>
+						</div>
+        </div>
+
+    </div>
+
+		<div id="body_totop_btn">
+				返回顶部
+		</div>
+</body>
+<script type="text/javascript" src="../../script/common/api.js"></script>
+<script type="text/javascript" src="../../script/common/jquery.min.js"></script>
+<!-- <script type="text/javascript" src="../../script/common/zepto-1.2.0.min.js"></script> -->
+<script type="text/javascript" src="../../script/common/iscroll.js"></script>
+<script type="text/javascript" src="../../script/common/common/pds.ajax.js"></script>
+<script type="text/javascript">
+	apiready = function(){
+    //适配iOS7+，Android4.4+状态栏沉浸式效果，详见config文档statusBarAppearance字段
+    var header = $api.byId('header');
+    $api.fixStatusBar(header);
+    var headerH = $api.offset(header).h;
+    $("body").css({"paddingTop":headerH+"px"});
+		//获取搜索历史信息
+		getHistoryData();
+    //监听搜索框
+    //var url = "/app/content/techContentList";//搜索接口地址
+    inputListen();
+
+	};
+
+
+  //监听input框
+  function inputListen(){
+      //监听软键盘回车事件
+      $('#header_search_input').bind('keypress', function(event) {   //回车事件绑定
+          if (event.keyCode == "13") {  //js监测到为为回车事件时 触发
+              event.preventDefault();   //阻止页面自动刷新，重复加载
+              var searchStr = $(this).val();
+							if(searchStr == ""){
+									api.alert({msg: '请输入搜索内容'});
+									return;
+							};
+							$("#scrollerBox").html("");
+							page=1;
+							//pageScroll(page, searchStr);
+							setTimeout(function(){
+								//$("#wrapper .scroller").css({"top":"0rem"});
+			  				//$("#scrollerBox").html("");
+								getData(page, searchStr);
+							},0)
+          }
+      });
+      //实时监听input框值变化
+      $("#header_search_input").bind("input propertychange", function(e){
+          var this_ = $(this);
+          if (e.type === "input" || e.orignalEvent.propertyName === "value") {
+              var strLength = this.value.length;
+              if(strLength > 0){
+                  this_.removeClass("inputBc");
+                  $("#clearMsg_btn").show().click(function(){
+                      this_.val("").addClass("inputBc");
+                      $(this).hide();
+											$("#scrollerBox").html("");
+											$("#wrapper").hide();
+											$(".search_history_box").show();
+                  });
+              }else {
+                  this_.addClass("inputBc");
+                  $("#clearMsg_btn").hide();
+              }
+
+          }
+      })
+  };
+
+  //搜索请求数据
+	var search_history_arr;
+  function getData(page, nameSearchStr){
+			//pageScroll(page, nameSearchStr);
+      //alert("搜索条件改变，开始获取搜索数据啦")
+			//保存搜索历史加入本地缓存
+			var search_obj = {
+					'searchStr' : nameSearchStr
+			};
+			search_history_arr = $api.getStorage('search_history_list');
+			var search_history_flag = false;//记录是否追加本地缓存
+			//alert(JSON.stringify(search_history_arr));
+			if(search_history_arr != [] && search_history_arr != null && search_history_arr != "" && search_history_arr != undefined){
+					var search_history_flag_ = (function(){
+							for (var j = 0; j < search_history_arr.length; j++) {
+									if(search_history_arr[j].searchStr == nameSearchStr){
+											search_history_flag = true;//遍历本地缓存，有等值则不追加；否则追加
+											search_history_arr.splice(j,1);//很重要，需注意
+											return search_history_flag
+									};
+							};
+					})();
+					//通过flag判断是否追加本地缓存
+					if(!search_history_flag_){
+							search_history_arr.unshift(search_obj);
+					}else{
+							search_history_arr.unshift(search_obj);
+					};
+			}else{
+					search_history_arr.unshift(search_obj);
+			};
+			//需延时处理
+			setTimeout(function(){
+					$api.setStorage('search_history_list', search_history_arr);
+					//重新获取历史搜索数据
+					//alert(JSON.stringify(search_history_arr))
+					if(!search_history_flag_){//有新增时才会重新请求搜索记录
+							getHistoryData();
+					};
+			},300);
+
+			//获取数据
+			pathListData(page, nameSearchStr)
+
+  }
+
+
+	//请求数据***************************************
+	var page = 1, pageSize = 4;
+	function pathListData(page, name){
+
+				//page++;
+				pds.ajaxSubmit({
+					 url:"app/coor/selectByUser",
+					 type : "GET",
+					 data:{
+								"data":JSON.stringify({
+										"page" : page,
+										"pageSize" : pageSize
+								}),
+								"name" : name,
+								"date" : "2",
+								"flag" : "1"
+					 },
+					 success:function(e){
+							//alert("success")
+							//alert(JSON.stringify(e))
+							$(".search_history_box").hide();
+							$("#wrapper").show();
+							$('.pull_icon').addClass('loading');
+							$('.more span').text('搜索中...');
+							setTimeout(function(){
+								if(e.total > 0){
+										var techListArr = e.data;
+										var techListStr = "";
+										var articleTypeName = null;
+										//console.log("*******************"+techListArr.length+"**********************")
+										if(techListArr != "" && techListArr != null && techListArr != []){
+												//$("#emptyPage").hide();
+												//$('.more').show();
+												var headerImgSrc = null, pathDate = null, statusHtml = null, statusClass = null, statusText = null;
+												for (var i = 0; i < techListArr.length; i++) {
+														//显示用户头像
+														headerImgSrc = "../../image/common/header_bc.png";
+														if(techListArr[i].photo != "" && techListArr[i].photo != null){
+																//headerImgSrc = techListArr[i].photo;
+																headerImgSrc = pds.defaultUri+"app/attach/view/"+techListArr[i].photo;
+														};
+
+														//显示以前走的路日期
+														var todayDate = getNowFormatDate();
+														//今日日期
+														pathDate = '<span class="pathInfo center" onclick="openMapInfo(this)">查看轨迹</span>';
+														if(techListArr[i].createDate.split(" ")[0] != todayDate && techListArr[i].createDate != "" && techListArr[i].createDate != null){
+																//以前日期
+																pathDate = '<span class="pathDate">'+ techListArr[i].createDate.split(" ")[0] +'</span><span class="pathInfo" onclick="openMapInfo(this)">查看轨迹</span>';
+														};
+														//是否显示今日在线状态
+														if(techListArr[i].createDate.split(" ")[0] == todayDate){
+																//修改在线状态字体样式
+																if(techListArr[i].status == 109){
+																	statusClass = "online";
+																	statusText = "在线";
+																}else{
+																	statusClass = "outline";
+																	statusText = "离线";
+																};
+																statusHtml = '<span class="'+ statusClass +'">['+ statusText +']</span>';
+														}else{
+																statusHtml = '';
+														}
+														//拼接Html结构
+														techListStr += '<li>'+
+																								'<div class="scrollerBox-top">'+
+																										'<div class="scrollerBox-left" style="">'+
+																												'<a href="#"><img src="'+ headerImgSrc +'"/></a>'+
+																										'</div>'+
+																										'<div class="scrollerBox-right" style="">'+
+																												'<ul>'+
+																														'<li><span>姓名：</span><span>'+ techListArr[i].name +'</span>'+ statusHtml +'</li>'+
+																														'<li><span>电话：</span><span>'+ techListArr[i].mobile +'</span></li>'+
+																														'<li><span>走了多少公里：</span><span>'+ techListArr[i].distance/1000 +'公里</span></li>'+
+																												'</ul>'+
+																										'</div>'+
+																								'</div>'+
+																								'<div class="scrollerBox-bottom" data-photo="'+ headerImgSrc +'" data-landId="'+ techListArr[i].landIds +'"data-tel="'+ techListArr[i].mobile +'" data-date="'+ techListArr[i].createDate +'" data-id="'+ techListArr[i].createBy +'">'+ pathDate +'</div>'+
+																					'</li>';
+												};
+												$("#scrollerBox").append(techListStr);
+												scrollToTop();
+												var total = e.total;
+												// 判断是否还有数据，如果还有数据监听滚动，滚动加载
+												if(page*pageSize < total){
+														$('.pull_icon').removeClass('flip loading');
+														$('.more span').text('上拉加载更多...')
+														api.addEventListener({
+																name:'scrolltobottom',
+														}, function(ret, err){
+																page++;
+																//alert('已滚动到底部');
+																$('.more span').text('搜索中...');
+																$('.pull_icon').addClass('loading');
+																// alert(page);
+																setTimeout(function(){
+																		pathListData(page,name);
+																},300)
+
+														});
+												}else{
+														$('.pull_icon').removeClass('flip loading');
+														$('.more span').text('暂无更多数据...');
+														api.removeEventListener({
+																name: 'scrolltobottom'
+														});
+												};
+
+										}else{
+												$('.pull_icon').removeClass('flip loading');
+												$('.pull_icon').removeClass('loading');
+												$('.more span').text('暂无数据...')
+										}
+
+								}else{
+										$('.pull_icon').removeClass('flip loading');
+										$('.pull_icon').removeClass('loading');
+										$('.more span').text('搜索无结果...');
+								};
+
+							},300)
+
+
+					 },
+					 error:function(e){
+							api.alert({msg:"服务器异常，请联系管理员!"});
+					 }
+				});
+	};
+
+
+	//点击跳转
+	function openMapInfo(obj){
+				var date = $(obj).parents().attr("data-date");
+				var id = $(obj).parents().attr("data-id");
+				var tel = $(obj).parents().attr("data-tel");
+				var landsId = $(obj).parents().attr("data-landId");
+				var headerImgSrc = $(obj).parents().attr("data-photo");
+				//alert(date+"**********"+id+'**********'+1);
+				api.openWin({
+					name : "employeePath_info_win",
+					url : "widget://html/EmployeePath/employeePath_info_win.html",
+					reload : true,
+					slidBackEnabled : false,
+					pageParam : {
+						 pathDate : date,
+						 pathId : id,
+						 pathTel : tel,
+						 pathLandId : landsId,
+						 photo : headerImgSrc
+					},
+					animation : {
+						type : "movein", //动画类型（详见动画类型常量）
+						subType : "from_right", //动画子类型（详见动画子类型常量）
+						duration : 300 //动画过渡时间，默认300毫秒
+					}
+				});
+	};
+
+
+	//上滑刷新
+	var myscroll;
+	function pageScroll(page, nameSearchStr){
+			//alert(page+"**********"+total+"*********"+navId)
+			setTimeout(function(){
+				//var fingerMoveFlag = false;
+				myscroll = new iScroll("wrapper",{
+						topOffset: 0,
+						onScrollMove:function(){
+							if (this.y<(this.maxScrollY)) {
+								$('.pull_icon').addClass('flip');
+								$('.pull_icon').removeClass('loading');
+								$('.more span').text('释放加载...');
+							}else{
+								$('.pull_icon').removeClass('flip loading');
+								$('.more span').text('上拉加载更多...')
+							}
+						},
+						onScrollEnd:function(){
+							if ($('.pull_icon').hasClass('flip')) {
+								$('.pull_icon').addClass('loading');
+								$('.more span').text('加载中...');
+								setTimeout(function(){
+										page++;
+										pathListData(page, nameSearchStr)
+								},300)
+							}
+						},
+						onRefresh:function(){
+							$('.more').removeClass('flip');
+							$('.more span').text('上拉加载更多...');
+						}
+				});
+			},0)
+	}
+
+	// 重新计算滚动的高度
+	function onCompletion() {
+			// Update here your DOM
+			setTimeout(function () {
+					myscroll.refresh();
+			}, 0);
+	};
+
+	//页面回到顶部
+	function scrollToTop(){
+			$("#wrapper").on("scroll",function(){
+					var scrollTop = $("#wrapper").scrollTop();
+					if(scrollTop >= 300){
+							$("#body_totop_btn").show().off("click").on("click",function(){
+									$("#wrapper").animate({'scrollTop': '0px'}, 200);
+									//myScroll.scrollTo(0, 0, 300)
+							})
+					}else{
+							$("#body_totop_btn").hide();
+					}
+			})
+	};
+
+
+  //搜索历史数据
+  function getHistoryData(){
+      var search_history_list_arr = $api.getStorage('search_history_list');
+			//alert(JSON.stringify(search_history_list_arr[2]));
+			if(search_history_list_arr != '' && search_history_list_arr != null && search_history_list_arr != []  && search_history_list_arr != undefined){
+					$(".clear_search_history_btn").show();
+					var search_history_list_str = "";
+					for (var i = 0; i < 10; i++) {
+							if (search_history_list_arr[i] != null && search_history_list_arr[i] != "" && search_history_list_arr[i] != undefined && search_history_list_arr[i].searchStr != "" && search_history_list_arr[i].searchStr != null && search_history_list_arr[i].searchStr != undefined) {
+									search_history_list_str += '<span class="spans searchSpan_active" onclick="getData(1,$(this).text())">'+ search_history_list_arr[i].searchStr +'<i class="span_ok"><i><i class="span_ic"></i></span>';
+							}
+					};
+					//alert(JSON.stringify(search_history_list_str));
+					setTimeout(function(){
+							$(".search_history_list_content").html(search_history_list_str);
+							checkActive();
+					},300)
+			}else{
+					empty_search_history();
+			}
+  }
+  //清空input框
+  function emptyInput(){
+	    $("#header_search_input").val("");
+	    $("#clearMsg_btn").hide();
+  }
+  //清空搜索历史
+  function empty_search_history(){
+      $(".search_history_list_content").html("暂无搜索历史记录");
+			$("#wrapper .scroller ul").html("");
+			$api.setStorage('search_history_list', []);
+			//$api.clearStorage('search_history_list');
+			$(".clear_search_history_btn").hide();
+			emptyInput();
+  };
+
+	//搜索历史字段按钮点击样式
+	function checkActive(){
+			$(".search_history_list_content span").off("click").on("click",function(){
+					$(".spans").css({"backgroundColor" : "#fff"})
+					$(this).css({
+							"backgroundColor" : "#E4FFDD"
+					});
+					// $(".span_ok").removeClass("ok");
+					// $(".span_ic").removeClass("ic");
+					//$(this).removeClass("searchSpan").addClass("searchSpan_active");
+					// $(this).next(".span_ok").addClass("ok");
+					// $(this).next(".span_ic").addClass("ic");
+			})
+	}
+
+	//打开技术详情页面***************************************************
+	function openTechTransferInfo(id){
+		api.openWin({
+			name : "frm_home_tech_transfer_info",
+			url : "widget://html/home/techTransfer/win_home_tech_transfer_info.html",
+			reload : true,
+			selecteIndex : '3',
+			slidBackEnabled : false,
+			pageParam : {
+					contentId : id
+			},
+			animation : {
+				type : "movein", //动画类型（详见动画类型常量）
+				subType : "from_right", //动画子类型（详见动画子类型常量）
+				duration : 300 //动画过渡时间，默认300毫秒
+			}
+		});
+	};
+
+	//获取当前时间，格式YYYY-MM-DD
+    function getNowFormatDate() {
+        var date = new Date();
+        var seperator1 = "-";
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = year + seperator1 + month + seperator1 + strDate;
+        return currentdate;
+    }
+
+	//返回上一级********************************************************************
+	function back() {
+			api.closeWin();
+	}
+</script>
+</html>

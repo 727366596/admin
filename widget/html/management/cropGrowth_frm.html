@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<title>作物长的怎么样</title>
+		<link rel="stylesheet" type="text/css" href="../../css/common/public.css"/>
+		<!-- <link rel="stylesheet" type="text/css" href="../../css/common/header.css"/> -->
+		<link rel="stylesheet" type="text/css" href="../../css/common/swiper.min.css"/>
+		<script type="text/javascript" src="../../script/common/rem-750.js"></script>
+    <style>
+				article{
+					padding-top: 0.2rem;
+					padding-left: 0.2rem;
+					padding-right: 0.2rem;
+					padding-bottom: 0.6rem;
+					background-color: #f3f4f4;
+				}
+				section{
+					background-color: #fff;
+				}
+				#section1{
+					padding-top: 0.25rem;
+					padding-bottom: 0.25rem;
+					text-align: center;
+				}
+				#section2{
+					margin-top: 0.3rem;
+				}
+				#section1 li{
+					height: 0.8rem;
+					line-height: 0.8rem;
+					text-align: center;
+				}
+				#section1 li span{
+					display: inline-block;
+					font-size: 0.3rem;
+					width: 1.6rem;
+				  color: #666666;
+				}
+				input{
+					font-size: 0.3rem;
+					padding-top: 0.1rem;
+					padding-bottom: 0.1rem;
+					width: 3.4rem;
+					padding-left: 0.1rem;
+					color: #666666;
+					background-color: #f3f4f4;
+				}
+				button{
+					width: 5.7rem;
+					height: 0.7rem;
+					background-color: #00c558;
+					color:#ffffff;
+					font-size: 0.3rem;
+					border-radius: 0.7rem;
+					outline: 0;
+				}
+				.plantCondition{
+					height: 0.95rem;
+					font-size: 0.34rem;
+					line-height: 0.95rem;
+					color: #00c558;
+					text-align: center;
+					border-bottom: 1px solid #f6f3f3;
+				}
+				.collectionTime{
+					font-size: 0.28rem;
+					color: #666666;
+					height: 0.88rem;
+					line-height: 0.88rem;
+					text-align: center;
+				}
+				#tishi{
+					padding-top: 0.4rem;
+					padding-bottom: 0.4rem;
+					margin: 0 auto;
+					width: 6.64rem;
+					height: 8.2rem;
+				}
+				.img{
+					margin: 0 auto;
+					width: 6.64rem;
+					height: 8.2rem;
+					/*background:url("../../image/management/growth.jpg") no-repeat center center;
+					background-size: 100% 100%;*/
+				}
+				.imgShow{
+					/*width: 100%;*/
+					height: 100%;
+				}
+			 .wrap{
+			 	 position: relative;
+				 overflow-x: scroll;
+				 width: 100%;
+				 height: 1.4rem;
+			 }
+			 .slider{
+				white-space:nowrap;
+		    word-wrap:break-word;
+		    word-break:break-all;
+				padding-left: 0.2rem;
+				padding-right: 0.2rem;
+			 }
+			 .slider span{
+			 	display: inline-block;
+				margin-left: 0.2rem;
+				padding-top: 0.1rem;
+				padding-bottom: 0.1rem;
+				padding-left: 0.2rem;
+				padding-right: 0.2rem;
+				border-radius: 0.8rem;
+				font-size: 0.28rem;
+				color: #999999;
+				text-align: center;
+				border: 1px solid #ededed;
+			 }
+			 .slider span:first-child{
+			 	background-color: #A2C446;
+				color: #fff;
+				border: 0;
+			 }
+			 #section3{
+			 	margin-top: 0.3rem;
+				padding-bottom: 0.3rem;
+			 }
+			 .warningBar{
+			 	height: 1.2rem;
+				padding-top: 0.25rem;
+				padding-left: 0.2rem;
+				padding-right: 0.25rem;
+			 }
+			 .warning{
+			 	float: left;
+				margin-left: 0;
+				padding-left: 0.5rem;
+				width: 3.5rem;
+				height: 0.6rem;
+				padding-top: 0.16rem;
+				padding-bottom: 0.16rem;
+				font-size: 0.28em;
+				color: #666666;
+				background:url("../../image/management/plantIcon.jpg") no-repeat left center;
+				background-size: 0.36rem 0.47rem;
+			 }
+			 .moreInfo{
+			 	float: right;
+			 	width: 2.4rem;
+				height: 0.6rem;
+				line-height: 0.6rem;
+				font-size: 0.24rem;
+				text-align: center;
+				border-radius: 0.8rem;
+				color: #579FFF;
+				background-color: #D0E4FF;
+			 }
+			 .swiper-container{
+					margin-top: 0.5rem;
+			 }
+			 .swiper-wrapper{
+				  width: 7.08rem;
+ 			  	height: 4.6rem;
+			 }
+			 .swiper-wrapper img{
+			 	  margin: 0 auto;
+				  /*width: 100%;*/
+ 			  	height: 100%;
+			 }
+			 .updateTime{
+			 	font-style: normal;
+			 }
+    </style>
+</head>
+<body>
+<!-- <div id="header">
+        <div class="headerLeft" onclick="api.closeWin()"></div>
+        <div class="headerCenter">作物长的怎么样</div>
+        <div class="headerRight"></div>
+</div> -->
+<article>
+    <section id="section1">
+				<ul>
+					<li>
+						<span>统计时间：</span>
+						<input id="time" type="text" value="" readonly>
+					</li>
+					<li>
+						<span>地&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp块：</span>
+						<input id="land"type="text" value="" readonly>
+						<input id="landId" type="hidden">
+					</li>
+					<li>
+						<span>种的作物：</span>
+						<input id="crop" type="text" value="" readonly>
+						<input id="catId" type="hidden">
+					</li>
+				</ul>
+				<button onclick="selectSearchTerm()">点我选择</button>
+    </section>
+
+    <section id="section2">
+				<p class="plantCondition">作物长势</p>
+				<img id="tishi" src="">
+				<div id="growth">
+					<p class="collectionTime">最近采集时间：<i class="updateTime">2017-12-11</i></p>
+					<div class="img">
+						<img class="imgShow" src="">
+					</div>
+					<!-- <p id="warning" onclick="workList()">点击我查看具体情况</p> -->
+					<p class="warningBar">
+						<span class="warning">作物长势良好</span>
+						<button class="moreInfo" onclick="workList(this)">点我查看具体情况</button>
+					</p>
+					<div class="wrap">
+						<p class="slider">
+
+						</p>
+					</div>
+			</div>
+    </section>
+		<section id="section3">
+			<p class="plantCondition">地里的实际情况</p>
+			<img id="noImg" style="width:100%;height:4.96rem;display:none" src="../../image/management/shijing.png">
+			<div id="swiper-container" class="swiper-container"><!--swiper容器[可以随意更改该容器的样式-->
+			    <div class="swiper-wrapper" id="swiper-wrapper">
+			    	<div class="swiper-slide"><img src="../../image/management/no.png"></div>
+						<div class="swiper-slide"><img src="../../image/management/no.png"></div>
+						<div class="swiper-slide"><img src="../../image/management/no.png"></div>
+			    </div>
+				  <!-- <div class="swiper-pagination"></div> -->
+			    <!-- <div class="swiper-button-prev swiper-button-black"></div>
+			    <div class="swiper-button-next swiper-button-black"></div> -->
+			</div>
+		</section>
+</article>
+<script type="text/javascript" src="../../script/common/api.js"></script>
+<script type="text/javascript" src="../../script/common/zepto-1.2.0.min.js"></script>
+<script type="text/javascript" src="../../script/common/swiper.min.js"></script>
+<script type="text/javascript" src="../../script/common/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/common/pds.ajax.js"></script>
+<script>
+	var back;
+	apiready=function(){
+		// var header = $api.byId('header');
+		// 	$api.fixStatusBar(header);
+		// 	var headerH = $api.offset(header).h;
+		// 	$("body").css({"paddingTop":headerH+"px"});
+
+			initIn()
+	}
+	function initIn(n){
+		back=n;
+		if(n){
+			$("#growth").nextAll().remove()
+			var startDate=$api.getStorage('startDates')
+			var endDate=$api.getStorage('endDates')
+			var landId=$api.getStorage('landIds')
+			var categoryId=$api.getStorage('categoryIds')
+			$("#time").val(startDate.substring(0,4)+"年"+startDate.substring(5,7)+"月-"+endDate.substring(0,4)+"年"+endDate.substring(5,7)+"月")
+			$("#land").val($api.getStorage('landNames'))
+			$("#crop").val($api.getStorage('categorys'))
+			showGrowth(api.pageParam.farmId,landId,categoryId,startDate,endDate)
+		}else{
+			var d = new Date(), y = d.getFullYear(), m = d.getMonth() + 1, r = d.getDate();
+			m < 10 ? m = "0" + m : m;
+			r < 10 ? r = "0" + r : r;
+			var endDate=y + "-" + m + "-" + r;
+			var startDate=y + "-0" + 1 + "-0" + 1;
+			$("#time").val(y+"年0"+1+"月-"+y+"年"+m+"月")
+			pds.ajaxSubmit({
+				 url:"app/crop/firstEnterCondition",
+				 type : "GET",
+				 data:{
+					 farmId:api.pageParam.farmId
+				 },
+				 success:function(e){
+					 //alert(e.data.lifeCycleNum)
+					 if(e.data.land){
+						 e.data.land.landName=e.data.land.landName||""
+						 $("#land").val(e.data.land.landName)
+						 e.data.land.id=e.data.land.id||""
+						 $("#landId").val(e.data.land.id)
+					 }
+					 if(e.data.category){
+						 e.data.category.catName=e.data.category.catName||""
+						 $("#crop").val(e.data.category.catName)
+						 e.data.category.id=e.data.category.id||""
+						 $("#catId").val(e.data.category.id)
+					 }
+					 if(!e.data.category||!e.data.land){
+						 if(e.data.lifeCycleNum==0){
+						 	$("#tishi").attr("src", "../../image/management/no.png")
+						 }else{
+							$("#tishi").attr("src", "../../image/management/noM.png")
+						 }
+						 $("#tishi").show()
+						 $("#growth").hide()
+						 $("#noImg").show()
+						 $("#swiper-container").hide()
+						 return
+					 }else{
+						 $("#tishi").hide()
+						 $("#growth").show()
+						 $("#noImg").hide()
+						 $("#swiper-container").show()
+					 }
+					 showGrowth(api.pageParam.farmId,e.data.land.id,e.data.category.id,startDate,endDate)
+				 },
+				 error:function(e){
+						api.alert({msg:"服务器异常，请联系管理员!"});
+				 }
+			});
+			// api.ajax({
+			// 	url:pds.defaultUri + 'app/crop/firstEnterCondition',
+			// 	data:{values:{farmId:api.pageParam.farmId}}
+			// },function(ret,err){
+			// 	if (ret) {
+			// 		if(!ret.data.land){
+			// 			return
+			// 		}
+			// 		//alert(JSON.stringify(ret))
+			// 		$("#land").val(ret.data.land.landName)
+			// 		$("#crop").val(ret.data.category.catName)
+			// 		$("#landId").val(ret.data.land.id)
+			// 		$("#catId").val(ret.data.category.id)
+			// 		showGrowth(api.pageParam.farmId,ret.data.land.id,ret.data.category.id,startDate,endDate)
+			// 		//showGrowth(11,1,23,'2017-11-20','2017-12-04')
+			// 	} else {
+			// 		//api.alert({msg:JSON.stringify(err)});
+			// 	};
+			// });
+		}
+	}
+	function showGrowth(farmId,landId,categoryId,startDate,endDate){
+			pds.ajaxSubmit({
+			//标准传
+			url:'app/crop/growth',
+			type : "GET",
+			data:{'farmId':farmId,'landId':landId,'categoryId':categoryId,'startDate':startDate,'endDate':endDate},
+			success:function(ret){
+				// alert(JSON.stringify(ret.data.lifeCycleNum))
+				var period=ret.data.list||0
+				if(!ret.data.hasOwnProperty("list")||period==0){
+					$("#tishi").show()
+					if(ret.data.lifeCycleNum>0){
+						$("#tishi").attr("src", "../../image/management/noM.png")
+					}else{
+						$("#tishi").attr("src", "../../image/management/no.png")
+					}
+					$("#growth").hide()
+				}else{
+					$("#tishi").hide()
+					$("#growth").show()
+				}
+				//解决初始化照片不回显问题*************************************************************8
+				setTimeout(function(){
+						$(".slider").each(function(index){
+								$(this).find("span").eq(0).trigger("click")
+						})
+				},30)
+				//alert(JSON.stringify(period))
+				for(var i=0;i<period.length;i++){
+					var per=""
+					if(i>0){
+						$("#section2").append($("#growth").clone().removeAttr("id"))
+					}
+					period[i]=period[i].reverse()
+					for(var j=0; j<period[i].length; j++){
+						per='<span onclick="qiehuan(this)" id='+period[i][j].updateDate+','+period[i][j].growthCycleId+','+period[i][j].disease+','+period[i][j].insectPests+','+period[i][j].grassHarm+','+period[i][j].physiologicalStress+','+period[i][j].ifDeficiency+','+period[i][j].weak+','+categoryId+','+period[i][j].modelNum+' >'+period[i][j].lifeCycle+'</span>'+per
+					}
+					$(".slider").eq(i).html(per);
+
+					per=null
+					$(".updateTime").eq(i).html(period[i][period[i].length-1].updateDate)
+					$(".moreInfo").eq(i).attr("id",period[i][period[i].length-1].growthCycleId+","+period[i][period[i].length-1].weak+","+period[i][period[i].length-1].modelNum)
+					// console.warn(JSON.stringify(period[i][period[i].length-1].weak))
+					var  str="出现",arr=[]
+					if(period[i][period[i].length-1].disease==1){
+						arr.push("病害")
+					}
+					if(period[i][period[i].length-1].insectPests==1){
+						arr.push("虫害")
+					}
+					if(period[i][period[i].length-1].grassHarm==1){
+						arr.push("草害")
+					}
+					if(period[i][period[i].length-1].physiologicalStress==1){
+						arr.push("生理胁迫")
+					}
+					if(period[i][period[i].length-1].ifDeficiency==1){
+						arr.push("缺素症")
+					}
+					str+=arr.join("、")
+					str+="现象"
+					// alert(JSON.stringify(str))
+					if(period[i][period[i].length-1].weak===120){
+
+
+							pds.ajaxSubmit({
+							//标准传
+							url:'app/crop/growthModelPicture',
+							type : "GET",
+							//虚拟数据
+							//url:'http://192.168.31.213:8080/app/crop/growth',
+							//data:{values:{'farmId':farmId,'landId':landId,'categoryId':categoryId,'startDate':startDate,'endDate':endDate}}
+							data:{
+								'catalogId':categoryId,'growthCycleId':period[i][period[i].length-1].growthCycleId,'weak':"120",'deficiency':period[i][period[i].length-1].ifDeficiency,'physiologicalStress':period[i][period[i].length-1].physiologicalStress,'insectPests':period[i][period[i].length-1].insectPests,'grassHarm':period[i][period[i].length-1].grassHarm,'disease':period[i][period[i].length-1].disease
+							},
+							success:function(ret){
+
+									if(ret.data==null){
+										$(".imgShow").eq(0).attr("src", "../../image/management/no.png")
+										return
+									}
+								  // console.warn(ret.data.url)
+									$(".imgShow").eq(0).attr("src", ret.data.url)
+								},
+			 				 error:function(e){
+			 						api.alert({msg:"服务器异常，请联系管理员!"});
+			 				 }
+			 			});
+
+						$(".warning").eq(i).css("background","url('../../image/management/warning.png') no-repeat left center")
+						$(".warning").eq(i).css("backgroundSize","0.36rem 0.36rem")
+						$(".warning").eq(i).css("color","red")
+						$(".warning").eq(i).html(str)
+
+					}else{
+
+						pds.ajaxSubmit({
+							//标准传
+							url:'app/crop/growthModelPicture',
+							type : "GET",
+							//虚拟数据
+							//url:'http://192.168.31.213:8080/app/crop/growth',
+							//data:{values:{'farmId':farmId,'landId':landId,'categoryId':categoryId,'startDate':startDate,'endDate':endDate}}
+							data:{
+								'catalogId':categoryId,'growthCycleId':period[i][period[i].length-1].growthCycleId,'weak':"121"
+							},
+							success:function(ret){
+									if(ret.data==null){
+										$(".imgShow").eq(0).attr("src", "../../image/management/no.png")
+										return
+									}
+									$(".imgShow").eq(0).attr("src", ret.data.url)
+								},
+	 						 error:function(e){
+	 								api.alert({msg:"服务器异常，请联系管理员!"});
+	 						 }
+	 					});
+						$(".warning").eq(i).css("background","url('../../image/management/plantIcon.jpg') no-repeat left center")
+						$(".warning").eq(i).css("backgroundSize","0.36rem 0.36rem")
+						$(".warning").eq(i).css("color","#666")
+						$(".warning").eq(i).html('作物长势良好')
+
+					}
+
+				}
+
+				// $(".slider>span").on("touchstart",function(){
+				// 	//$api.setStorage('growthCycleId',$(this).attr("id"))
+				// 	var i=$(this).parent().parent().parent().index()-2
+				// 	var arr=$(this).attr('name').split(',')
+				// 	//$("#imgShow").attr("src", period[arr[0]][arr[1]].imageUrl)
+				// 	$(".updateTime").eq(i).html(arr[0])
+				// 	//$(".warning").eq(i).html(period[arr[0]][arr[1]].physiologicalStress)
+				// 	$(".moreInfo").eq(i).attr("id",arr[1])
+				// 	$(this).parent().find('span').css("backgroundColor","#fff")
+				// 	$(this).parent().find('span').css("color","#747976")
+				// 	$(this).parent().find('span').css("border","1px solid #ededed")
+				// 	$(this).css("backgroundColor","#A2C446")
+				// 	$(this).css("color","#fff")
+				// 	$(this).css("border","0")
+				// 	// alert($(this).next().val())
+				// 	// alert($(this).next().next().val())
+				// 	// alert($(this).next().next().next().val())
+				// 	// alert($(this).next().next().next().next().val())
+				// 	// alert($(this).next().next().next().next().next().val())
+				// 	var  str="出现",arry=[];
+				// 	if(arr[2]==1){
+				// 		arry.push("病害")
+				// 	}
+				// 	if(arr[3]==1){
+				// 		arry.push("虫害")
+				// 	}
+				// 	if(arr[4]==1){
+				// 		arry.push("草害")
+				// 	}
+				// 	if(arr[5]==1){
+				// 		arry.push("生理胁迫")
+				// 	}
+				// 	if(arr[6]==1){
+				// 		arry.push("缺素症")
+				// 	}
+				// 	str+=arry.join("、")
+				// 	str+="现象"
+				// 	if(arr[7]==120){
+				// 		api.ajax({
+				// 			//标准传
+				// 			url:pds.defaultUri + 'app/crop/growthModelPicture',
+				// 			//虚拟数据
+				// 			//url:'http://192.168.31.213:8080/app/crop/growth',
+				// 			//data:{values:{'farmId':farmId,'landId':landId,'categoryId':categoryId,'startDate':startDate,'endDate':endDate}}
+				// 			data:{values:{'categoryId':categoryId,'growthCycleId':arr[1],'weak':"120",'deficiency':arr[2],'physiologicalStress':arr[3],'insectPests':arr[4],'grassHarm':arr[5],'disease':arr[6]}}
+				// 		},function(ret,err){
+				// 			if (ret) {
+				// 					$(".imgShow").eq(i).attr("src", ret.data.url)
+				// 			} else {
+				// 					api.alert({msg:JSON.stringify(err)});
+				// 				};
+				// 		});
+				// 		$(".warning").eq(i).css("background","url('../../image/management/warning.png') no-repeat left center")
+				// 		$(".warning").eq(i).css("backgroundSize","0.36rem 0.36rem")
+				// 		$(".warning").eq(i).css("color","red")
+				// 		$(".warning").eq(i).html(str)
+				// 	}else{
+				// 		api.ajax({
+				// 			//标准传
+				// 			url:pds.defaultUri + 'app/crop/growthModelPicture',
+				// 			//虚拟数据
+				// 			//url:'http://192.168.31.213:8080/app/crop/growth',
+				// 			//data:{values:{'farmId':farmId,'landId':landId,'categoryId':categoryId,'startDate':startDate,'endDate':endDate}}
+				// 			data:{values:{'categoryId':categoryId,'growthCycleId':arr[1],'weak':"121"}}
+				// 		},function(ret,err){
+				// 			if (ret) {
+				// 				//alert(JSON.stringify(ret.data.url))
+				// 				 $(".imgShow").eq(i).attr("src", ret.data.url)
+				// 			} else {
+				// 					api.alert({msg:JSON.stringify(err)});
+				// 				};
+				// 		});
+				// 		$(".warning").eq(i).css("background","url('../../image/management/plantIcon.jpg') no-repeat left center")
+				// 		$(".warning").eq(i).css("backgroundSize","0.36rem 0.36rem")
+				// 		$(".warning").eq(i).css("color","#666")
+				// 		$(".warning").eq(i).html('作物长势良好')
+				// 	}
+				// })
+				//$api.setStorage('growthCycleId',$(".slider>span").eq(0).attr("id"))
+
+					// if(period[0]==null){
+					// 	return;
+					// }
+
+
+				// for(var k=0; k<sum; k++){
+					// if(period[$(this).index()] == null){
+					// 	continue;
+					// }
+
+				// }
+				var t=setTimeout(function(){
+					var pic=ret.data.pictures,l=pic.length,str='',imgUrls=[];
+					if(l>0){
+						for (var i=0; i<l; i++){
+							str+='<div class="swiper-slide"><img id='+i+' onclick="preview(this)" src="'+pic[i]+'"></div>'
+							// str+='<div class="swiper-slide"><img src="'+pic[i]+'"></div>'
+							imgUrls.push(pic[i])
+						}
+						$("#noImg").hide()
+						$("#swiper-container").show()
+						$("#swiper-wrapper").html(str)
+						var mySwiper = new Swiper(".swiper-container",{
+								loop : true,
+								autoplay : 3000,
+								noSwiping : true,//控制slide是否可手动滑动
+								observer:true,
+								preloadImages:true,
+								initialSlide :0,
+								updateOnImagesReady : true,
+								speed:1000,
+								autoplayDisableOnInteraction : false,
+								effect : 'coverflow',
+								centeredSlides: true,
+								spaceBetween : 0,
+								coverflow: {
+												rotate: 0,
+												stretch: -48,
+												depth: 200,
+												modifier: 2,
+												slideShadows : false
+								}
+						 })
+					}else{
+						$("#noImg").show()
+						$("#swiper-container").hide()
+						$("#swiper-wrapper").html('')
+					}
+					str=null;
+					window.preview = function (dom) {
+						// alert(JSON.stringify(imgUrl))
+						var imageBrowser = api.require('imageBrowser');
+						imageBrowser.openImages({
+								imageUrls: imgUrls,
+								activeIndex:$(dom).attr("id")
+						});
+					};
+				},300)
+			},
+			error:function(ret){
+				 api.alert({msg:"服务器异常，请联系管理员!"});
+			}
+		});
+	}
+	function selectSearchTerm(){
+		var buriedPoint = pds.buriedPoint();
+		buriedPoint.pageId = 'page_the_growth_admin';
+		buriedPoint.eventId = 'button_filtering_condition_page_the_growth_admin';
+		pds.ajaxSubmit({
+		url:"app/buried_point/save",
+		data:{"point":buriedPoint},
+		success:function(v){
+
+		}
+	})
+	api.openWin({
+		name : 'selectSearchTerm_win',
+		url : './selectSearchTerm_win.html',
+		pageParam: {
+				farmId: api.pageParam.farmId
+		}
+	});
+	}
+
+	function workList(dom){
+		var buriedPoint = pds.buriedPoint();
+		buriedPoint.pageId = 'page_the_growth_admin';
+		buriedPoint.eventId = 'button_check_the_details_page_the_growth_admin';
+		pds.ajaxSubmit({
+		url:"app/buried_point/save",
+		data:{"point":buriedPoint},
+		success:function(v){
+		}
+	})
+		var growthCycleId=$(dom).attr('id').split(',')[0],weak=$(dom).attr('id').split(',')[1],modelNum=$(dom).attr('id').split(',')[2]
+		if(back){
+			var landId=$api.getStorage('landIds')
+			var categoryId=$api.getStorage('categoryIds')
+			api.openWin({
+				name : 'workList_win',
+				url : './workList_win.html',
+				pageParam: {
+						landId: landId,
+						categoryId:categoryId,
+						farmId: api.pageParam.farmId,
+						startDate:$api.getStorage('startDates'),
+						endDate:$api.getStorage('endDates'),
+						growthCycleId:growthCycleId,
+						weak:weak,
+						modelNum:modelNum
+				}
+			});
+		}else{
+			var growthCycleId=$(dom).attr('id').split(',')[0],weak=$(dom).attr('id').split(',')[1],modelNum=$(dom).attr('id').split(',')[2]
+			var d = new Date(), y = d.getFullYear(), m = d.getMonth() + 1, r = d.getDate();
+			m < 10 ? m = "0" + m : m;
+			r < 10 ? r = "0" + r : r;
+			var endDate=y + "-" + m + "-" + r;
+			var startDate=y + "-0" + 1 + "-0" + 1;
+			api.openWin({
+				name : 'workList_win',
+				url : './workList_win.html',
+				pageParam: {
+						landId: $("#landId").val(),
+						categoryId:$("#catId").val(),
+						farmId: api.pageParam.farmId,
+						endDate:endDate,
+						startDate:startDate,
+						growthCycleId:growthCycleId,
+						weak:weak,
+						modelNum:modelNum
+				}
+			});
+		}
+	}
+
+	 function qiehuan(dom){
+		 //$api.setStorage('growthCycleId',$(this).attr("id"))
+			var i=$(dom).parent().parent().parent().index()-2;
+			var arr=$(dom).attr('id').split(',')
+			//alert(JSON.stringify(arr))
+			//$("#imgShow").attr("src", period[arr[0]][arr[1]].imageUrl)
+			$(".updateTime").eq(i).html(arr[0])
+			//$(".warning").eq(i).html(period[arr[0]][arr[1]].physiologicalStress)
+			$(".moreInfo").eq(i).attr("id",arr[1]+","+arr[7]+","+arr[9])
+			$(dom).parent().find('span').css("backgroundColor","#fff")
+			$(dom).parent().find('span').css("color","#747976")
+			$(dom).parent().find('span').css("border","1px solid #ededed")
+			$(dom).css("backgroundColor","#A2C446")
+			$(dom).css("color","#fff")
+			$(dom).css("border","0")
+			// alert($(this).next().val())
+			// alert($(this).next().next().val())
+			// alert($(this).next().next().next().val())
+			// alert($(this).next().next().next().next().val())
+			// alert($(this).next().next().next().next().next().val())
+			var  str="出现",arry=[];
+			if(arr[2]==1){
+				arry.push("病害")
+			}
+			if(arr[3]==1){
+				arry.push("虫害")
+			}
+			if(arr[4]==1){
+				arry.push("草害")
+			}
+			if(arr[5]==1){
+				arry.push("生理胁迫")
+			}
+			if(arr[6]==1){
+				arry.push("缺素症")
+			}
+			str+=arry.join("、")
+			str+="现象"
+			if(arr[7]==120){
+				pds.ajaxSubmit({
+					//标准传
+					url:'app/crop/growthModelPicture',
+					type : "GET",
+					//虚拟数据
+					//url:'http://192.168.31.213:8080/app/crop/growth',
+					//data:{values:{'farmId':farmId,'landId':landId,'categoryId':categoryId,'startDate':startDate,'endDate':endDate}}
+					data:{'catalogId':arr[8],'growthCycleId':arr[1],'weak':"120",'deficiency':arr[6],'physiologicalStress':arr[5],'insectPests':arr[3],'grassHarm':arr[4],'disease':arr[2]},
+					success:function(ret){
+							if(ret.data.url==null){
+								$(".imgShow").eq(i).attr("src", "../../image/management/no.png")
+								return
+							}
+						  //api.alert({msg:JSON.stringify(ret.data.url)});
+							$(".imgShow").eq(i).attr("src", ret.data.url)
+						},
+						error:function(e){
+							 api.alert({msg:"服务器异常，请联系管理员!"});
+						}
+				 });
+				$(".warning").eq(i).css("background","url('../../image/management/warning.png') no-repeat left center")
+				$(".warning").eq(i).css("backgroundSize","0.36rem 0.36rem")
+				$(".warning").eq(i).css("color","red")
+				$(".warning").eq(i).html(str)
+			}else{
+				pds.ajaxSubmit({
+					//标准传
+					url:'app/crop/growthModelPicture',
+					type : "GET",
+					//虚拟数据
+					//url:'http://192.168.31.213:8080/app/crop/growth',
+					//data:{values:{'farmId':farmId,'landId':landId,'categoryId':categoryId,'startDate':startDate,'endDate':endDate}}
+					data:{'catalogId':arr[8],'growthCycleId':arr[1],'weak':"121"},
+					success:function(ret){
+						if(ret.data==null){
+							$(".imgShow").eq(i).attr("src", "../../image/management/no.png")
+							return
+						}
+						//alert(JSON.stringify(ret.data.url))
+						 $(".imgShow").eq(i).attr("src", ret.data.url)
+					 },
+ 					error:function(e){
+ 						 api.alert({msg:"服务器异常，请联系管理员!"});
+ 					}
+ 			  });
+				$(".warning").eq(i).css("background","url('../../image/management/plantIcon.jpg') no-repeat left center")
+				$(".warning").eq(i).css("backgroundSize","0.36rem 0.36rem")
+				$(".warning").eq(i).css("color","#666")
+				$(".warning").eq(i).html('作物长势良好')
+			}
+	 }
+</script>
+</body>
+</html>

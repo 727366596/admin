@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>员工走的路frm</title>
+		<link rel="stylesheet" type="text/css" href="../../css/common/public.css" />
+    <script type="text/javascript" src="../../script/common/rem-750.js"></script>
+	</head>
+	<body>
+			<input type="hidden" id="deletePointId"/>
+	</body>
+	<script type="text/javascript" src="../../script/common/api.js"></script>
+	<script src="../../script/common/jquery.min.js"></script>
+	<script src="../../script/common/pds.ajax.js"></script>
+	<script type="text/javascript">
+			var map = null, date_ = null, id_ = null, tel_ = null, photoUrl = null;
+			// 加载模块一定要在apiready方法里
+			apiready = function() {
+					//设置轨迹线宽；
+					lineBorderWidth = api.systemType == "ios" ? 3: 12;
+					api.parseTapmode();
+					date_ = api.pageParam.date;
+					id_ = api.pageParam.id;
+					tel_ = api.pageParam.tel;
+					pathLandId = api.pageParam.landId;
+					photoUrl = api.pageParam.photo;
+					//console.log(date_+"***********"+id_+"******"+ tel_ +"******employeePath_map_frm")
+					var screenHeight = api.frameHeight;
+					// 加载百度地图模块
+					map = api.require('bMap');
+					// 判断定位功能是否开启
+					map.getLocationServices(function(ret, err) {
+							if (ret.enable) {
+								//alert(JSON.stringify(ret));
+							} else {
+								alert("未开启定位功能！");
+							}
+					});
+					// 监听到进入后台时停止定位
+					api.addEventListener({
+							name : 'pause'
+					}, function(ret, err) {
+							map.stopLocation();
+					});
+					//开启地图
+					openMap();
+		};
+
+		//关闭地图
+		function closeMap(){
+			console.log("关闭地图了")
+			map.close();
+		}
+		// 打开地图
+		function openMap() {
+				var rectY = 68;// 地图在y轴上的距离
+				map.open({
+					// （可选项）模块的位置及尺寸
+					rect : {
+						x : 0, //（可选项）数字类型；地图左上角的 x 坐标（相对于所属的 Window 或 Frame）；默认：0
+						y : 0, //（可选项）数字类型；地图左上角的 y 坐标（相对于所属的 Window 或 Frame）；默认：0
+						w : api.frameWidth, //（可选项）数字类型；地图的宽度；默认：所属的 Window 或 Frame 的宽度
+						h : api.frameHeight //（可选项）数字类型；地图的高度；默认：所属的 Window 或 Frame 的高度
+					},
+					zoomLevel : 18, //（可选项）设置百度地图缩放等级，取值范围：3-18级
+					showUserLocation : true, //（可选项）是否在地图上显示用户位置
+					fixedOn : api.frameName,//（可选项）模块视图添加到指定 frame 的名字（只指 frame，传 window 无效）
+					fixed : true //（可选项）模块是否随所属 window 或 frame 滚动
+				}, function(ret) {
+					if (ret.status) {
+						//alert('地图打开成功');
+						//api.hideProgress();
+						//打电话按钮
+						api.openFrame({
+                name:'employeePath_map_call_frm',
+                url:'./employeePath_map_call_frm.html',
+                rect:{
+                    x:api.winWidth-60,
+                    y:api.winHeight-140,
+										w:40,
+										h:50
+                },
+								pageParam: {
+										id : id_,
+										date : date_,
+										tel : tel_
+								},
+								//bgColor:'#00f',
+                bounces:false,
+                vScrollBarEnabled:false,
+                hScrollBarEnabled:false
+            });
+
+						// api.openFrame({
+            //     name:'employeePath_map_callBtn_frm',
+            //     url:'./employeePath_map_callBtn_frm.html',
+            //     rect:{
+            //         x:0,
+            //         y:66,
+            //         w:'auto',
+            //         h:40
+            //     },
+						// 		pageParam: {
+						// 				id : id_,
+						// 				date : date_,
+						// 				tel : tel_
+						// 		},
+						// 		//bgColor:'#00f',
+            //     bounces:false,
+            //     vScrollBarEnabled:false,
+            //     hScrollBarEnabled:false
+            // });
+
+						//点击查看轨迹按钮
+						api.openFrame({
+						    name: 'employeePath_map_addLineBtn_frm',
+						    url: './employeePath_map_addLineBtn_frm.html',
+						    rect: {
+										x:api.winWidth-60,
+										y:api.winHeight-80,
+										w:40,
+										h:50
+						    },
+						    pageParam: {
+						        name: 'test'
+						    },
+						    bounces:false,
+						    bgColor: 'rgba(0,0,0,0)',
+						    vScrollBarEnabled: true,
+						    hScrollBarEnabled: true
+						});
+
+
+						// 显示用户的位置
+						map.showUserLocation({
+							isShow : true,
+							trackingMode : 'none'//罗盘compass
+						});
+						// 是否显示比例尺
+						map.setScaleBar({
+							show : true,
+							position : {
+								x : 25, //（可选项）数字类型；比例尺左上角的 x 坐标（相对于地图）；默认：0
+								y : api.frameHeight-60 //（可选项）数字类型；比例尺左上角的 y 坐标（相对于地图）；默认：0
+							}
+						});
+
+						setTimeout(function(){
+							// 查询已打的坐标（有时间改成只有已打点的才能查）
+							selectCoordinatesByLandId();
+						},500)
+
+					} else {
+						alert("地图打开失败");
+					}
+			});
+		}
+
+		//绘制员工轨迹，需要在地图加载完毕后调用**************billBoardId****************************
+		var beginBillBoardId = null, endBillBoardId = null, billBoardId = null;
+		var pointsArrs = [];//后台数据坐标数组*************************************
+
+		function selectCoordinatesByLandId(){
+				//console.log(date_+"***********"+id_+"******"+ pathLandId +"******employeePath_map_frm")
+				pds.ajaxSubmit({
+					 url:"app/coor/selectCoordinateByWorkId",
+					 data:{
+						 	id : id_,
+							date : date_
+					 },
+					 success:function(e){
+							 if(e.status == "ok"){
+								 		//**************************轨迹所有任务坐标数组****************************************************************
+										var taskPointArr = e.data.task;
+										if (taskPointArr != "" && taskPointArr != null && taskPointArr != []) {
+												var taskArr = [];//
+												var taskRealArr = (function(arr){
+														for (var i = 0; i < taskPointArr.length; i++) {
+																if (taskPointArr[i].id != "" && taskPointArr[i].id != null && taskPointArr[i].latitude != "" && taskPointArr[i].latitude != null && taskPointArr[i].longitude != "" && taskPointArr[i].longitude != null) {
+																		//taskPointArr[i]
+																		var taskObj = {
+																				id : taskPointArr[i].id,
+																				lon : taskPointArr[i].longitude,
+																				lat : taskPointArr[i].latitude
+																		}
+																		arr.push(taskObj);
+
+																}
+														};
+														return arr;
+												})(taskArr);
+												//调用添加备注事件
+												annotation(taskRealArr);
+										}
+
+										//**************************地块所有点坐标数组****************************************************************
+										var landIds = e.data.landIds;
+										if (landIds != "" && landIds != null && landIds != []) {
+											for (var i = 0; i < landIds.length; i++) {
+												var landPointsArr = landIds[i].landId;
+												//console.log(JSON.stringify(landPointsArr.length))
+												if (landPointsArr != undefined && landPointsArr != null && landPointsArr != "" && landPointsArr.length >= 3) {
+													var realPointsArr = []
+													var pointArr = (function(){
+														for (var q = 0; q < landPointsArr.length; q++) {
+															//console.log(q+"************************"+JSON.stringify(landPointsArr[12]))
+															if(landPointsArr[q] != null && landPointsArr[q] != "" && landPointsArr[q].latitude != "" && landPointsArr[q].latitude != null && landPointsArr[q].longitude != null && landPointsArr[q].longitude != ""){
+																var landObj = {
+																	lon : landPointsArr[q].longitude,
+																	lat : landPointsArr[q].latitude
+																};
+																realPointsArr.push(landObj)
+															}
+														};
+
+														return realPointsArr;
+													})();
+
+													addPolygon(i, realPointsArr);
+												}
+											}
+										}
+
+										//**************************轨迹所有点坐标数组****************************************************************
+										//	alert(JSON.stringify(e.data))
+										var coordinates = e.data.coordinate;
+										if(coordinates !=null && coordinates != [] && coordinates != ""){
+												var createDateArr = [];
+												pointsArrs = (function(){
+														var allPathArr = [];
+														for (var i = 0; i < coordinates.length; i++) {
+																if(coordinates[i].latitude != "" && coordinates[i].latitude != null && coordinates[i].longitude != "" && coordinates[i].longitude != null){
+																		createDateArr.push(coordinates[i].createDate);
+																		var pointObj = {
+																				lon : coordinates[i].longitude,
+																				lat : coordinates[i].latitude
+																		};
+																		allPathArr.push(pointObj)
+																}
+														};
+
+														return allPathArr;
+												})();
+
+												//调用画动态轨迹方法***********************************************
+												var newArr = initData();
+												getArrowDynamic(newArr);
+												//设置起点坐标为中心点
+												//alert(JSON.stringify(pointsArrs[0]))
+												// map.setCenter({
+												// 	coords: pointsArrs[0],
+												// 	animation: false
+												// });
+												setCenter(pointsArrs[0])
+												//调用画线方法
+												//addline(id_,pointsArrs);
+												//改用调用画点方法
+												// for (var r = 0; r < pointsArrs.length; r++) {
+												// 		(function(){
+												// 				addCircle(r+10000,pointsArrs[r]);
+												// 		})()
+												// };
+												//启动布告图
+												billBoardId = (function(){
+														var systemType = api.systemType;
+
+														//alert("可以显示了")
+														var bgImgUrl = "widget://image/common/beginPoint_bc1.png";
+														if (systemType == "ios") {
+																bgImgUrl = "widget://image/common/beginPoint_bc1_ios.png";
+														}
+														//添加起始点布告牌
+														var titleStart = title("起点",createDateArr,systemType);
+														//画布告图
+														//beginBillBoardId = 0+99999;
+														addBillboard(0, pointsArrs[0], bgImgUrl, titleStart, photoUrl);
+														//画背景图
+														(pointsArrs[0]).id = 0;
+														//console.log(JSON.stringify(pointsArrs[0]))
+														var beginIconUrl = "widget://image/common/begin_bcImg.png";
+														annotation_(pointsArrs[0], beginIconUrl, titleStart);
+
+														//添加起终点布告牌
+														var endImgUrl = "widget://image/common/endPoint_bc2.png";
+														if (systemType == "ios") {
+																endImgUrl = "widget://image/common/endPoint_bc2_ios.png";
+														}
+														var titleEnd = title("终点",createDateArr,systemType);
+														//画布告图
+														//endBillBoardId = pointsArrs.length-1+99999;
+														addBillboard(999999, pointsArrs[pointsArrs.length-1], endImgUrl, titleEnd, photoUrl);
+														//画背景图
+														var endIconUrl = "widget://image/common/end_bcImg.png";
+														var EndPointObj = pointsArrs[pointsArrs.length-1];
+														EndPointObj.id = pointsArrs.length-1;
+														//console.log(JSON.stringify(EndPointObj))
+														annotation_(EndPointObj, endIconUrl, titleEnd);
+														billBoardId_ = [0, 999999]
+														return  billBoardId_;
+												})();
+												//监听地图视角改变
+												// map.addEventListener({
+												//     name: 'viewChange'
+												// }, function(ret) {
+												//     if (ret.status) {
+												// 				//alert("地图视角改变了")
+												//         //alert(JSON.stringify(ret));
+												// 				map.getZoomLevel(function(ret) {
+												// 						//alert(ret.level)
+												// 						if(ret.level >= 19){
+												// 								//alert(JSON.stringify(billBoardId))
+												// 								map.removeAnnotations({
+												// 									ids: billBoardId
+												// 								});
+												// 						}else{
+												// 								//
+												// 								// billBoardId = (function(){
+												// 								// 		//alert("可以显示了")
+												// 								// 		//添加起始点布告牌
+												// 								// 		var bgImgUrl = "widget://image/common/beginPoint_bc.png";
+												// 								// 		var titleStart = title("起点",createDateArr);
+												// 								// 		//画布告图
+												// 								// 		//beginBillBoardId = 0+99999;
+												// 								// 		addBillboard(0, pointsArrs[0], bgImgUrl, titleStart, photoUrl);
+												// 								// 		//画背景图
+												// 								// 		(pointsArrs[0]).id = 0;
+												// 								// 		//console.log(JSON.stringify(pointsArrs[0]))
+												// 								// 		var beginIconUrl = "widget://image/common/begin_bcImg.png";
+												// 								// 		annotation_(pointsArrs[0], beginIconUrl, titleStart);
+												// 								//
+												// 								// 		//添加起终点布告牌
+												// 								// 		var endImgUrl = "widget://image/common/endPoint_bc.png";
+												// 								// 		var titleEnd = title("终点",createDateArr);
+												// 								// 		//画布告图
+												// 								// 		//endBillBoardId = pointsArrs.length-1+99999;
+												// 								// 		addBillboard(88888888888, pointsArrs[pointsArrs.length-1], endImgUrl, titleEnd, photoUrl);
+												// 								// 		//画背景图
+												// 								// 		var endIconUrl = "widget://image/common/end_bcImg.png";
+												// 								// 		var EndPointObj = pointsArrs[pointsArrs.length-1];
+												// 								// 		EndPointObj.id = pointsArrs.length-1;
+												// 								// 		//console.log(JSON.stringify(EndPointObj))
+												// 								// 		annotation_(EndPointObj, endIconUrl, titleEnd);
+												// 								// 		billBoardId_ = [0, 88888888888]
+												// 								// 		return  billBoardId_;
+												// 								// })();
+												//
+												// 						}
+												// 				});
+												//     }
+												// });
+										}else{
+												api.alert({
+												    msg: '暂无轨迹数据'
+												});
+								 		};
+
+
+							}else{
+									api.alert({
+											msg: '获取数据失败，请重试'
+									});
+							}
+					 },
+					 error:function(e){
+							api.alert({
+							    msg: '获取数据失败，请重试'
+							});
+					 }
+				});
+
+		}
+
+
+		//回到地块中心
+		function setCenter(point){
+				map.setCenter({
+					coords: point,
+					animation: false
+				});
+		}
+
+
+		// 已打点地块addPolygon形成轨迹
+		function addPolygon(num, pointArr){
+				map.addPolygon({
+						id: num,
+						styles: {
+								borderColor: 'rgba(255,198,92,0.2)',
+								borderWidth: 3,
+								fillColor: 'rgba(255,198,92,0.2)'//randomColor()#ffc65c
+						},
+						points: pointArr
+				});
+		}
+
+		//调用addLine方法画轨迹
+		function addline(lineId, pointsArrs){
+				map.addLine({
+						id: lineId,
+						styles: {
+								borderColor: '#49aff0',//randomColor()
+								borderWidth:10
+						 },
+						 points: pointsArrs
+				});
+		};
+
+		//调用addCircle方法画轨迹
+		function addCircle(CirId, pointsObj){
+				map.addCircle({
+						id: CirId,
+						center: pointsObj,
+						radius: 5,
+						styles: {
+								borderColor: '#FF0000',
+								borderWidth: 0,
+								fillColor: '#ff0000'
+						}
+				});
+		};
+
+		//地图添加布告牌
+		function addBillboard(billBoardId, position, bgImgUrl, title, illusUrl){
+			//alert(JSON.stringify(bgImgUrl))
+			//var illusUrl = 'widget://image/common/header_bc.png';
+			map.addBillboard({
+					id: billBoardId,
+					coords: position,
+					bgImg: bgImgUrl,
+					content: {
+							//title: title,
+							subTitle: title,
+							//illus: illusUrl
+					},
+					styles: {
+							titleColor: '#fff',
+							titleSize: 13,
+							subTitleColor: '#fff',
+							subTitleSize: 14,
+							//illusAlign: 'left'
+					}
+				}, function(ret) {
+					// if (ret) {
+					// 		alert(JSON.stringify(ret));
+					// }
+				});
+		};
+
+		//起始点添加标注
+		function annotation_(pointArr, iconUrl, title){
+				map.addAnnotations({
+						annotations: [pointArr],
+						icon: iconUrl,
+						draggable: false
+					}, function(ret) {
+						var eventType = ret.eventType;
+						if (eventType == "click") {
+								alert(title)
+						}
+
+				});
+		}
+
+		//特定点添加标注
+		function annotation(pointArr){
+			//alert(JSON.stringify(pointArr))
+			map.addAnnotations({
+					annotations: pointArr,
+					icon: 'widget://image/common/task_pointIcon.png',
+					draggable: false
+				}, function(ret) {
+					var flag = false;
+					if (ret.eventType == "click") {
+							//alert(JSON.stringify(ret));
+							var detailID = ret.id;
+							api.confirm({
+							    //title: '查看任务点工单详情？',
+							    msg: '查看任务点工单详情？',
+							    buttons: ['确定', '取消']
+							}, function(ret, err) {
+							    var index = ret.buttonIndex;
+									if(index == 1){
+											api.openWin({
+													name : "workView_win",
+													url : "widget://html/management/workView_win.html",
+													reload : true,
+													slidBackEnabled : false,
+													pageParam : {
+														 detailID : detailID
+													},
+													animation : {
+														type : "movein", //动画类型（详见动画类型常量）
+														subType : "from_right", //动画子类型（详见动画子类型常量）
+														duration : 300 //动画过渡时间，默认300毫秒
+													}
+											});
+									}
+							});
+					}
+			});
+		}
+
+		//日期处理
+		function title(str,arr,systemType){
+				var titleTimeArr = null, titleTime = null;
+				if(str == "起点"){
+						titleTimeArr = (arr[0].split(" ")[1]).split(":");
+				}else{
+						titleTimeArr = (arr[arr.length-1].split(" ")[1]).split(":");
+				};
+
+				var emptyStr = "";
+				if (systemType == "ios") {
+						emptyStr = "          ";
+				};
+				var	titleTime =" " + titleTimeArr[0]+":"+titleTimeArr[1];
+				return  str = emptyStr + str + titleTime;
+		};
+
+		//设置当前中心位置
+		function nowPosition(){
+			map.getLocation({
+			    accuracy: '10m',
+			    autoStop: true,
+			    filter: 10
+			}, function(ret, err) {
+					if (ret.status) {
+							map.setCenter({
+									coords: {
+											lon: ret.lon,
+											lat: ret.lat
+									},
+									animation: true
+							});
+					} else {
+						api.alert({msg:"获取位置信息失败，请重试!"});
+					}
+			});
+
+		}
+
+		//	点击“客服热线”弹出电话
+  	function openCall(){
+      var telNum = tel_;
+			if(telNum == "暂无"){
+					api.toast({
+					    msg: '暂无该员工联系方式',
+					    duration: 1000,
+					    location: 'bottom'
+					});
+					return;
+			}
+    	api.confirm({
+    	    title: '确认拨打员工电话？',
+    	    msg: telNum,
+    	    buttons: ['确定', '取消']
+    	}, function(ret, err) {
+    	    var index = ret.buttonIndex;
+    	    if(index==1){
+    		    api.call({
+	    			    type: 'tel_prompt',
+	    			    number: telNum
+	    			});
+    	    }
+    	});
+    };
+
+		// 运动轨迹坐标数组
+		var coordArray 			= new Array();
+		// 标记点数组
+		var annotationArray = new Array();
+		// 地块面积
+		var area ;
+		// 打点：定位并获取坐标
+		function getPosition() {
+				map.getLocation({
+						accuracy : '10m', // 定位精度，默认100m
+						autoStop : true, 	// 获取到位置信息后是否自动停止定位
+						filter 	 : 10 		// 位置更新所需的最小距离（单位米），autoStop 为 true 时，此参数有效
+				}, function(ret, err) {
+						if (ret.status) {
+							var len = coordArray.length;
+							if(len >0){
+									map.getDistance({
+										start: {
+												lon: ret.lon,
+												lat: ret.lat
+										},
+										end: {
+												lon: coordArray[len-1].lon,
+												lat: coordArray[len-1].lat
+										}
+									}, function(e) {
+										if (e.status) {
+												if(e.distance < minDistance){
+														api.alert({msg:distanceErrMsg});
+														return;
+												}else{
+													pushToCoorArray(ret);
+													addAnnotations(ret);
+												}
+										}
+									});
+							}else{
+								pushToCoorArray(ret);
+								addAnnotations(ret);
+							}
+
+						} else {
+							//alert();
+						}
+				});
+		}
+
+		//点击标注时弹出气泡信息
+		function setBubble(bubbleId, bgImgUrl, title, illusUrl){
+			map.setBubble({
+						id: bubbleId,
+						bgImg: 'widget://res/bubble_bg.png',
+						content: {
+								title: '大标题',
+								// subTitle: '概述内容',
+								illus: 'http://ico.ooopic.com/ajax/iconpng/?id=145044.png'
+						},
+						styles: {
+								titleColor: '#fff',
+								titleSize: 13,
+								subTitleColor: '#666',
+								subTitleSize: 12,
+								illusAlign: 'left'
+						}
+				}, function(ret) {
+						if (ret) {
+								//alert(JSON.stringify(ret));
+						}
+				});
+		}
+
+		//调用addAnnotations方法画起始点标注
+		function addAnnotations(pointObj, iconUrl){
+			map.addAnnotations({
+					annotations: [pointObj],
+					icon: 'widget://'+iconUrl,
+					draggable: true
+			}, function(ret) {
+					if (ret) {
+							alert(ret.id);
+					}
+			});
+		};
+
+		//随机生成颜色
+		function randomColor(){
+		　　var colorStr=Math.floor(Math.random()*0xFFFFFF).toString(16).toUpperCase();
+		　　return"#"+"000000".substring(0,6-colorStr)+colorStr;
+		}
+
+		// **************************************地图动态轨迹*******************************************
+		// 后台轨迹坐标数据
+		// 步增值(经纬度角度)
+		//var diffSingle = 0.00005;
+		var diffSingle = 0.00008;
+		// 步增间隔时间（毫秒）
+		var interValTime = 100;
+		// 线宽
+		var lineBorderWidth;
+		// 存放将后台查回的所有坐标生成新的坐标数组
+		var allCoorArr = [];
+		// 计时器
+		var interval ;
+		function removeLine(ids){
+			map.removeOverlay({
+	 		    ids: ids
+	 		});
+		}
+		// 初始化数据：生成更多步增点
+		function initData(){
+			// 拿到所有步增坐标
+			for(var i=0;i<pointsArrs.length;i++){
+					if(i ==  pointsArrs.length-1){
+						allCoorArr.push(pointsArrs[i]);
+						break;
+					}
+					var childern = getChildrenCoorArr(pointsArrs[i],pointsArrs[i+1]);
+					allCoorArr.push(pointsArrs[i]);
+					for(var j = 0;j<childern.length; j++){
+						allCoorArr.push(childern[j]);
+					}
+			}
+			return allCoorArr;
+		}
+
+		// 获取两点间按步增值生成的子坐标点
+		function getChildrenCoorArr(p1,p2){
+			var children = [];
+			var k = calculateK(p1.lon,p1.lat,p2.lon,p2.lat);
+			// 必须转成数字，不然会被当成字符串处理
+			var lon1 = parseFloat(p1.lon);
+			var lat1 = parseFloat(p1.lat);
+			var lon2 = parseFloat(p2.lon);
+			var lat2 = parseFloat(p2.lat);
+			if(k == null){// 垂直
+				var sonLen = Math.abs(Math.floor((lat1-lat2)/diffSingle));
+				var Latsymbol = (p2.lat >= p1.lat) ? 1 : -1;
+				var p = p1;
+				for(var i=0;i<sonLen; i++){
+					var son = {};
+					son.lon = parseFloat(p.lon);
+					son.lat = parseFloat(p.lat)+(diffSingle*Latsymbol);
+					if(Math.abs(lat2 - son.lat) <= diffSingle){
+						break;
+					}
+					children.push(son);
+					p = son;
+				}
+			}else{
+				// 两个点之间在坐标系中的长度
+				var L = Math.sqrt((lon1-lon2)*(lon1-lon2)+(lat1-lat2)*(lat1-lat2));
+				// 在该斜率下经度的步增值
+				var diffLon = diffSingle* Math.abs(lon1-lon2)/L;
+				// 计算出步增的个数
+				var sonLen = Math.abs(Math.floor((lon1-lon2)/diffLon));
+				// 步增的正负
+				var Lonsymbol = (p2.lon >= p1.lon) ? 1 : -1;
+				var p = p1;
+				for(var i=0;i<sonLen; i++){
+					var son = {};
+					son.lon = parseFloat(p.lon)+(diffLon*Lonsymbol);
+					son.lat = parseFloat(p.lat)+k*(son.lon - parseFloat(p.lon));
+					if(Math.abs(lon2 - parseFloat(son.lon)) <= diffLon){
+						break;
+					}
+					children.push(son);
+					p = son;
+				}
+			}
+			return children;
+		}
+
+
+		// 存放动态生成的数组
+		var dynamicPointArr = [];
+		// 存放点击停止动画时最后生成的一条直线的ID，以备后面删除用
+		var oldIds = new Array();
+		// ios系统轨迹限制坐标点个数
+		var iosLimitCoorPoints = 400;
+
+		// 动态生成轨迹
+		function getArrowDynamic(coorArr) {
+			if(coorArr == "undefined" || coorArr == null || coorArr.length <2 ){
+				return;
+			}
+			var i = 0;
+			interval =self.setInterval(function(){
+				// 最后一个时停止动画
+				if(i == coorArr.length -1){
+					window.clearInterval(interval);
+					//stopAnimation();
+					return;
+				}
+				var newLineId = 1314521+i;
+				lastId = newLineId;
+				var nums = Math.floor(i/iosLimitCoorPoints);
+				var startIndex = nums*iosLimitCoorPoints;
+				// 获取步增后
+				var arr = coorArr.slice(startIndex ,i+3)
+				// 直接连线
+				map.addLine({
+						id: newLineId,
+						styles: {
+								borderColor: '#99ce00',
+								borderWidth: lineBorderWidth
+						 },
+						 points: arr
+				});
+
+				// 移除旧线，一定要在添加新线后面
+				// 如果满足重新生成一条直线时候，不删除
+				if(i > 0){
+					if(i % iosLimitCoorPoints == 0){
+						oldIds.push(newLineId);
+					}else{
+						removeLine([newLineId-1]);
+					}
+				}
+				i++;
+			},interValTime);
+		}
+
+		// 停止动画
+		function stopAnimation(){
+			var arrLen = pointsArrs.length ;
+				if (arrLen == 0) {
+						api.toast({
+								msg: '暂无轨迹数据',
+								duration: 1000,
+								location: 'bottom'
+						});
+						return;
+				};
+				// 停止
+				window.clearInterval(interval);
+				// 移除之前的
+				removeLine(oldIds);
+				//回到地块
+				setCenter(pointsArrs[0])
+
+				var nums = Math.ceil(arrLen/iosLimitCoorPoints);
+				for(var i = 0; i< nums ; i++){
+					var arr = pointsArrs.slice(i*iosLimitCoorPoints,i*iosLimitCoorPoints+iosLimitCoorPoints)
+					// 直接连线
+					map.addLine({
+							id: 999999+i,
+							styles: {
+									borderColor: '#99ce00',
+									borderWidth: lineBorderWidth
+							 },
+							 points:  arr
+					});
+				}
+		}
+
+	 	// 移除所有轨迹
+	 	function removeArrow(){
+	 		map.removeOverlay({
+	 		    ids: arrowIdArr
+	 		});
+	 	}
+
+		// 计算两点形的直线函数的斜率k（y=kx+b）,两点连线与x轴垂直时返回null
+		function calculateK(xa, ya, xb, yb) {
+			if (xa == xb) {
+				return null;
+			}
+			var k = (ya - yb) / (xa - xb)
+			return k;
+		}
+
+		// 计算两点形的直线函数的常值b（y=kx+b）
+		function calculateB(x, y, k) {
+			if (k == null) {
+				return null;
+			}
+			var b = y - k * x;
+			return b;
+		}
+
+	</script>
+</html>

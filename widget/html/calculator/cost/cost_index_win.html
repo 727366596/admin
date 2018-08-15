@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>成本投入</title>
+	<script type="text/javascript" src="../../../script/common/rem.js"></script>
+	<link rel="stylesheet" href="../../../css/common/public.css" />
+	<link rel="stylesheet" href="../../../css/common/header.css" />
+	<link rel="stylesheet" href="../../../css/common/swiper.min.css" />
+	<link rel="stylesheet" href="../../../css/common/animate.min.css" />
+	<style>
+	*{
+	margin:0;
+	padding:0;
+}
+
+.swiper-container {
+  /*  width: 320px;
+    height: 480px;*/
+	width: 100%;
+    height: 100%;
+	background:#000;
+	padding-top: 1rem;
+
+}
+
+.swiper-slide{
+	width:100%;
+	height:100%;
+	background-size:100% 100%;
+}
+img{
+	display:block;
+}
+.swiper-pagination-bullet {
+width: 6px;
+height: 6px;
+background: #fff;
+opacity: .4;
+}
+.swiper-pagination-bullet-active {
+opacity: 1;
+}
+@-webkit-keyframes start {
+	0%,30% {opacity: 0;-webkit-transform: translate(0,10px);}
+	60% {opacity: 1;-webkit-transform: translate(0,0);}
+	100% {opacity: 0;-webkit-transform: translate(0,-8px);}
+}
+@-moz-keyframes start {
+	0%,30% {opacity: 0;-moz-transform: translate(0,10px);}
+	60% {opacity: 1;-moz-transform: translate(0,0);}
+	100% {opacity: 0;-moz-transform: translate(0,-8px);}
+}
+@keyframes start {
+	0%,30% {opacity: 0;transform: translate(0,10px);}
+	60% {opacity: 1;transform: translate(0,0);}
+	100% {opacity: 0;transform: translate(0,-8px);}
+}
+.ani{
+	position:absolute;
+	}
+.txt{
+	position:absolute;
+}
+#array{
+	position:absolute;z-index:999;-webkit-animation: start 1.5s infinite ease-in-out;
+}
+	html,body{
+		/*padding-top:1rem;*/
+		box-sizing:border-box;
+		height: 100%;
+		width: 100%;
+	}
+		/*#header {
+			background: #204e41;
+		}*/
+		.headerRight img{
+       background: #fff;
+		}
+		.content{
+			position:relative;
+			height:100%;
+		}
+		.slidPage{
+			width: 100%;
+			height: 100%;
+			background-color: #dadada;
+			overflow: hidden;
+			position: relative;
+		}
+		/*第一页*/
+		.choose{
+			width: 100%;
+			height: 100%;
+			position: relative;
+			overflow: hidden;
+			box-sizing: border-box;
+			background-color: #dadada;
+		}
+		.item{
+			overflow: hidden;
+			display: inline-block;
+			background-size: 100% 100%;
+			box-sizing: border-box;
+		}
+		/*土地*/
+		.item0{
+			width: 100%;
+			height: 100%;
+			position: absolute;;
+			z-index: 999;
+			margin: 2.7rem 0.54rem 7.93rem 2.12rem;
+		}
+		.laoren{
+			width: 4.84rem;
+			height:1.24rem;
+		}
+		/*烦恼*/
+		.item_1a{
+			width:100%;
+			height:100%;
+			position: absolute;;
+			margin: 0.5rem 2.56rem 8.06rem 0.47rem;
+		}
+		.price_1a{
+			width:4.47rem;
+			height: 3.27rem;
+		}
+		/*横线*/
+		.line{
+			text-align: center;
+			position: absolute;;
+			margin: 4.5rem 0.72rem 8.06rem 0.72rem;
+			z-index: 9999999;
+			overflow: hidden;
+			height: 1px;
+			background: #fff;
+		}
+		.crossLine{
+			width:6.06rem;
+		}
+		/*左一*/
+		.item_1b{
+			width:100%;
+			height:100%;
+			position: absolute;
+			margin: 5rem 3.95rem 2.9rem 0.23rem;
+		}
+		.price_1b{
+			width:3.32rem;
+			height: 3.51rem;
+		}
+		/*左二*/
+		.item_1c{
+			width:100%;
+			height:100%;
+			position: absolute;
+			margin: 5.85rem 2.23rem 1.61rem 1.95rem;
+		}
+		.price_1c{
+			width:3.32rem;
+			height: 3.88rem;
+		}
+		/*左三*/
+		.item_1d{
+			width:100%;
+			height:100%;
+			position: absolute;
+			margin: 6.5rem 0.45rem 0.53rem 3.73rem;
+			z-index: 9;
+		}
+		.price_1d{
+			width:3.32rem;
+			height: 4.18rem;
+		}
+		/*下一页*/
+		.toDown{
+			width: 100%;
+			height:100%;
+			position: absolute;
+			text-align: center;
+			top: 10.8rem;
+			z-index: 999;
+		}
+		.price_down{
+			width: 0.46rem;
+			height: 0.24rem;
+		}
+		/*第二页*/
+		/*自从*/
+		.item01{
+			width: 100%;
+			height: 100%;
+			position: absolute;;
+			margin: 1rem 0.83rem 11.07rem 0.72rem;
+		}
+		.since1{
+			font-size:0.26rem;
+      color: #204e41;
+		}
+		/*马铃薯*/
+		.item_1a1{
+			width:100%;
+			height:100%;
+			position: absolute;;
+			margin: 0.8rem 5.59rem 10.42rem 0.73rem;
+		}
+		.price_1a1{
+      font-size:0.2rem;
+      color: #204e41;
+		}
+		/*横线*/
+		.line1{
+			text-align: center;
+			position: absolute;;
+			margin: 5.35rem 0.72rem 8.06rem 0.72rem;
+			z-index: 9999999;
+			overflow: hidden;
+			height: 1px;
+			background: #fff;
+		}
+		.crossLine1{
+			width:6.06rem;
+		}
+		/*省*/
+		.item_1b1{
+			width:100%;
+			height:100%;
+			position: absolute;
+			margin: 2rem 0.71rem 7.34rem 0.69rem;
+		}
+		.price_1b1{
+			width:6.1rem;
+			height: 2.77rem;
+		}
+		/*详细*/
+		.item_1c1{
+			width:100%;
+			height:100%;
+			position: absolute;
+			margin: 5.3rem 1.87rem 4.99rem 0.69rem;
+		}
+		.price_1c1{
+      font-size:0.26rem;
+      color: #204e41;
+		}
+		/*对比*/
+		.item_1d1{
+			width:100%;
+			height:100%;
+			position: absolute;
+			margin: 6.5rem 0.77rem 1.19rem 0.77rem;
+		}
+		.price_1d1{
+			width:5.96rem;
+			height: 3.42rem;
+		}
+
+		/*第三页*/
+		/*节省*/
+		.item02{
+			width: 100%;
+			height: 100%;
+			position: absolute;;
+			margin: 0.3rem 1.01rem 11.47rem 1.02rem;
+		}
+		.since2{
+			font-size:0.26rem;
+			color: #5a5a5a;
+		}
+		/*复合肥*/
+		.item_1a2{
+			width:100%;
+			height:100%;
+			position: absolute;;
+			margin: 0.8rem 1.32rem 5.12rem 1.1rem;
+			z-index: 333;
+		}
+		.price_1a2{
+			width:5.08rem;
+			height: 5.84rem;
+		}
+		/*竖线*/
+		.line2{
+			text-align: center;
+			position: absolute;;
+			margin: 0.8rem 5.95rem 4.72rem 1.53rem;
+			overflow: hidden;
+			width:1px;
+			background: #204e41;
+		}
+		.crossLine2{
+			height:5.9rem;
+			/*height: 6.23rem;*/
+		}
+		/*种植户选择*/
+		.item_1b2{
+			width:100%;
+			height:100%;
+			position: absolute;
+			margin: 7rem 0.97rem 1.32rem 0.96rem;
+			/*margin: 7.3rem 0.97rem 1.32rem 0.96rem;*/
+		}
+		.price_1b2{
+			width:5.57rem;
+			height: 2.87rem;
+		}
+		/*问号*/
+		.item_1c2{
+			width:100%;
+			height:100%;
+			position: absolute;
+			margin:9.2rem 4.87rem 1.47rem 2.13rem;
+			/*margin:9.1rem 4.87rem 1.47rem 2.13rem;*/
+		}
+		.price_1c2{
+			width: 0.5rem;
+			height: 0.5rem;
+		}
+		/*查看*/
+		.item_1d2{
+			width:100%;
+			position: absolute;
+			margin: 10.3rem 2.36rem 0.5rem 2.35rem;
+			/*margin: 10rem 2.36rem 0.5rem 2.35rem;*/
+			z-index: 999999;
+		}
+		.price_1d2{
+			width:2.79rem;
+			height: 0.41rem;
+		}
+		/*弹出层*/
+		.item_1e2{
+			width:100%;
+			height:100%;
+			position: absolute;
+			margin: 0.8rem 0.76rem 4.92rem 0.76rem;
+			z-index: 9999;
+		}
+		.price_1e2{
+			width:6rem;
+			height:6rem;
+		}
+		.layer{
+			position: absolute;
+			z-index: 99999;
+		}
+		/*关闭*/
+		.item_1f2{
+			width:100%;
+			height:100%;
+			position: absolute;
+			margin: 7rem 3.08rem 3.54rem 3.24rem;
+			z-index: 9999;
+		}
+		.price_1f2{
+			width:1.18rem;
+			height:1.18rem;
+		}
+
+		/*第四页*/
+		/*网格*/
+		.item03{
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			margin: 0.8rem 1.87rem 2.07rem 2.15rem;
+		}
+		.since3{
+			width: 3.48rem;
+      height: 9.19rem;
+		}
+		/*图一*/
+		.item_1a3{
+			width:100%;
+			height:100%;
+			position: absolute;
+			margin: 1.3rem 1.35rem 8.37rem 1.62rem;
+      z-index: 333;
+		}
+		.price_1a3{
+      width:4.53rem;
+      height: 2.2rem;
+		}
+    /*图二*/
+		.item_1b3{
+			width:100%;
+			height:100%;
+			position: absolute;
+      margin: 3.8rem 1.35rem 5.51rem 1.62rem;
+      z-index: 333;
+		}
+		.price_1b3{
+      width:4.53rem;
+      height: 2.43rem;
+		}
+		/*图三*/
+		.line3{
+      width:100%;
+      height:100%;
+      position: absolute;
+			margin:6.3rem 1.35rem 2.94rem 1.62rem;
+      z-index: 333;
+		}
+		.crossLine3{
+		  width:4.53rem;
+      height: 2.43rem;
+		}
+
+		/*图四*/
+		.item_1c3{
+			width:100%;
+			height:100%;
+			position: absolute;
+      margin:8.5rem 1.41rem 0.95rem 1.7rem;
+      z-index: 333;
+		}
+		.price_1c3{
+      width: 4.39rem;
+      height: 1.95rem;
+		}
+		/*雨滴*/
+		.item_1d3{
+			width:100%;
+      height: 100%;
+			position: absolute;
+      margin: 4.3rem 2.88rem 4.46rem 3.08rem;
+		}
+		.price_1d3{
+			width:1.54rem;
+			height: 4.18rem;
+		}
+    /*字一*/
+    .item_1e3{
+			width:100%;
+			height:100%;
+			position: absolute;
+			margin: 0.36rem 1.17rem 7.69rem 1.32rem;
+      z-index: 9999;
+		}
+		.price_1e3{
+			width:5.01rem;
+			height:0.73rem;
+		}
+    /*字二*/
+    .item_1f3{
+			width:100%;
+			height:100%;
+			position: absolute;
+			margin: 3.5rem 1.87rem 7.63rem 2.15rem;
+      z-index: 9999;
+		}
+		.price_1f3{
+			width:3.48rem;
+			height:0.56rem;
+		}
+    /*字三*/
+    .item_1g3{
+			width:100%;
+			height:100%;
+			position: absolute;
+			margin: 6.05rem 1.87rem 5.09rem 2.15rem;
+      z-index: 9999;
+		}
+		.price_1g3{
+			width:3.48rem;
+			height:0.56rem;
+		}
+
+	</style>
+</head>
+
+<body>
+	<header id="header">
+		<div class="headerLeft" onclick="closeWin()"></div>
+		<div class="headerCenter">成本投入</div>
+		<div class="headerRight"></div>
+	</header>
+
+	<div class="swiper-container">
+		 <div class="swiper-wrapper">
+			 <!---slide1----------------->
+					 <section class="swiper-slide swiper-slide1">
+						 <div id="pag1" class="slidPage">
+							 <!--土地  -->
+					 				<div class="item0">
+					 					<img class="ani resize laoren item" src="../../../image/cal_img/cost/pic01@3x.png" swiper-animate-effect="bounceInRight" swiper-animate-duration="0.5s" swiper-animate-delay="0s">
+					 				</div>
+							<!-- 烦恼 -->
+									<div class="item_1a">
+										<img class="ani resize price_1a item" src="../../../image/cal_img/cost/wenzi@3x.png" swiper-animate-effect="bounceInDown" swiper-animate-duration="0.5s" swiper-animate-delay="1s">
+									</div>
+							<!-- 横线 -->
+							<div class="line">
+								<div class="crossLine"></div>
+							</div>
+							<!-- 左一 -->
+							<div class="item_1b">
+								<img class="ani resize price_1b item" src="../../../image/cal_img/cost/tudou01@3x.png" swiper-animate-effect="bounceInLeft" swiper-animate-duration="0.5s" swiper-animate-delay="1.5s">
+							</div>
+							<!-- 左二 -->
+							<div class="item_1c">
+								<img class="ani resize price_1c item" src="../../../image/cal_img/cost/tudou02@3x.png" swiper-animate-effect="bounceInLeft" swiper-animate-duration="0.5s" swiper-animate-delay="2s">
+							</div>
+							<!--左三  -->
+							<div class="item_1d">
+								<img class="ani resize price_1d item" src="../../../image/cal_img/cost/tudou03@3x.png" swiper-animate-effect="bounceInRight" swiper-animate-duration="0.5s" swiper-animate-delay="2.5s">
+							</div>
+
+						 </div>
+
+					 </section>
+					 <!--slide2  -->
+					 <section class="swiper-slide swiper-slide1">
+						 <div class="slidPage">
+						 <!--自从  -->
+								 <div class="item01" >
+									 <span class="since1">自从用了慧种地,可对比同区域优秀种植企业亩成本</span>
+								 </div>
+						 <!-- 马铃薯 -->
+								 <div class="item_1a1">
+									 <span class="price_1a1 item">以马铃薯为例</span>
+								 </div>
+								 <!-- 省 -->
+								 <div class="item_1b1">
+									 <img class="ani resize price_1b1 item" src="../../../image/cal_img/cost/sheng@3x.png" swiper-animate-effect="bounceInLeft" swiper-animate-duration="0.5s" swiper-animate-delay="0s">
+								 </div>
+								 <!-- 横线 -->
+								 <div class="line1">
+									 <div class="crossLine1"></div>
+								 </div>
+								 <!-- 详细 -->
+								 <div class="item_1c1">
+									 <span class="price_1c1 item">可详细对比不同作物生长周期每亩投入成本</span>
+								 </div>
+								 <!--对比  -->
+								 <div class="item_1d1">
+									 <img class="ani resize price_1d1 item" src="../../../image/cal_img/cost/quxian@3x.png" swiper-animate-effect="bounceInRight" swiper-animate-duration="0.5s" swiper-animate-delay="1s">
+								 </div>
+
+						 </div>
+					 </section>
+			<!-- slide3 -->
+<section class="swiper-slide swiper-slide1">
+	<div class="slidPage">
+	<!--自从  -->
+		<div class="item02" >
+			<span class="since2">还能详细分析整个种植过程有哪些成本可以节省</span>
+		</div>
+	<!-- 复合肥 -->
+		<div class="item_1a2">
+			<img class="ani resize price_1a2 item" src="../../../image/cal_img/cost/fuhefei.png" swiper-animate-effect="bounceInLeft" swiper-animate-duration="0.5s" swiper-animate-delay="0s">
+		</div>
+		<!-- 种植户选择 -->
+		<div class="item_1b2">
+			<img class="ani resize price_1b2 item" src="../../../image/cal_img/cost/user.png" swiper-animate-effect="bounceInRight" swiper-animate-duration="0.5s" swiper-animate-delay="1s">
+		</div>
+		<!-- 竖线 -->
+		<div class="line2">
+			<div class="crossLine2"></div>
+		</div>
+		<!-- 问号 -->
+		<!-- <div class="item_1c2">
+			<img class="ani resize price_1c2 item" src="../../../image/cal_img/cost/question.png" swiper-animate-effect="bounceInLeft" swiper-animate-duration="0.5s" swiper-animate-delay="1s">
+		</div> -->
+		<!--查看  -->
+		<div id="costView" class="item_1d2">
+			<img class="ani resize price_1d2 item" src="../../../image/cal_img/cost/chakan.png" swiper-animate-effect="bounceInLeft" swiper-animate-duration="0.5s" swiper-animate-delay="1.5s">
+		</div>
+		<!-- 弹出层 -->
+		<div class="layer" id="frnd" style="display:none">
+			<div class="item_1e2">
+				<img class="price_1e2 item" src="../../../image/cal_img/cost/totast.png">
+			</div>
+			<!-- 关闭 -->
+			<div class="item_1f2" id="close">
+				<img class="price_1f2 item" src="../../../image/cal_img/cost/dele.png">
+			</div>
+		</div>
+
+	</div>
+</section>
+<!-- slide4 -->
+<section class="swiper-slide swiper-slide1">
+	<div class="slidPage">
+<!--网格  -->
+		<div class="item03">
+			<img class="since3" src="../../../image/cal_img/cost/wangge@3x.png">
+		</div>
+<!-- 图一 -->
+		<div class="item_1a3">
+			<img class="ani resize price_1a3 item" src="../../../image/cal_img/cost/p01.png" swiper-animate-effect="bounceInDown" swiper-animate-duration="0.5s" swiper-animate-delay="0.5s">
+		</div>
+		<!-- 图二 -->
+		<div class="item_1b3">
+			<img class="ani resize price_1b3 item" src="../../../image/cal_img/cost/p02.png" swiper-animate-effect="bounceInLeft" swiper-animate-duration="0.5s" swiper-animate-delay="1.5s">
+		</div>
+		<!-- 图三 -->
+		<div class="line3">
+				<img class="ani resize crossLine3" src="../../../image/cal_img/cost/p03.png" swiper-animate-effect="bounceInLeft" swiper-animate-duration="0.5s" swiper-animate-delay="2.5s">
+		</div>
+		<!-- 图四 -->
+		<div class="item_1c3">
+			<img class="ani resize price_1c3 item" src="../../../image/cal_img/cost/p05.png" swiper-animate-effect="bounceInUp" swiper-animate-duration="0.5s" swiper-animate-delay="3s">
+		</div>
+		<!--雨滴  -->
+		<div class="item_1d3">
+			<img class="ani resize price_1d3 item" src="../../../image/cal_img/cost/p04.png"  swiper-animate-effect="bounceInDown" swiper-animate-duration="3s" swiper-animate-delay="1.5s">
+		</div>
+		<!-- 字一 -->
+			<div class="item_1e3">
+				<img class="ani resize price_1e3 item" src="../../../image/cal_img/cost/p06.png" swiper-animate-effect="bounceInDown" swiper-animate-duration="0.5s" swiper-animate-delay="0s">
+			</div>
+			<!-- 字二 -->
+			<div class="item_1f3">
+				<img class="ani resize price_1f3 item" src="../../../image/cal_img/cost/p07.png" swiper-animate-effect="bounceInRight" swiper-animate-duration="0.5s" swiper-animate-delay="1s">
+			</div>
+			<!-- 字三 -->
+			<div class="item_1g3">
+				<img class="ani resize price_1g3 item" src="../../../image/cal_img/cost/p08.png" swiper-animate-effect="bounceInRight" swiper-animate-duration="0.5s" swiper-animate-delay="2s">
+			</div>
+
+	</div>
+</section>
+
+
+		 </div>
+		 <!-- <div class="toDown">
+			 <img id="array" class="resize price_down item" src="../../../image/cal_img/price/xiangxia@3x.png" />
+		 </div> -->
+	 <div class="swiper-pagination"></div>
+	 </div>
+
+
+</body>
+<script type="text/javascript" src="../../../script/common/api.js"></script>
+<script type="text/javascript" src="../../../script/common/swiper.min.js"></script>
+<script type="text/javascript" src="../../../script/common/swiper.animate.min.js"></script>
+<script type="text/javascript">
+	apiready = function() {
+		var header = $api.byId('header');
+		$api.fixStatusBar(header);
+		scaleW=window.innerWidth/320;
+		scaleH=window.innerHeight/480;
+		var resizes = document.querySelectorAll('.resize');
+							for (var j=0; j<resizes.length; j++) {
+							 resizes[j].style.width=parseInt(resizes[j].style.width)*scaleW+'px';
+					 resizes[j].style.height=parseInt(resizes[j].style.height)*scaleH+'px';
+					 resizes[j].style.top=parseInt(resizes[j].style.top)*scaleH+'px';
+					 resizes[j].style.left=parseInt(resizes[j].style.left)*scaleW+'px';
+							}
+
+			var mySwiper = new Swiper ('.swiper-container', {
+			 direction : 'vertical',
+			 pagination: '.swiper-pagination',
+			//virtualTranslate : true,
+			 mousewheelControl : true,
+			 onInit: function(swiper){
+			 swiperAnimateCache(swiper);
+			 swiperAnimate(swiper);
+				},
+			 onSlideChangeEnd: function(swiper){
+			swiperAnimate(swiper);
+				},
+			onTransitionEnd: function(swiper){
+			swiperAnimate(swiper);
+				},
+
+
+			watchSlidesProgress: true,
+
+					onProgress: function(swiper){
+						for (var i = 0; i < swiper.slides.length; i++){
+							var slide = swiper.slides[i];
+							var progress = slide.progress;
+							var translate = progress*swiper.height/4;
+					scale = 1 - Math.min(Math.abs(progress * 0.5), 1);
+							var opacity = 1 - Math.min(Math.abs(progress/2),0.5);
+							slide.style.opacity = opacity;
+					es = slide.style;
+					es.webkitTransform = es.MsTransform = es.msTransform = es.MozTransform = es.OTransform = es.transform = 'translate3d(0,'+translate+'px,-'+translate+'px) scaleY(' + scale + ')';
+
+						}
+					},
+
+				 onSetTransition: function(swiper, speed) {
+						for (var i = 0; i < swiper.slides.length; i++){
+							es = swiper.slides[i].style;
+					es.webkitTransitionDuration = es.MsTransitionDuration = es.msTransitionDuration = es.MozTransitionDuration = es.OTransitionDuration = es.transitionDuration = speed + 'ms';
+
+						}
+					},
+
+
+
+				 })
+		}
+		// 查看
+		$api.addEvt($api.byId('costView'), 'click',function(){
+
+			$api.css($api.byId('pri_chart'),'background: rgba(0, 0, 0, 0.3);')
+
+				$api.css($api.byId('frnd'),'display:block')
+		});
+		// 关闭
+		$api.addEvt($api.byId('close'), 'click',function(){
+
+				$api.css($api.byId('frnd'),'display:none')
+
+		});
+	function closeWin() {
+				api.closeWin();
+	}
+
+</script>
+
+</html>

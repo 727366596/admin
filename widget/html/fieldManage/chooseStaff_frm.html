@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="../../css/common/public.css"/>
+      <link rel="stylesheet" type="text/css" href="../../css/common/header.css"/>
+      <link rel="stylesheet" type="text/css" href="../../css/fieldManage/chooseStaff_frm.css"/>
+      <script type="text/javascript" src="../../script/common/rem-750.js"></script>
+  </head>
+  <body>
+     <div id="contain">
+     </div>
+     <div id="footer">就选他了</div>
+      <script type="text/template" id='StaffTmpl'>
+        <div class="employList">
+          {{each(i,item) staffList.data}}
+              <div class="public_title">
+                <span>${item.officeName}</span>
+              </div>
+                <ul class="imglist clearfix" >
+                   {{each(j,temp) item.userList}}
+                    <li data-id='${temp.id}' data-name="${temp.name}" onclick="changeStyle(this)">
+                      {{if temp.photo.length && temp.photo.length>0}}
+                          <img id="avatar" src="${staffList.url}/${temp.photo}" >
+                         {{else}}
+                         <img src="../../image/fieldManage/default_avatar.png" alt="">
+                      {{/if}}
+                      <span class="staffName">${temp.name}</span>
+                    </li>
+                    {{/each}}
+                </ul>
+          {{/each}}
+        </div>
+      </script>
+  </body>
+  <script type="text/javascript" src="../../script/common/api.js"></script>
+  <script type="text/javascript" src="../../script/common/jquery.min.js"></script>
+  <script type="text/javascript" src="../../script/common/jquery.tmpl.js"></script>
+  <script type="text/javascript" src="../../script/common/zepto-1.2.0.min.js"></script>
+  <script type="text/javascript" src="../../script/common/pds.ajax.js"></script>
+  <script type="text/javascript">
+      apiready = function(){
+        api.parseTapmode();
+        getEmployees();
+        // 渲染模板
+        // 选好员工之后跳转回前一个页面
+        $('#footer').click(function(){
+          if(clickFlag ==1){
+          // 调用重新刷新页面的方法
+          switch(api.pageParam.planOut){
+            case 1:
+            api.execScript({
+                name: 'win_home',
+                frameName: 'planOut_frm',
+                script: 'getExecutor()'
+            });
+            break;
+          case 2:
+            api.execScript({
+                name: 'plantPlan_win',
+                frameName: 'plantPlan_frm',
+                script: 'getExecutor()'
+            });
+            break
+          case 3:
+            api.execScript({
+                name: 'plantEditor_win',
+                frameName: 'plantEditor_frm',
+                script: 'getExecutor()'
+            });
+            break
+          case 4:
+            api.execScript({
+                name: 'PlantPlanEditor_win',
+                frameName: 'PlantPlanEditor_frm',
+                script: 'getExecutor()'
+            });
+            break
+          case 5:
+            api.execScript({
+                name: 'planOutEditor_win',
+                frameName: 'planOutEditor_frm',
+                script: 'getExecutor()'
+            });
+          break
+          default:
+            api.execScript({
+                name: 'sendWork_win',
+                frameName: 'sendWork_frm',
+                script: 'openFrm()'
+            });
+          }
+          api.closeWin();
+        }else{
+          alert('请先选择员工')
+        };
+
+        })
+        //alert($('#avatar').attr('src'))
+      };
+      // 发送ajaxt
+
+      function getEmployees(){
+              pds.ajaxSubmit({
+                 url:"app/task/officeAndUsers",
+                 type : "GET",
+                 success:function(e){
+                    // alert("success")
+                    //alert(JSON.stringify(e));
+                    e.url=pds.defaultUri
+                    staffList = e;
+                    // alert(JSON.stringify(e.url))
+                    //$("#contain").append($("#StaffTmpl").tmpl(staffList));
+                      // 真正的逻辑处理
+                    if(e.status=='ok' && e.data != '' && e.data !=null && e.data != [] ){
+                      $("#contain").append($("#StaffTmpl").tmpl(staffList));
+                    }else{
+                      alert('暂无数据')
+                    }
+
+                 },
+                 error:function(e){
+                    api.alert({msg:"服务器异常，请联系管理员!"});
+                 }
+              });
+      };
+      // 点击改变样式
+      var clickFlag ;
+      function changeStyle(dom){
+        // $('.imglist li').on('click',function(){
+             // 获取员工的id和名字传给后台和上一页
+            // $api.rmStorage("employInfo");
+              var employ_id = $(dom).attr('data-id');
+              var employ_name = $(dom).attr('data-name');
+              $api.setStorage('employInfo',{employId:employ_id,employName:employ_name});
+              $(dom).parents().find("img").css('border','0.06rem solid #e1e1e3');
+              $(dom).parents().find(".staffName").css('color','#666666');
+              $(dom).children('img').css('border','0.06rem solid #00C558');
+              $(dom).children('.staffName').css('color','#00C558');
+              clickFlag = 1;
+        //})
+      }
+      // function sendEmploy(){
+      //
+      // }
+
+
+
+  </script>
+  </html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>地头价</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/common/public.css" />
+    <script type="text/javascript" src="../../../script/common/rem.js"></script>
+    <style>
+				body{
+					text-align: center;
+					position: relative;
+				}
+				#body_totop_btn{
+						position: fixed;
+						bottom:0.5rem;
+						right:0.2rem;
+						width:1.2rem;
+						height:1.2rem;
+						z-index: 999;
+						line-height: 2.25rem;
+						font-size: 0.2rem;font-family: PingFangSC-Regular, sans-serif;color: #AEADAD;
+						text-align: center;
+						background: url("../../../image/common/rocket_up.png") no-repeat center 3px;
+						background-size: 70% 70%;
+						background-color: rgba(0,0,0,0);
+						border-radius: 6px;
+						font-size: 0.20rem;
+						color: #20c714;
+						display: none;
+				}
+				.nav{
+						height:0.95rem;
+						line-height: 0.95rem;
+						width: 100%;
+						background-color: #fff;
+						display: -webkit-box;
+						display: -webkit-flex;
+						display:flex;
+
+						-webkit-box-orient: horizontal;
+						-webkit-flex-flow: row;
+						flex-flow: row;
+
+						-webkit-box-pack: justify;
+						-webkit-justify-content: space-between;
+						justify-content: space-between;
+
+						-webkit-box-align: center;
+						-webkit-align-items: center;
+						align-items: center;
+				}
+				.nav li{
+				  font-size: 0.3rem;
+				  font-family: "PingFangSC-Regular";
+				  width: 33%;
+				  height: 0.95rem;
+				  text-align: center;
+				}
+				.nav li>span{
+				    display: inline-block;
+				    vertical-align: top;
+				    height: 0.95rem;
+				    /*width: 55%;*/
+				    line-height: 0.95rem;
+				    margin-top: 0.05rem;
+				    font-size: 0.30rem;
+				    color: #666666;
+				}
+    </style>
+</head>
+<body>
+		<ul class="nav">
+				<li id="localPrice"><span>地头价</span></li>
+				<li id="marketPrice"><span>市场价</span></li>
+				<li id="morePrice"><span>多市场对比</span></li>
+		</ul>
+		<div id="body_totop_btn">
+				返回顶部
+		</div>
+</body>
+<script type="text/javascript" src="../../../script/common/api.js"></script>
+<script type="text/javascript" src="../../../script/common/jquery.min.js"></script>
+<script type="text/javascript" src="../../../script/common/common/pds.ajax.js"></script>
+<script type="text/javascript">
+	apiready = function(){
+
+	};
+	//导航tab切换
+	function tabCheck(){
+			$(".nav li").off("touchend").on("touchend",function(){
+					$(".nav li span").css({
+							"color":"#666666",
+							"border":"none",
+							"fontSize" :"0.3rem"
+					});
+					$(this).find("span").css({
+							"color":"#00c558",
+							"border-bottom":"solid 1px #00c558",
+							"fontSize" :"0.32rem"
+					});
+
+			});
+
+	};
+
+
+
+	//打开技术详情页面***************************************************
+	function openTechTransferInfo(id){
+		api.openWin({
+			name : "frm_home_tech_transfer_info",
+			url : "widget://html/home/techTransfer/win_home_tech_transfer_info.html",
+			reload : true,
+			selecteIndex : '3',
+			slidBackEnabled : false,
+			pageParam : {
+					contentId : id
+			},
+			animation : {
+				type : "movein", //动画类型（详见动画类型常量）
+				subType : "from_right", //动画子类型（详见动画子类型常量）
+				duration : 300 //动画过渡时间，默认300毫秒
+			}
+		});
+	};
+
+	//获取当前时间，格式YYYY-MM-DD
+    function getNowFormatDate() {
+        var date = new Date();
+        var seperator1 = "-";
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = year + seperator1 + month + seperator1 + strDate;
+        return currentdate;
+    }
+
+	//返回上一级********************************************************************
+	function back(){
+			api.closeFrame();
+	}
+</script>
+</html>

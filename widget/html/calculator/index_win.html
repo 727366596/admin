@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>种植测算</title>
+	<script type="text/javascript" src="../../script/common/rem.js"></script>
+	<link rel="stylesheet" href="../../css/common/public.css" />
+	<link rel="stylesheet" href="../../css/common/header.css" />
+	<style>
+		/*#header {
+			background: #204e41;
+		}*/
+		.headerRight img{
+       background: #fff;
+		}
+		.headerRight{
+			background: url(../../image/cal_img/tip.png) no-repeat center;
+	    background-size: 25px 25px;
+		}
+	</style>
+</head>
+
+<body>
+	<header id="header">
+		<div class="headerLeft" onclick="closeWin()"></div>
+		<div class="headerCenter">种植测算</div>
+		<div class="headerRight" onclick="toolTip()"></div>
+	</header>
+</body>
+<script type="text/javascript" src="../../script/common/api.js"></script>
+<script type="text/javascript">
+	apiready = function() {
+		api.parseTapmode();
+		var header = $api.byId('header');
+		$api.fixStatusBar(header);
+		var headerPos = $api.offset(header);
+		var body_h = $api.offset($api.dom('body')).h;
+		api.openFrame({
+			name: 'index_frm',
+			url: './index_frm.html',
+			bounces: true,
+			reload: true,
+			rect: {
+				x: 0,
+				y: headerPos.h,
+				w: 'auto',
+				h: 'auto'
+			}
+		})
+
+		api.addEventListener({
+				name: 'keyback'
+		}, function(ret, err){
+				if( ret ){
+					closeWin();
+				}
+		});
+
+	};
+
+	/*******监听事件*********/
+	function onkeyback(){
+		api.sendEvent({
+				name: 'backHome'
+			})
+	}
+
+	function closeWin() {
+		api.closeWin();
+	  onkeyback();
+	}
+
+	function toolTip(){
+		api.sendEvent({
+		    name: 'showEvent'
+		});
+	}
+</script>
+
+</html>

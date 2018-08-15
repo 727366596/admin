@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>种植计算器win</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/common/public.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/common/header.css" />
+    <script type="text/javascript" src="../../../script/common/rem-750.js"></script>
+</head>
+<body>
+    <div id="moveHeader">
+        <div class="headerLeft" onclick="back()"></div>
+        <div class="headerCenter">
+            种植计算器
+        </div>
+        <div class="headerRight"></div>
+    </div>
+
+</body>
+<script type="text/javascript" src="../../../script/common/api.js"></script>
+<script type="text/javascript" src="../../../script/common/zepto-1.2.0.min.js"></script>
+<script type="text/javascript">
+    apiready = function(){
+        //适配iOS7+，Android4.4+状态栏沉浸式效果，详见config文档statusBarAppearance字段
+        var header = $api.byId('moveHeader');
+        $api.fixStatusBar(header);
+        var headerH = $api.offset(header).h;
+        //$("body").css({"paddingTop":headerH+"px"});
+        var id_ = api.pageParam.id;
+
+        api.openFrame({
+            name: 'empty-frm',
+            url: '../../empty-frm.html',
+            bounces: false,
+            rect: {
+                x: 0,
+                y: headerH,
+                w: 'auto',
+                h: 'auto'
+            }
+        });
+    };
+    function back(){
+        api.closeWin();
+    }
+</script>
+</html>

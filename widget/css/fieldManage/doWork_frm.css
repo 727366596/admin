@@ -1,0 +1,219 @@
+.clearfix{*zoom:1;}
+.clearfix:after{display:block;overflow:hidden;clear:both;height:0;visibility:hidden;content:".";}
+.wrapper{
+  margin-top: 1.5rem;
+  font-size: 0.3rem;
+}
+.page_title{
+  background-color: #fff;
+  border-bottom: 1px solid rgba(34,31,32,0.1);
+  box-sizing: border-box;
+}
+.page_title>span{
+  padding:0.14rem 0;
+  padding-left: 0.2rem;
+  border-left: 4px solid #fbd033;
+}
+#tab_work{
+  height: 1.6rem;
+  line-height: 1.6rem;
+  background-color: #fff;
+  text-align: center;
+}
+#tab_work ul{
+  vertical-align: middle;
+  margin-left: 0.4rem;
+  margin-right: 0.4rem;
+  padding-top: 0.4rem;
+  height: 0.7rem;
+  line-height: 0.7rem;
+}
+#tab_work ul li{
+  float: left;
+  width: 50%;
+  font-size: 0.3rem;
+  color:#999999;
+  font-family: "PingFangSC Regular"
+}
+#tab_work ul li:nth-child(1){
+  border-left:1px solid #98c721;
+  border-top:1px solid #98c721;
+  border-bottom:1px solid #98c721;
+}
+#tab_work ul li:nth-child(2){
+  border-right:1px solid #98c721;
+  border-top:1px solid #98c721;
+  border-bottom:1px solid #98c721;
+}
+
+#pub_contain{
+  background-color: #fff;
+  margin-top: 0.1rem;
+}
+#pub_contain>div{
+  margin-left: 0.4rem;
+  margin-right: 0.4rem;
+  padding-top: 0.4rem;
+}
+#pub_contain .pub_person{
+  height: 0.8rem ;
+  line-height: 0.8rem;
+}
+.pub_person div{
+    float: left;
+    height: 0.8rem ;
+    line-height: 0.8rem;
+    font-size: 0.3rem;
+}
+.div-active{
+    color:#000!important;
+}
+.pub_person div:nth-child(1){
+      width: 30%;
+      color:#666666;
+}
+.pub_person div:nth-child(2){
+  width: 70%;
+  border: 1px solid #b0bcb0;
+  color:#D1CDCD;
+  padding-left:0.22rem;
+}
+.pub_date{
+  margin-top: 0.4rem;
+  padding-bottom: 0.45rem;
+}
+.pub_date div{
+  float: left;
+  height: 0.8rem ;
+  line-height: 0.8rem;
+  font-size: 0.3rem;
+}
+.pub_date div:nth-child(1){
+    width: 30%;
+    color:#666666;
+}
+.pub_date div:nth-child(2){
+  width: 70%;
+  border: 1px solid #b0bcb0;
+  color:#D1CDCD;
+  padding-left:0.22rem;
+}
+.pub_date .btn{
+  height: 0.76rem;
+  line-height: 0.76rem;
+  background-color: #ef8132;
+  margin-top: 0.4rem;
+  color:#fff;
+  width: 100%;
+  text-align: center;
+}
+.pub_other{
+  margin-top: 0.4rem;
+  padding-bottom: 0.45rem;
+  background-color: #fff;
+  position: relative;
+}
+.pub_other div:nth-child(1){
+  float: left;
+  width: 30%;
+  color:#666666;
+}
+.pub_other textarea{
+  float: left;
+  width: 70%;
+  height: 2.24rem;
+}
+.bottom{
+  width: 100%;
+  margin-right: 0.4rem;
+  margin-left: 0.4rem;
+}
+.btn_other{
+  height: 0.9rem;
+  line-height: 0.9rem;
+  background-color: #ef8132;
+  margin-top: 0.4rem;
+  width: 100%;
+  color:#fff;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  left:0;
+}
+textarea{
+  /*background-color: rgba(0,0,0,0.4);*/
+}
+textarea::-webkit-input-placeholder {
+  color:#d2cecf;
+  font-size: 0.3rem;
+}
+textarea::-moz-placeholder {
+  color:#d2cecf;
+  font-size: 0.3rem;
+}
+.mike{
+   width: 0.42rem;
+   height: 0.7rem;
+   background: url("../../image/fieldManage/mike.png") no-repeat center center;
+   background-size: 100% 100%;
+   position: absolute;
+   right:0.1rem;
+   top:1.4rem;
+}
+#record_n{
+  width: 60%;
+  height: 1rem;
+  line-height: 1rem;
+  background-color: #effaec;
+  float: right;
+  border-radius: 0.5rem;
+  padding: 0 0.2rem;
+  margin-right: 0.7rem;
+  display: none;
+  position: relative;
+}
+#timeRecord{
+color: #98c723;
+position: absolute;
+right: 0.2rem;
+top:0;
+}
+
+#viocegifId{
+  width: 3rem;
+  height: 3rem;
+  position: absolute;
+  left:50%;
+  top:50%;
+  margin-left: -1.5rem;
+  margin-top: -1.5rem;
+}
+.paly_icon{
+  display: block;
+  width: 0.3rem;
+  height: 1rem;
+  margin-bottom: 0.2rem;
+  background: url('../../image/fieldManage/play.png') no-repeat center center;
+  background-size:0.3rem 0.44rem;
+}
+.paly_delete{
+  display: block;
+  width: 0.4rem;
+  height: 0.5rem;
+  background: url('../../image/fieldManage/delete.png') no-repeat center center;
+  background-size:100% 100%;
+  position: absolute;
+  right:0rem;
+  bottom:0.7rem;
+  display: none;
+}
+#triangle-up{
+  display: block;
+  width: 0;
+  height: 0;
+  border-left: 0.4rem solid transparent;
+  border-right: 0.2rem solid transparent;
+  border-bottom: 0.4rem solid red;
+  margin-top: -0.18rem;
+  margin-left: 0.26rem;
+}

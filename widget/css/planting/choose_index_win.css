@@ -1,0 +1,339 @@
+.clearfix{*zoom:1;}
+.clearfix:after{display:block;overflow:hidden;clear:both;height:0;visibility:hidden;content:".";}
+#tab_top{
+
+  font-size: 0.3rem;
+  height: 2.5rem;
+  line-height: 2.5rem;
+  background-color: #fff;
+  display: flex;
+  /*background-color: red;*/
+  color:#666666;
+}
+#tab_top li{
+  flex:1;
+  text-align: center;
+}
+#tab_top .tab_plan{
+  display: block;
+  width: 1.2rem;
+  height:1.2rem;
+  background: url('../../image/planting/planA.png') no-repeat center center;
+  background-size: 1.2rem 1.2rem;
+  margin:0 auto;
+  border-top:3px solid #fff;
+  margin-top: 0.4rem;
+  height:1.6rem;
+  margin-top: 0rem;
+}
+
+#tab_top .currentA{
+  display: block;
+  width: 1.2rem;
+  height:1.2rem;
+  background: url('../../image/planting/planA_b.png') no-repeat center center;
+  background-size: 1.2rem 1.2rem;
+  margin:0 auto;
+  margin-top: 0.4rem;
+  border-top:3px solid #ee7e34;
+  height:1.6rem;
+  margin-top: 0rem;
+}
+
+#tab_top .currentA1{
+  display: block;
+  width: 1.2rem;
+  height:1.2rem;
+  background: url('../../image/planting/planA_b.png') no-repeat center center;
+  background-size: 1.2rem 1.2rem;
+  margin:0 auto;
+  margin-top: 0.4rem;
+  border-top:3px solid #fff;
+  height:1.6rem;
+  margin-top: 0rem;
+}
+
+/*#tab_top .planA{
+  border-top:3px solid #ee7e34;
+  height:1.6rem;
+  margin-top: 0rem;
+}*/
+
+#tab_top .planB{
+  display: block;
+  width: 1.2rem;
+  height:1.2rem;
+  background: url('../../image/planting/planB.png') no-repeat center center;
+  background-size: 1.2rem 1.2rem;
+  margin:0 auto;
+  margin-top: 0.4rem;
+  height:1.6rem;
+  margin-top: 0rem;
+}
+
+#tab_top .currentB{
+  display: block;
+  width: 1.2rem;
+  height:1.2rem;
+  background: url('../../image/planting/planB_b.png') no-repeat center center;
+  background-size: 1.2rem 1.2rem;
+  margin:0 auto;
+  margin-top: 0.4rem;
+  border-top:3px solid #ee7e34;
+  height:1.6rem;
+  margin-top: 0rem;
+}
+#tab_top .currentB1{
+  display: block;
+  width: 1.2rem;
+  height:1.2rem;
+  background: url('../../image/planting/planB_b.png') no-repeat center center;
+  background-size: 1.2rem 1.2rem;
+  margin:0 auto;
+  margin-top: 0.4rem;
+  border-top:3px solid #fff;
+  height:1.6rem;
+  margin-top: 0rem;
+}
+
+/*#tab_top .planB{
+  border-top:3px solid #ee7e34;
+  height:1.6rem;
+  margin-top: 0rem;
+}*/
+
+
+/*#tab_top .planB{
+  display: block;
+  width: 1.2rem;
+  height:1.6rem;
+  margin-top: 0rem;
+  background: url('../../image/planting/planB.png') no-repeat center center;
+  background-size: 1.2rem 1.2rem;
+}
+#tab_top .currentB{
+  display: block;
+  width: 1.2rem;
+  height:1.2rem;
+  background: url('../../image/planting/planB_b.png') no-repeat center center;
+  background-size: 1.2rem 1.2rem;
+  margin:0 auto;
+  margin-top: 0.4rem;
+}
+#tab_top .planB{
+  border-top:3px solid #ee7e34;
+  height:1.6rem;
+  margin-top: 0rem;
+}*/
+#tab_top li span{
+  display: block;
+  height: 0.4rem;
+  line-height: 0.4rem;
+  padding-bottom: 10px;
+  margin-top: 0rem;
+  font-size: 0.3rem;
+  color:#666666;
+}
+#tab_top li .special{
+color:#FF7500;
+}
+#plan_content{
+  background-color: #fff;
+  margin-top: 0.1rem;
+  font-size: 0.3rem;
+  text-align: center;
+  position: relative;
+  padding-top: 0.4rem;
+  background-color: #fff;
+}
+#plan_content .plan_title{
+  height: 0.4rem;
+  line-height: 0.4rem;
+  display: table ;
+  margin: 0 auto;
+}
+#plan_content .plan_title span{
+   float: left;
+   font-size: 0.28rem;
+   color:#666666;
+}
+#plan_content .plan_title i{
+  margin-top: 0.1rem;
+}
+#plan_content .plan_title i:nth-child(1){
+   float: left;
+   display: block;
+   width: 0.24rem;
+   height: 0.14rem;
+   background: url('../../image/planting/choose_l.png') no-repeat center center;
+   background-size: 100% 100%;
+   margin-right: 0.3rem;
+   vertical-align: middle;
+}
+#plan_content .plan_title i:nth-child(3){
+   float: left;
+   display: block;
+   width: 0.24rem;
+   height: 0.14rem;
+   background: url('../../image/planting/choose_r.png') no-repeat center center;
+   background-size: 100% 100%;
+   margin-left: 0.3rem;
+   vertical-align: middle;
+}
+
+#plan_list{
+  background-color: #fff;
+  padding-top: 0.5rem;
+  padding-bottom:0.8rem ;
+}
+#plan_list .choose{
+  display: table;
+  margin: 0 auto;
+}
+#plan_list .choose div{
+  float: left;
+}
+#plan_list .choose div{
+    width: 3.02rem;
+    height: 0.65rem;
+    line-height: 0.65rem;
+    border: 1px solid #6ebc43;
+    border-radius: 0.6rem;
+    padding-left: 0.4rem;
+    position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#plan_list .choose div select{
+  color:#60bc56;
+  font-size: 0.28rem;
+  width: 2.08rem;
+  height: 0.65rem;
+  line-height: 0.65rem;
+  position: absolute;
+  left:0;
+  top:0;
+  padding-left: 0.4rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+}
+#plan_list .choose div:nth-child(1){
+   margin-right: 0.23rem;
+}
+#plan_list .choose div:nth-child(2){
+   margin-left: 0.23rem;
+}
+#plan_list .choose div .icon_select{
+   display: inline-block;
+   width: 0.25rem;
+   height: 0.13rem;
+   background: url('../../image/management/open.png') no-repeat center center;
+   background-size: 100% 100%;
+   position: absolute;
+   right:0.46rem;
+   top:0.26rem;
+}
+#land_list {
+  margin-top: 0.63rem;
+}
+#land_list .tastList{
+
+}
+
+#land_list .tastList>li{
+  border-bottom: 1px solid #efeff4;
+}
+#land_list .tastList>li:nth-child(1){
+  border-top: 1px solid #efeff4;
+}
+#land_list .tastList>li:nth-child(1) .planDetail{
+ display: block;
+}
+#land_list .tastList li .task_detail{
+   font-size: 0.3rem;
+   color:#666666;
+   height: 0.92rem;
+   line-height: 0.92rem;
+   /*background-color: green;*/
+}
+#land_list .tastList li .task_detail:nth-child(1){
+    /*border-top: 1px solid #efeff4;*/
+}
+#land_list .tastList li .task_detail span{
+  float: left;
+}
+#land_list .tastList li .task_detail .task_l{
+  display: inline-block;
+  width: 0.34rem;
+  height: 0.34rem;
+  background: url('../../image/planting/land_icon.png') no-repeat center center;
+  background-size: 100% 100%;
+  float: left;
+  margin-left: 0.24rem;
+  margin-right: 0.23rem;
+  margin-top: 0.29rem;
+}
+#land_list .tastList li .task_detail .task_r{
+  display: inline-block;
+  width: 0.26rem;
+  height: 0.26rem;
+  background: url('../../image/planting/go_down.png') no-repeat center center;
+  background-size: 100% 100%;
+  float: right;
+  margin-right: 0.28rem;
+  margin-top: 0.33rem;
+}
+#land_list .tastList li .task_detail .up{
+  display: inline-block;
+  width: 0.26rem;
+  height: 0.26rem;
+  background: url('../../image/planting/go_down.png') no-repeat center center;
+  background-size: 100% 100%;
+  float: right;
+  margin-right: 0.28rem;
+  margin-top: 0.33rem;
+}
+#land_list .tastList li .task_detail .down{
+  display: inline-block;
+  width: 0.26rem;
+  height: 0.26rem;
+  background: url('../../image/planting/go_top.png') no-repeat center center;
+  background-size: 100% 100%;
+  float: right;
+  margin-right: 0.28rem;
+  margin-top: 0.33rem;
+}
+
+#land_list .tastList li .planDetail{
+  display:none;
+  border-top: 1px solid #efeff4;
+
+}
+#land_list .tastList li .lands{
+  font-size: 0.28rem;
+  color:#999999;
+  /*list-style: square inside url('../../image/planting/plan_circle.png');*/
+  margin-left: 0.7rem;
+  padding-top: 0.43rem;
+}
+#land_list .tastList li .lands i{
+  display: block;
+  width: 6px;
+  height: 6px;
+  background: url('../../image/planting/plan_circle.png');
+  -webkit-background-size: 6px 6px;
+  background-size: 6px 6px;
+  position: absolute;
+
+}
+#land_list .tastList li .lands span{
+  margin-left: 0.2rem;
+  margin-top: -3px;
+}
+#land_list .tastList li .lands:last-child{
+   padding-bottom: 0.43rem;
+}

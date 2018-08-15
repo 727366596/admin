@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>win页面提示语</title>
+		<link rel="stylesheet" type="text/css" href="../../css/common/public.css"/>
+    <script type="text/javascript" src="../../script/common/rem-750.js"></script>
+    <script type="text/javascript" src="../../script/common/api.js"></script>
+  	<script src="../../script/common/zepto-1.2.0.min.js"></script>
+
+</head>
+<style type="text/css">
+    body {
+        width: 100%;
+        height: 100%;
+    }
+    .info {
+        position: relative;
+        background: url("../../image/common/infoFrm_info.png") no-repeat 15px 8px;
+        background-size: 15px 15px;
+        background-color: #fff;
+        color: #555;
+        font-size: 0.27rem;
+        height: 40px;
+        line-height: 40px;
+        text-align: right;;
+        padding-right: 35px;
+    }
+</style>
+<body>
+<div class="info" id="info" onclick="openCall();"></div>
+</body>
+
+<script type="text/javascript">
+    apiready = function(){
+        api.parseTapmode();
+        // var date = api.pageParam.date;
+        // var id = api.pageParam.id;
+        // var tel = api.pageParam.tel;
+        // console.log(date+"***********"+id+"******"+ tel +"******hahahahaha")
+        $("#info").text(api.pageParam.tel)
+    }
+    function setInfo(address){
+        $api.text($api.byId("info"),address);
+    }
+    function infoSlideUp(){
+        api.closeFrame({
+            name: 'employeePath_map_prompt_frm',
+            animation: {
+              type:"curl",
+              subType:"from_bottom",
+              duration:"1000"
+            }
+        });
+    }
+
+    //	点击“客服热线”弹出电话
+  	function openCall(){
+      var telNum = $("#info").text();
+    	api.confirm({
+    	    title: '确认拨打员工电话？',
+    	    msg: telNum,
+    	    buttons: ['确定', '取消']
+    	}, function(ret, err) {
+    	    var index = ret.buttonIndex;
+    	    if(index==1){
+    		    api.call({
+    			    type: 'tel_prompt',
+    			    number: telNum
+    			});
+    	    }
+    	});
+    }
+</script>
+</html>

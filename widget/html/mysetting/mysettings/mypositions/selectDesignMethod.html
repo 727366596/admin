@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<title>我的-选定地块</title>
+		<link rel="stylesheet" type="text/css" href="../../../../css/common1/aui.css"/>
+    <style>
+        .nav-bg{
+				  padding-top:20px;
+					background: #00c558;
+        }
+        p{
+          float: left;
+          margin-top: 40px;
+          margin-left: 10px;
+          width: 170px;
+          height:170px;
+        }
+        .circle{
+          text-align: center;
+          line-height: 170px;
+          border-radius: 85px;
+          border: 1px solid #757575;
+        }
+        .square{
+          padding:40px 10px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <nav class="aui-bar aui-bar-nav nav-bg">
+        <a class="aui-pull-left" onclick="api.closeWin()">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title">选择地块划定方式</div>
+    </nav>
+</header>
+<article>
+      <p class="circle" onclick="hand()">手动划定地块范围</p>
+      <p class="square">手动划定地块范围：适用于地块形状较为规则的地块选取一些重要的定位点进行轮廓划定</p>
+      <p class="circle" onclick="auto()">自动划定地块范围</p >
+      <p class="square">自动划定地块范围：适用于面积较小的地块，点击‘开始’后拿着手机绕地块边缘一周，即可生成轮廓</p>
+</article>
+<script type="text/javascript" src="../../../../script/common/api.js"></script>
+<script type="text/javascript" src="../../../../script/common/zepto-1.2.0.min.js"></script>
+<script type="text/javascript" src="../../../../script/common/pds.ajax.js"></script>
+<script>
+apiready = function(){
+    //alert(api.pageParam.id)
+  }
+  function hand(){
+    $api.openWin({
+            name: 'mypostion',
+            url: 'widget://html/mysetting/mysettings/mypostion.html',
+            pageParam: {
+                id: api.pageParam.id
+            }
+    });
+  }
+  function auto(){
+    $api.openWin({
+            name: 'mypostion',
+            url: 'widget://html/mysetting/mysettings/mypostion.html',
+            pageParam: {
+                id: api.pageParam.id
+            }
+    });
+  }
+</script>
+</body>
+</html>

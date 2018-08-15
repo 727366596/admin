@@ -1,0 +1,203 @@
+    body{
+        width: 100%;
+        height: 100%;
+        color:#747976;
+        background-color: #f3f4f4;
+    }
+    .scroller{
+        margin:0 0.4rem;
+    }
+    .clearfix{*zoom:1;}
+    .clearfix:after{display:block;overflow:hidden;clear:both;height:0;visibility:hidden;content:".";}
+    #tab{
+      height:0.95rem;
+      line-height: 0.95rem;
+      width: 100%;
+      background-color: #fff;
+      position: fixed;
+      left:0;
+      top:0;
+      z-index: 1;
+    }
+    #tab li{
+      float: left;
+      font-size: 0.3rem;
+      font-family: "PingFangSC Regular";
+      width: 33.33%;
+      height: 0.95rem;
+      text-align: center;
+    }
+    #tab li span{
+      display: inline-block;
+      height:0.95rem;
+      line-height: 0.95rem;
+    }
+   #wrapper{
+     padding-top: 1.3rem;
+     /*background-color: #f3f4f4;*/
+     /*background-color: blue;*/
+     /*position: absolute;
+     left: 0;
+     right: 0;
+     bottom: 0;
+     top: 0;*/
+     /*z-index: 1;*/
+     /*overflow-y: auto;*/
+     background-color: #f3f4f4;
+   }
+   #wrapper .scroller{
+     /*background-color: blue;*/
+   }
+   .list{
+       /*background-color: red;*/
+   }
+   .list .top{
+     font-size: 0.3rem;
+     color:#666666;
+     padding-top:0.3rem;
+     position: relative;
+     border-bottom: 1px solid rgba(34,31,32,0.1);
+   }
+   .list ul{float: left;}
+   .list .label{
+       margin-left: 0.9rem;
+   }
+   .list .content{
+      margin-bottom: 0.3rem;
+   }
+   .label li:nth-child(1),.label li:nth-child(2){
+      margin-bottom: 0.1rem;
+   }
+   .label li{
+     /*padding-bottom: 0.2rem;*/
+     height: 0.5rem;
+    }
+   .val{
+     margin-left: 0.3rem;
+     position: relative;
+     width: 30%;
+     overflow: hidden;
+     text-overflow: ellipsis;
+     white-space: nowrap;
+   }
+   .val li:nth-child(1){
+     height: 0.5rem;
+     line-height: 0.5rem;
+     /*background-color:red;*/
+     /*border: 1px solid #000;*/
+   }
+    .val li{
+       /*background-color: blue;*/
+       /*height: 0.6rem;*/
+       line-height: 0.6rem;
+       /*background-color: red;*/
+       width: 100%;
+       /*overflow: hidden;*/
+       /*text-overflow: ellipsis;*/
+       white-space: wrap;
+    }
+    .val li span{
+        height: 0.5rem;
+        line-height: 0.5rem;
+    }
+    .val li:last-child{
+      margin-top: 0.1rem;
+    }
+    .val .time{
+      margin-top: 2px;
+    }
+   .content li{
+     /*background-color: red;*/
+   }
+   .left_icon{
+     display: block;
+     width: 0.6rem;
+     height: 1.02rem;
+     /*background:url("../../image/fieldManage/top.png") no-repeat center center;*/
+     background-size: 100% 100%;
+     float: left;
+     position: absolute;
+     left:0.1rem;
+     top:-0.1rem;
+     margin-right: 0.54rem;
+   }
+   .right_icon{
+     display: block;
+     width: 0.65rem;
+     height: 0.63rem;
+     background:url("../../image/fieldManage/phone.png") no-repeat center center;
+     background-size: 0.65rem 0.63rem;
+     float: right;
+     margin-right: 0.32rem;
+     margin-top: 0.3rem;
+     padding: 0.5rem;
+   }
+   .current{
+     font-family: 'PingFangSC Regular';
+     font-size: 0.3rem;
+     color:#00C558;
+     border-bottom: 1px solid #00C558;
+   }
+   .sick{
+      /*text-align:center;
+      height: 0.8rem;
+      line-height: 0.8rem;
+      border-bottom: 1px solid rgba(34,31,32,0.1);
+      background-color: transparent;*/
+      width: 100%;
+      border-top: 1px solid #f3f4f4;
+      overflow: hidden;
+      padding: 0.18rem 0.4rem;
+      box-sizing: border-box;
+   }
+  /*.sick .wrapper_list{
+      display：flex;
+  }*/
+   .sick span{
+     	/*float: left;
+     display: inline-block;
+     justify-content:space-around;
+     width: auto;
+     height: 0.44rem;
+     line-height: 0.44rem;
+     padding: 0 0.16rem;
+     background-color: #ff4551;
+     color:#fff;
+     font-size: 0.24rem;
+     border-radius: 0.3rem;
+     	margin-left: 0.1rem;*/
+       font-size: 0.24rem;
+      float: left;
+      min-width: 0rem;
+      line-height: 0.4rem;
+      text-align: center;
+      color: #fff;
+      padding: 0 0.15rem;
+      box-sizing: border-box;
+      background: red;
+      border-radius: 10px;
+      margin-left: 0.1rem;
+   }
+
+   .solt{
+     background-color: #f3f4f4;
+     height: 0.3rem;
+   }
+   #body_totop_btn{
+       position: fixed;
+       bottom:0.5rem;
+       right:0.2rem;
+       width:1.2rem;
+       height:1.2rem;
+       z-index: 999;
+       line-height: 2.25rem;
+       font-size: 0.2rem;font-family: PingFangSC-Regular, sans-serif;color: #AEADAD;
+       text-align: center;
+       background: url("../../image/common/rocket_up.png") no-repeat center 3px;
+       background-size: 70% 70%;
+       background-color: rgba(0,0,0,0);
+       border-radius: 6px;
+       font-size: 0.20rem;
+       color: #20c714;
+       display: none;
+   }

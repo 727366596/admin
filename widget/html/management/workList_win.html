@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="../../css/common/public.css"/>
+      <link rel="stylesheet" type="text/css" href="../../css/common/header.css"/>
+      <script type="text/javascript" src="../../script/common/rem-750.js"></script>
+  </head>
+  <body>
+        <header id="header">
+                <div class="headerLeft" onclick="api.closeWin()"></div>
+                <div class="headerCenter">
+                    工单追溯
+                </div>
+                <div class="headerRight"></div>
+        </header>
+      <script type="text/javascript" src="../../script/common/api.js"></script>
+      <script type="text/javascript" src="../../script/common/jquery.min.js"></script>
+      <script type="text/javascript">
+          apiready = function(){
+            var header = $api.byId('header');
+            $api.fixStatusBar(header);
+            var headerH = $api.offset(header).h;
+            api.openFrame({
+              name : 'workList_frm',
+              url : './workList_frm.html',
+              pageParam: {
+                  landId: api.pageParam.landId,
+                  categoryId:api.pageParam.categoryId,
+                  farmId: api.pageParam.farmId,
+                  startDate:api.pageParam.startDates,
+                  endDate:api.pageParam.endDates,
+                  growthCycleId:api.pageParam.growthCycleId,
+                  weak:api.pageParam.weak,
+                  modelNum:api.pageParam.modelNum
+              },
+              rect: {
+  								x: 0,
+  								y: headerH,
+  								w: 'auto',
+  								h: 'auto'
+  						}
+            });
+          };
+
+      </script>
+  </body>
+
+  </html>

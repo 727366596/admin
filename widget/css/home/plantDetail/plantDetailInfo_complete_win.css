@@ -1,0 +1,144 @@
+body {
+	background-color:#f3f4f4
+}
+article {
+	margin-top:.2rem;
+	margin-left:.20rem;
+	margin-right:.20rem;
+	margin-bottom:1rem;
+	padding-top:.2rem;
+	background-color:#fff
+}
+section {
+	padding-top:.23rem;
+	background-color:#fff
+}
+p {
+	clear:both;
+	height:.8rem;
+	line-height:.8rem;
+	width:100%;
+	padding-right:.2rem;
+	line-height:.8rem!important;
+	margin-bottom:0!important;
+	padding-left:.2rem;
+	border-bottom:1px solid #f6f3f3
+}
+.first {
+	float:left;
+	width:25%;
+	font-size:.30rem;
+	color:#666;
+	text-align:left
+}
+.last {
+	float:right;
+	margin-left:9%;
+	width:65%;
+	color:#666;
+	font-size:.30rem;
+	text-align:right
+}
+.center {
+	float:left;
+	width:100%;
+	font-size:.30rem;
+	color:#ff7a00;
+	text-align:right
+}
+.standard {
+	clear:both;
+	width:100%;
+	padding:.2rem;
+	overflow-y:scroll;
+	min-height:3rem;
+	font-size:.26rem;
+	line-height:.26rem;
+	color:#666;
+	border:1px solid #f6f3f3
+}
+.standardTitle {
+	color:#666;
+	font-size:.30rem;
+	text-align:left
+}
+.last-p {
+	height:4rem;
+	padding-bottom:.2rem
+}
+h4 {
+	padding-top:.09rem;
+	padding-bottom:.05rem;
+	padding-left:.20rem;
+	width:2rem;
+	font-size:.26rem;
+	font-weight:lighter;
+	color:#fff;
+	background-color:#20c714;
+	border-top-right-radius:.42rem;
+	border-bottom-right-radius:.42rem;
+	white-space:nowrap
+}
+.resource>p {
+	border-bottom:0
+}
+.resource-p>span {
+	color:#82e268;
+	font-size: 0.26rem;
+	padding-left:.2rem
+}
+.firstTitle {
+	width:1.4rem
+}
+b {
+	display:inline-block;
+	padding:0;
+	margin:0;
+	background-color:#82e268;
+	width:.4rem;
+	height:.4rem;
+	line-height:.4rem;
+	color:#fff;
+	border-radius:.3rem
+}
+#pic {
+	clear:both;
+	display:block;
+	padding-left:.25rem;
+	padding-right:.25rem;
+	width:100%;
+	text-align:justify;
+	background-color:#fff
+}
+#pic>img {
+	display:inline-block;
+	margin-left:.25rem;
+	margin-right:.25rem;
+	margin-bottom:.25rem;
+	padding-top:.2rem;
+	padding-bottom:.2rem;
+	width:1.7rem;
+	height:1.7rem
+}
+.warn {
+	height:1.6rem
+}
+i {
+	display:inline-block;
+	width:.3rem;
+	height:.3rem;
+	background:url("../../../image/planting/require.png") no-repeat center center;
+	background-size:100% 100%
+}
+
+.kong {
+	padding-top:.3rem;
+	padding-bottom:.3rem;
+	text-align:center;
+	font-size:.26rem;
+	color:#666
+}
+.you{
+	width: 6rem !important;
+	height: 6rem !important;
+}

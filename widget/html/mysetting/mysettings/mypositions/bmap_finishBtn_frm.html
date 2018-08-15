@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>打点按钮frm</title>
+		<script src="../../../../script/common/zepto-1.2.0.min.js"></script>
+		<script type="text/javascript" src="../../../../script/common/api.js"></script>
+    <script type="text/javascript" src="../../../../script/common/jquery.min.js"></script>
+    <script type="text/javascript" src="../../../../script/common/pds.ajax.js"></script>
+</head>
+<style type="text/css">
+.frmBtn{
+  display: inline-block;
+  width: 65px;
+  height:65px;
+  border: none;
+  outline: none;
+  background-color: rgba(0,0,0,0.0);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 110% 110%;
+}
+.btn_active{
+  background-image: url("../../../../image/settings/finishBtn_active_bc_frm.png");
+}
+.btn{
+  background-image: url("../../../../image/settings/finishBtn_bc_frm.png");
+}
+</style>
+<body>
+    <button id="finishBtn" class="btn frmBtn" disabled="disabled"  onclick="complete();"></button>
+</body>
+
+<script type="text/javascript">
+    apiready = function(){
+        api.parseTapmode();
+    }
+    function btnUseable(){
+      $("#finishBtn").removeAttr("disabled").removeClass("btn").addClass("btn_active");
+    };
+    function btnUnuseable(){
+      $("#finishBtn").attr("disabled","disabled").removeClass("btn_active").addClass("btn");
+    };
+    function complete(){
+      var buriedPoint = pds.buriedPoint();
+            buriedPoint.pageId = 'page_delineate_plots_admin';
+            buriedPoint.eventId = 'button_delineate_plots_page_delineate_plots_admin';
+            pds.ajaxSubmit({
+            url:"app/buried_point/save",
+            data:{"point":buriedPoint},
+            success:function(v){
+              api.execScript({
+                  frameName: 'myposition_bmap_hand_show_frm',
+                  script: 'completeMakePoint()'
+              });
+            }
+          })
+
+    }
+</script>
+</html>

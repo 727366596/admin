@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<title>选择查询条件</title>
+	  <link rel="stylesheet" type="text/css" href="../../css/common/public.css"/>
+		<!-- <link rel="stylesheet" type="text/css" href="../../css/common/header.css"/> -->
+		<link rel="stylesheet" type="text/css" href="../../css/common/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/common/mui.picker.min.css"/>
+    <script type="text/javascript" src="../../script/common/rem-750.js"></script>
+    <style>
+		body{
+			background-color: #f3f4f4;
+			padding-bottom: 1.2rem;
+		}
+		section{
+			clear: both;
+			background-color: #fff;
+		}
+		ul{
+			padding-top: 0.25rem;
+			font-size: 0.3rem;
+			color:#666666;
+			text-align: center;
+		}
+		li{
+			text-align: center;
+		}
+		span{
+			display: inline-block;
+			position: relative;
+		}
+		input{
+			height: 0.7rem !important;
+			padding-left: 0.4rem;
+			font-size: 0.26rem;
+			color: #D1CDCD;
+			border-radius: 0.05rem !important;
+			border: 1px solid #B1BBB0;
+		}
+		.section-title{
+				padding-top: 0.1rem;
+				padding-bottom: 0.1rem;
+				padding-left: 0.1rem;
+				text-align: left;
+				font-size: 0.3rem;
+				color:#333333;
+				border-bottom: 1px solid #f6f3f3;
+		}
+		.filed{
+	   	text-align: left;
+			padding-top: 0.25rem;
+			padding-bottom: 0.2rem;
+			padding-left: 0.2rem;
+			padding-right: 0.2rem;
+		}
+		.filed>p{
+			display: inline-block;
+			margin-left: 0.1rem;
+			margin-top: 0.15rem;
+			padding-top: 0.02rem;
+			padding-bottom: 0.02rem;
+			padding-left: 0.2rem;
+			padding-right: 0.2rem;
+			border-radius: 0.05rem;
+			color: #82e268;
+			font-size: 0.28rem;
+			border-radius: 0.05rem;
+			border: 1px solid #82e268;
+		}
+		.filed2>p{
+			border-radius: 0.34rem;
+		}
+		.btnConfirm{
+			position: fixed;
+			bottom: 0;
+			width: 100%;
+			height: 0.8rem;
+			line-height: 0.8rem;
+			color: #FFFEFE;
+			font-size: 0.30rem;
+			text-align: center;
+			background-color: #FF7A00;
+		}
+		/*.btnConfirm{
+		  position: absolute;
+			margin-top: 0.4rem;
+			bottom: 0;
+			width: 100%;
+			height: 0.8rem;
+			line-height: 0.8rem;
+			color: #FFFEFE;
+			font-size: 0.30rem;
+			text-align: center;
+			background-color: #FF7A00;
+		}*/
+		.border1{
+			border-left: 2px solid #ffd400;
+		}
+		.border2{
+			border-left: 2px solid #79b2ff;
+		}
+		.border3{
+			border-left: 2px solid #82e268;
+		}
+		.border4{
+			border-left: 2px solid #f9b099;
+		}
+		i{
+			position: absolute;
+			display: inline-block;
+			width: 0.3rem;
+			height: 0.3rem;
+			background:url("../../image/management/arrow.png") no-repeat center center;
+			background-size: 80% 50%;
+			top: 0.2rem;
+			right: 0.1rem;
+		}
+		.small{
+			font-size: 0.24rem;
+		}
+    </style>
+</head>
+<body>
+<!-- <header id="mapLazyLoad">
+		<h4><span onclick="api.closeWin()"></span>作物长的怎么样</h4>
+</header> -->
+<!-- <header id="header">
+        <div class="headerLeft" onclick="api.closeWin()"></div>
+        <div class="headerCenter">
+            选择查询条件
+        </div>
+        <div class="headerRight"></div>
+</header> -->
+<article>
+	<section id="section1">
+			<nav class="section-title border1">
+	        选择统计时间<span class="small">（必选）</span>
+	    </nav>
+			<ul>
+				<li>
+					<span>开始时间：</span>
+					<span id="time1">
+						<input id="date1" type="text" placeholder="点击我选择时间" readonly>
+						<i></i>
+					</span>
+				</li>
+				<li>
+					<span>结束时间：</span>
+					<span id="time2">
+						<input id="date2" type="text" placeholder="点击我选择时间" readonly>
+						<i></i>
+					</span>
+				</li>
+			</ul>
+	</section>
+	<section id="section2">
+		<nav class="section-title border2">
+				选择地块<span class="small">（必选）</span>
+		</nav>
+		<div class="filed" id="selectFiled">
+			<!-- <p>数据库暂时为空，这是展示页面</p> -->
+		</div>
+	</section>
+	<section id="section3">
+		<nav class="section-title border3">
+				选择作物品名<span class="small">（必选）</span>
+		</nav>
+		<div class="filed filed2" id="spic">
+			<!-- <p>数据库暂时为空，这是展示页面</p> -->
+		</div>
+	</section>
+	<section id="section3">
+		<nav class="section-title border4">
+				选择作物品种<span class="small">（必选）</span>
+		</nav>
+		<div class="filed" id="pin">
+			<!-- <p>数据库暂时为空，这是展示页面</p> -->
+		</div>
+	</section>
+	<input id="idLand" type="hidden">
+	<input id="idCat" type="hidden">
+	<input id="nameLand" type="hidden">
+	<input id="nameCat" type="hidden">
+	<input id="cat" type="hidden">
+	<div class="btnConfirm" id="btnConfirm" onclick="cropGrowth()">我选好了</div>
+</article>
+<script type="text/javascript" src="../../script/common/api.js"></script>
+<script type="text/javascript" src="../../script/common/zepto-1.2.0.min.js"></script>
+<script type="text/javascript" src="../../script/common/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/common/pds.ajax.js"></script>
+<script type="text/javascript" src="../../script/common/mui.min.js"></script>
+<script type="text/javascript" src="../../script/common/mui.picker.min.js"></script>
+
+<script>
+apiready=function(){
+	// var header = $api.byId('header');
+	// 	$api.fixStatusBar(header);
+	// 	var headerH = $api.offset(header).h;
+	// 	$("body").css({"paddingTop":headerH+"px"});
+	  showLand()
+		var d = new Date(), y = d.getFullYear(), m = d.getMonth() + 1, r = d.getDate();
+		m < 10 ? m = "0" + m : m;
+		r < 10 ? r = "0" + r : r;
+		var endDate=y + "-" + m + "-" + r;
+		var startDate=y + "-0" + 1 + "-0" + 1;
+		$("#date1").val(startDate)
+		$("#date2").val(endDate)
+}
+function showLand(){
+	pds.ajaxSubmit({
+		url:'app/staff/farmland/land_list',
+		data:{farmId:api.pageParam.farmId},
+		success:function(ret){
+			var dt=ret.data,l=dt.length,land="";
+			if(!l){
+				return
+			}
+			for(var i=0; i<l; i++){
+				land+="<p id="+dt[i].id+">"+dt[i].name+"</p>"
+			}
+			$("#selectFiled").html(land);
+			$("#selectFiled>p").eq(0).css("backgroundColor","#e4ffdd")
+			$("#idLand").val($("#selectFiled>p").eq(0).attr("id"))
+			$("#nameLand").val($("#selectFiled>p").eq(0).html())
+			for(var j=0; j<l; j++){
+				$("#selectFiled>p").eq(j).on("touchstart",function(){
+					$("#selectFiled>p").css("backgroundColor","#fff")
+					$(this).css("backgroundColor","#e4ffdd")
+					$("#idLand").val($(this).attr("id"))
+					$("#nameLand").val($(this).html())
+				})
+			}
+			land=null
+		},
+		error:function(ret){
+			 api.alert({msg:"服务器异常，请联系管理员!"});
+		}
+  });
+	pds.ajaxSubmit({
+		url:'app/crop/categoryList',
+		type : "GET",
+		data:{farmId:api.pageParam.farmId},
+		success:function(ret){
+			//alert(JSON.stringify(ret))
+			var dt=ret.data,l=dt.length,spic="";
+			if(!l){
+				return
+			}
+			for(var i=0; i<l; i++){
+				spic+="<p id="+dt[i].id+">"+dt[i].catName+"</p>"
+			}
+			$("#spic").html(spic);
+			spic=null;
+		  $("#spic>p").eq(0).css("backgroundColor","#e4ffdd")
+			$("#cat").val($("#spic>p").eq(0).html())
+			pds.ajaxSubmit({
+				url:'app/crop/findCategoryList',
+				type : "GET",
+				data:{id:$("#spic>p").eq(0).attr("id")},
+				success:function(ret){
+					var dt=ret.data,l=dt.length,pin="";
+					if(!l){
+						return
+					}
+					for(var i=0; i<l; i++){
+						pin+="<p id="+dt[i].id+">"+dt[i].catName+"</p>"
+					}
+					$("#pin").html(pin);
+					$("#pin>p").eq(0).css("backgroundColor","#e4ffdd")
+					$("#idCat").val($("#pin>p").eq(0).attr("id"))
+					$("#nameCat").val($("#pin>p").eq(0).html())
+					pin=null;
+					for(var j=0; j<l; j++){
+						$("#pin>p").eq(j).on("touchstart",function(){
+							$("#pin>p").css("backgroundColor","#fff")
+							$(this).css("backgroundColor","#e4ffdd")
+							$("#idCat").val($(this).attr("id"))
+							$("#nameCat").val($(this).html())
+						})
+					}
+				},
+				error:function(e){
+					 api.alert({msg:"服务器异常，请联系管理员!"});
+				}
+		 });
+			for(var j=0; j<l; j++){
+				$("#spic>p").eq(j).on("touchstart",function(){
+					$("#spic>p").css("backgroundColor","#fff")
+					$(this).css("backgroundColor","#e4ffdd")
+					$("#cat").val($(this).html())
+					pds.ajaxSubmit({
+						url:'app/crop/findCategoryList',
+						type : "GET",
+						data:{id:$(this).attr("id")},
+						success:function(ret){
+							var dt=ret.data,l=dt.length,pin="";
+							if(!l){
+								return
+							}
+							for(var i=0; i<l; i++){
+								pin+="<p id="+dt[i].id+">"+dt[i].catName+"</p>"
+							}
+							$("#pin").html(pin);
+							$("#pin>p").eq(0).css("backgroundColor","#e4ffdd")
+							$("#idCat").val($("#pin>p").eq(0).attr("id"))
+							$("#nameCat").val($("#pin>p").eq(0).html())
+							pin=null;
+							for(var j=0; j<l; j++){
+								$("#pin>p").eq(j).on("touchstart",function(){
+									$("#pin>p").css("backgroundColor","#fff")
+									$(this).css("backgroundColor","#e4ffdd")
+									$("#idCat").val($(this).attr("id"))
+									$("#nameCat").val($(this).html())
+								})
+							}
+						},
+						error:function(ret){
+							 api.alert({msg:"服务器异常，请联系管理员!"});
+						}
+					});
+				})
+			}
+		},
+		error:function(ret){
+			 api.alert({msg:"服务器异常，请联系管理员!"});
+		}
+	});
+}
+function cropGrowth() {
+	if(!$("#date1").val()){
+		api.alert({msg:"请点击选择开始时间"});
+		return
+	}
+	if(!$("#date2").val()){
+		api.alert({msg:"请点击选择结束时间"});
+		return
+	}
+	if(!$("#idLand").val()){
+		api.alert({msg:"请点击选择地块"});
+		return
+	}
+	if(!$("#idCat").val()){
+		api.alert({msg:"请点击选择作物品种"});
+		return
+	}
+	$api.setStorage('startDates',$("#date1").val())
+	$api.setStorage('endDates',$("#date2").val())
+	$api.setStorage('landIds',$("#idLand").val())
+	$api.setStorage('categoryIds',$("#idCat").val())
+	$api.setStorage('landNames',$("#nameLand").val())
+	$api.setStorage('categorys',$("#nameCat").val())
+	$api.setStorage('cat',$("#cat").val())
+	api.execScript({
+    name: 'cropGrowth_win',
+		frameName:'cropGrowth_frm',
+    script: "initIn(1)"
+	});
+	api.closeWin();
+}
+// 调用事件插件
+		$("#time1").bind("touchstart",function(){
+			  $("#time1").unbind("touchstart")
+        mui.init()
+        var texts = $( '#date1' )
+        texts.on( 'tap', function () {
+            api.setFrameAttr( {
+             name: 'record_frm',//固定日历控件
+             bounces: false
+            } )
+
+            var dtpicker = new mui.DtPicker( {
+             type: 'date', //设置日历初始视图模式
+             labels: [ '年', '月', '日' ], //设置默认标签区域提示语
+            } )
+            dtpicker.show(function( rs ){
+             //console.log( JSON.stringify( rs ) );
+             var dateValue = JSON.parse(JSON.stringify( rs ));
+
+             //console.log(dateValue.value);
+						 var beginDate=rs.y.text + '-' + rs.m.text + '-' + rs.d.text;
+						 var endDate=$("#date2").val();
+						 var d1 = new Date(beginDate.replace(/\-/g, "\/"));
+						 var d2 = new Date(endDate.replace(/\-/g, "\/"));
+
+						 if(beginDate!=""&&endDate!=""&&d1 >d2)
+						 {
+						  alert("开始时间不能大于结束时间！");
+						  return false;
+						 }
+             texts.val(rs.y.text + '-' + rs.m.text + '-' + rs.d.text)
+
+             dtpicker.dispose()
+             api.setFrameAttr( {
+               name: 'record_frm',
+               bounces: true
+             } )
+            })
+      } )
+		})
+			$("#time2").on("touchstart",function(){
+				$("#time2").unbind("touchstart")
+        mui.init()
+        var texts = $( '#date2' )
+        texts.on( 'tap', function () {
+            api.setFrameAttr( {
+             name: 'record_frm',//固定日历控件
+             bounces: false
+            } )
+
+            var dtpicker = new mui.DtPicker( {
+             type: 'date', //设置日历初始视图模式
+             labels: [ '年', '月', '日' ], //设置默认标签区域提示语
+            } )
+            dtpicker.show(function( rs ) {
+             //console.log( JSON.stringify( rs ) );
+             var dateValue = JSON.parse(JSON.stringify( rs ));
+
+             //console.log(dateValue.value);
+						 var beginDate=$("#date1").val();
+						 var endDate=rs.y.text + '-' + rs.m.text + '-' + rs.d.text;
+						 var d1 = new Date(beginDate.replace(/\-/g, "\/"));
+						 var d2 = new Date(endDate.replace(/\-/g, "\/"));
+
+						if(beginDate!=""&&endDate!=""&&d1 >d2)
+						 {
+						  alert("开始时间不能大于结束时间！");
+						  return false;
+						 }
+             texts.val(rs.y.text + '-' + rs.m.text + '-' + rs.d.text)
+
+             dtpicker.dispose()
+             api.setFrameAttr( {
+               name: 'record_frm',
+               bounces: true
+             })
+            })
+      })
+		})
+</script>
+</body>
+</html>

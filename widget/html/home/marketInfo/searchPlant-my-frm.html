@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	  <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>员工轨迹列表搜索</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/common/public.css" />
+    <script type="text/javascript" src="../../../script/common/rem.js"></script>
+    <style>
+         html,body{
+             width: 100%;
+             background-color: #f3f4f4;
+         }
+         ul{
+             width: 100%;
+             background-color: #fff;
+         }
+         li{
+             width: 100%;
+             height:1.0rem;
+             line-height: 1.0rem;
+             border-bottom: solid 1px #f3f4f4;
+             font-size: 0.3rem;
+             color: #666666;
+             padding: 0 0.3rem;
+         }
+         li.select{
+             background-color: #f9f9f9;
+             color: #00c558;
+         }
+    </style>
+  </head>
+  <body>
+      <ul class="content">
+          <!-- <li>马铃薯</li> -->
+      </ul>
+  		<!-- <div id="body_totop_btn">
+  				返回顶部
+  		</div> -->
+  </body>
+<script type="text/javascript" src="../../../script/common/api.js"></script>
+<script type="text/javascript" src="../../../script/common/jquery.min.js"></script>
+<script type="text/javascript" src="../../../script/common/pds.ajax.js"></script>
+<script type="text/javascript">
+	apiready = function(){
+      //获取作物
+      getPlantData();
+
+	};
+  //获取我的作物数据
+  function getPlantData(){
+      pds.ajaxSubmit({
+          type: "GET",
+          url:"app/price/myCrops",
+          success:function(e){
+              //alert("success");
+              //alert(JSON.stringify(e));
+              if (e.status == "ok") {
+                  var data = e.data;
+                  if (data != "" && data != null && data != [] && data.length > 0) {
+                      var plantsStr = "";
+                      for (var i = 0; i < data.length; i++) {
+                         if (data[i].categoryName != "" && data[i].categoryName != null && data[i].id != "" && data[i].id != null) {
+                            plantsStr += '<li data-id="'+ data[i].id +'">'+ data[i].categoryName +'</li>';
+                         }
+                      };
+                      $(".content").html(plantsStr);
+                      //修改选中作物样式
+                      $(".content li").on("click",function(){
+                          $(this).addClass("select").siblings().removeClass("select");
+                          var plantName = $(this).text();
+                          var plantId = $(this).attr("data-id");
+                          api.execScript({
+                              name: 'market-index-win',
+                              script: 'plantDo("'+ plantName +'","'+ plantId +'")'
+                          });
+                          api.execScript({
+                              name: 'market-index-win',
+                              frameName: 'morePrice-frm',
+                              script: 'plantDo("'+ plantId +'","'+ plantName +'")'
+                          });
+                          api.execScript({
+                              name: 'market-index-win',
+                              frameName: 'marketPrice-frm',
+                              script: 'plantDo("'+ plantId +'","'+ plantName +'")'
+                          });
+                          //调用win页面获取数据方法
+                          // api.execScript({
+                          //     name: 'market-index-win',
+                          //     frameName: api.pageParam.frmName,
+                          //     script: 'dataInit()'
+                          // });
+                          setTimeout(function(){
+                              api.execScript({
+                                name: 'market-index-win',
+                                frameName: 'morePrice-frm',
+                                script: 'dataInit()'
+                              });
+                              api.execScript({
+                                name: 'market-index-win',
+                                frameName: 'marketPrice-frm',
+                                script: 'dataInit()'
+                              });
+                              api.closeWin();
+                          },300)
+
+                      });
+                  }else{
+                      $(".content").html('<li style="text-align:center;">暂无作物数据</li>');
+                  }
+              }else{
+                  api.alert({msg: '获取数据失败，请重试！'});
+              }
+
+          },
+          error : function(e){
+              api.alert({msg: '获取数据失败，请重试！'});
+          }
+      });
+  }
+
+  //选中默认面积
+  function readAllPlant(name){
+      $(".content li").each(function(index,el){
+          var plantName_ = $(this).text();
+          if (plantName_ == name) {
+              $(this).addClass("select").siblings().removeClass("select");
+          }
+      })
+  }
+</script>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="../../css/common/public.css"/>
+      <link rel="stylesheet" type="text/css" href="../../css/common/header.css"/>
+      <link rel="stylesheet" type="text/css" href="../../css/planting/choose_index_win.css"/>
+      <style>
+          body{
+
+          }
+      </style>
+  </head>
+  <body>
+    <!-- <header id="header">
+      <div class="headerLeft" onclick="back();"></div>
+      <div class="headerCenter">种植</div>
+      <div class="headerRight"></div>
+    </header> -->
+  
+    <div id="plan_list">
+         <div class="choose">
+              <div>
+                  <select class="" name="">
+                      <option value="">2017</option>
+                      <option value="">2018</option>
+                  </select>
+                  <i class="icon_select"></i>
+              </div>
+              <div>
+                  <select class="" name="">
+                    <option value="">基地一</option>
+                    <option value="">基地二</option>
+                  </select>
+                  <i class="icon_select"></i>
+              </div>
+         </div>
+         <div id="land_list">
+
+         </div>
+    </div>
+
+  </body>
+  <script type="text/javascript" src="../../script/common/api.js"></script>
+  <script type="text/javascript" src="../../script/common/zepto-1.2.0.min.js"></script>
+  <script type="text/javascript" src="../../script/common/jquery.min.js"></script>
+  <script type="text/javascript" src="../../script/common/jquery.tmpl.js"></script>
+  <script type="text/javascript" src="../../script/common/rem-750.js"></script>
+  <script type="text/template" id='tastList'>
+            <ul class="tastList">
+               {{each(i,item) plantList.data}}
+                <li>
+                      <div class="task_detail clearfix">
+                           <i class="task_icon task_l"></i>
+                            <span>${item.task}</span>
+                           <i class="task_icon task_r"></i>
+                      </div>
+                      <ul class="planDetail">
+                      {{each(j,temp) item.plan}}
+                            <li class="lands">
+                                <span>${temp.landName}</span>
+                            </li>
+                      {{/each}}
+                    </ul>
+                </li>
+                 {{/each}}
+            </ul>
+
+  </script>
+  <script type="text/javascript">
+      apiready = function(){
+              $("#land_list").append($("#tastList").tmpl(plantList));
+
+                            $("#land_list").append($("#tastList").tmpl(plantList));
+                            var i=null
+                            $('.tastList').on('click','.task_detail',function(){
+                                 if(i){
+                                    $(this).siblings().hide()
+                                    $(this).children('.task_r').css("transform","rotate(0deg)");
+                                   i=null
+                                 }else{
+                                   $(this).siblings().show()
+                                   $(this).children('.task_r').css("transform","rotate(180deg)");
+
+                                   i=1
+
+                                 }
+                            })
+                            // 跳转到计划外派单dd
+                            $('#tab_top').children().eq(1).click(function(){
+                              api.openWin({
+                                name : 'planOut_win',
+                                url : './planOut_win.html',
+                                reload : true,
+                              });
+                            })
+                            // 跳转到工序
+                            $('.tastList').on('click','.lands',function(){
+                                 api.openWin({
+                                   name : 'stepList_win',
+                                   url : './stepList_win.html',
+                                   reload : true,
+                                 });
+                            })
+      };
+      var plantList ={
+          data:[
+            {'task':"西蓝花种植",
+             "plan":[{'landName':'基地一'},{'landName':'基地二'},]
+           },
+           {'task':"西蓝花种植",
+            "plan":[{'landName':'基地一'},{'landName':'基地二'},]
+           },
+           {'task':"西蓝花种植",
+           "plan":[{'landName':'基地一'},{'landName':'基地二'},]
+           }
+          ],
+          "status": "ok"
+      }
+      function back(){
+          api.closeWin({
+
+          });
+          api.sendEvent( {
+           name: 'openMapEvent'
+         } )
+
+      }
+  </script>
+  </html>
